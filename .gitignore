@@ -1,0 +1,17 @@
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Hugo build output/cache
+public/
+resources/
+.hugo_build.lock
+
+# Local/editor
+.vscode/
+tmp/
+
+# Environment files
+.env
+.env.*
+.prod.env

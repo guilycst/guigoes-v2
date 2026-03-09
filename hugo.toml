@@ -1,0 +1,45 @@
+baseURL = "/"
+languageCode = "pt-br"
+defaultContentLanguage = "pt-br"
+title = "Guigoes"
+theme = "hugo-noir"
+relativeURLs = true
+canonifyURLs = false
+
+[taxonomies]
+  tag = "tags"
+  category = "categories"
+
+[markup]
+  defaultMarkdownHandler = 'goldmark'
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+
+[params]
+  name = "Guilherme de Castro"
+  location = "Blumenau, Santa Catarina, Brasil"
+  description = "Software Engineer (dev-first) | Go no ecossistema Kubernetes | experiência com Java, C#, Python e JavaScript/TS"
+  profile_image = "/images/profile.png"
+  email = "guilherme@guigoes.com"
+  github = "https://github.com/guilycst"
+  github_username = "guilycst"
+  linkedin = "https://www.linkedin.com/in/guicas"
+  linkedin_username = "guicas"
+  twitter = "https://twitter.com/guilycst"
+  twitter_username = "guilycst"
+  discord = "guilhermedecastro_50714"
+
+[menu]
+  [[menu.main]]
+    name = "Sobre"
+    pageRef = "/about"
+    weight = 1
+  [[menu.main]]
+    name = "Blog"
+    pageRef = "/blogs"
+    weight = 4
+  [[menu.main]]
+    name = "Contato"
+    pageRef = "/contact"
+    weight = 5

@@ -1,0 +1,15 @@
+.git
+.github
+.vscode
+
+# Local output/cache
+public
+resources
+.hugo_build.lock
+tmp
+
+# Local files
+.DS_Store
+.env
+.env.*
+.prod.env

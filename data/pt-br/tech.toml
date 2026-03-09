@@ -1,0 +1,20 @@
+row1 = [
+  { icon = "devicon-go-plain", name = "Go" },
+  { icon = "devicon-java-plain", name = "Java" },
+  { icon = "devicon-csharp-plain", name = "C#" },
+  { icon = "devicon-python-plain", name = "Python" },
+  { icon = "devicon-javascript-plain", name = "JavaScript" },
+  { icon = "devicon-typescript-plain", name = "TypeScript" }
+]
+
+row2 = [
+  { icon = "devicon-kubernetes-plain", name = "Kubernetes" },
+  { icon = "devicon-docker-plain", name = "Docker" },
+  { icon = "devicon-terraform-plain", name = "Terraform" },
+  { icon = "devicon-amazonwebservices-original", name = "AWS" },
+  { icon = "devicon-postgresql-plain", name = "PostgreSQL" },
+  { icon = "devicon-mysql-plain", name = "MySQL" },
+  { icon = "devicon-redis-plain", name = "Redis" },
+  { icon = "devicon-rabbitmq-original", name = "RabbitMQ" },
+  { icon = "devicon-linux-plain", name = "Linux" }
+]
