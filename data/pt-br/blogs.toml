@@ -1,16 +1,9 @@
 [[blogs]]
-title = "Criando um blog serverless eficiente e econômico com GO, HTMX e TailwindCSS"
-date = "2023-12-24"
-link = "/blogs/creating_a_cheap_blog_golang_htmx/"
-summary = "Vamos explorar a experiência de criar um blog do zero usando Golang, HTMX e TailwindCSS, rodando em AWS Lambdas com boa performance e sem quebrar o banco 💸"
-tags = ["go", "htmx", "tailwind", "serverless", "aws"]
-
-[[blogs]]
-title = "A Importância das Meta Tags: Impulsionando SEO, Redes Sociais e Taxa de Cliques"
-date = "2024-04-30"
-link = "/blogs/html_meta_tags_social_media_ctr/"
-summary = "Como meta tags melhoram SEO, compartilhamento em redes sociais e taxa de cliques (CTR)."
-tags = ["web", "SEO", "CTR", "social media", "meta tags"]
+title = "lazy-dvc: Gerenciando dados grandes no DVC com autenticação GitHub SSH"
+date = "2026-03-15"
+link = "/blogs/lazy-dvc-github-ssh-dvc-storage/"
+summary = "Um bridge de autenticação que permite usar chaves SSH do GitHub para acessar armazenamento DVC, filtrado por organização e time."
+tags = ["go", "dvc", "github", "ssh", "devops", "docker"]
 
 [[blogs]]
 title = "Quando não dá para fugir do JavaScript: Hyperscript te salva"
@@ -20,8 +13,15 @@ summary = "Quando JS é inevitável, Hyperscript ajuda a escrever menos código 
 tags = ["web", "frontend", "JS", "hyperscript"]
 
 [[blogs]]
-title = "lazy-dvc: Gerenciando dados grandes no DVC com autenticação GitHub SSH"
-date = "2025-03-15"
-link = "/blogs/lazy-dvc-github-ssh-dvc-storage/"
-summary = "Um bridge de autenticação que permite usar chaves SSH do GitHub para acessar armazenamento DVC, filtrado por organização e time."
-tags = ["go", "dvc", "github", "ssh", "devops", "docker"]
+title = "A Importância das Meta Tags: Impulsionando SEO, Redes Sociais e Taxa de Cliques"
+date = "2024-04-30"
+link = "/blogs/html_meta_tags_social_media_ctr/"
+summary = "Como meta tags melhoram SEO, compartilhamento em redes sociais e taxa de cliques (CTR)."
+tags = ["web", "SEO", "CTR", "social media", "meta tags"]
+
+[[blogs]]
+title = "Criando um blog serverless eficiente e econômico com GO, HTMX e TailwindCSS"
+date = "2023-12-24"
+link = "/blogs/creating_a_cheap_blog_golang_htmx/"
+summary = "Vamos explorar a experiência de criar um blog do zero usando Golang, HTMX e TailwindCSS, rodando em AWS Lambdas com boa performance e sem quebrar o banco 💸"
+tags = ["go", "htmx", "tailwind", "serverless", "aws"]

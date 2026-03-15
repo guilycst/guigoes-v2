@@ -1,6 +1,6 @@
 +++
 title = "lazy-dvc: Gerenciando dados grandes no DVC com autenticação GitHub SSH"
-date = 2025-03-15T10:00:00-03:00
+date = 2026-03-15T10:00:00-03:00
 draft = false
 description = "Um bridge de autenticação que permite usar chaves SSH do GitHub para acessar armazenamento DVC, filtrado por organização e time."
 author = "Guilherme de Castro"
