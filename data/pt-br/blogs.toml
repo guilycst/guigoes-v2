@@ -18,3 +18,10 @@ date = "2024-04-30"
 link = "/blogs/hyperscript_for_the_rescue/"
 summary = "Quando JS é inevitável, Hyperscript ajuda a escrever menos código e manter legibilidade."
 tags = ["web", "frontend", "JS", "hyperscript"]
+
+[[blogs]]
+title = "lazy-dvc: Gerenciando dados grandes no DVC com autenticação GitHub SSH"
+date = "2025-03-15"
+link = "/blogs/lazy-dvc-github-ssh-dvc-storage/"
+summary = "Um bridge de autenticação que permite usar chaves SSH do GitHub para acessar armazenamento DVC, filtrado por organização e time."
+tags = ["go", "dvc", "github", "ssh", "devops", "docker"]
