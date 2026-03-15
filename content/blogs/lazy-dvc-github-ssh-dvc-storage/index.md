@@ -8,7 +8,7 @@ tags = ["go", "dvc", "github", "ssh", "devops", "docker"]
 aliases = ["/posts/lazy-dvc-github-ssh-dvc-storage/"]
 +++
 
-## O Problema
+## O Problema  
 
 Times de ML e Data Science que usam DVC para versionar datasets e modelos grandes enfrentam um problema recorrente: **autenticação duplicada**.
 
@@ -19,7 +19,7 @@ Você já tem chaves SSH no GitHub para acessar repositórios. Mas para usar DVC
 3. Configurar no servidor de armazenamento
 4. Gerenciar revogação manual quando alguém sai do time
 
-Quando um novo engenheiro entra no time, o processo de "onboarding de storage" se torna um ritual separado do onboarding de código. Quando alguém sai, você lembra de remover o acesso do GitHub, mas esquece de revogar a chave do servidor S3.
+Quando um novo engenheiro entra no time, o processo de "onboarding de storage" se torna um ritual `separado do onboarding de código. Quando alguém sai, você lembra de remover o acesso do GitHub, mas esquece de revogar a chave do servidor S3.
 
 ## Alternativas Consideradas
 
@@ -54,7 +54,7 @@ dvc push
 
 Se você está na organização GitHub, você tem acesso ao storage. Se sai, perde acesso automaticamente.
 
-## Como Funciona
+## Como Funciona 
 
 ```
 ┌─────────────┐                        ┌─────────────────┐
