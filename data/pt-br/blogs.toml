@@ -1,9 +1,16 @@
 [[blogs]]
-title = "Criando um blog serverless eficiente e econômico com GO, HTMX e TailwindCSS"
-date = "2023-12-24"
-link = "/blogs/creating_a_cheap_blog_golang_htmx/"
-summary = "Vamos explorar a experiência de criar um blog do zero usando Golang, HTMX e TailwindCSS, rodando em AWS Lambdas com boa performance e sem quebrar o banco 💸"
-tags = ["go", "htmx", "tailwind", "serverless", "aws"]
+title = "Acessar storage DVC com as mesmas chaves SSH do GitHub"
+date = "2026-03-15"
+link = "/blogs/lazy-dvc-github-ssh-dvc-storage/"
+summary = "Se seu time já usa GitHub, por que precisaria de credenciais separadas para armazenamento de dados? Este repositório resolve essa fricção."
+tags = ["go", "dvc", "github", "ssh", "devops", "docker"]
+
+[[blogs]]
+title = "Quando não dá para fugir do JavaScript: Hyperscript te salva"
+date = "2024-04-30"
+link = "/blogs/hyperscript_for_the_rescue/"
+summary = "Quando JS é inevitável, Hyperscript ajuda a escrever menos código e manter legibilidade."
+tags = ["web", "frontend", "JS", "hyperscript"]
 
 [[blogs]]
 title = "A Importância das Meta Tags: Impulsionando SEO, Redes Sociais e Taxa de Cliques"
@@ -13,8 +20,8 @@ summary = "Como meta tags melhoram SEO, compartilhamento em redes sociais e taxa
 tags = ["web", "SEO", "CTR", "social media", "meta tags"]
 
 [[blogs]]
-title = "Quando não dá para fugir do JavaScript: Hyperscript te salva"
-date = "2024-04-30"
-link = "/blogs/hyperscript_for_the_rescue/"
-summary = "Quando JS é inevitável, Hyperscript ajuda a escrever menos código e manter legibilidade."
-tags = ["web", "frontend", "JS", "hyperscript"]
+title = "Criando um blog serverless eficiente e econômico com GO, HTMX e TailwindCSS"
+date = "2023-12-24"
+link = "/blogs/creating_a_cheap_blog_golang_htmx/"
+summary = "Vamos explorar a experiência de criar um blog do zero usando Golang, HTMX e TailwindCSS, rodando em AWS Lambdas com boa performance e sem quebrar o banco 💸"
+tags = ["go", "htmx", "tailwind", "serverless", "aws"]
