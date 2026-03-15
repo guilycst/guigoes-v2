@@ -1,60 +1,37 @@
 +++
-title = "Acessar storage DVC com as mesmas chaves SSH do GitHub"
+title = "Anunciando lazy-dvc: Chega de gerenciar múltiplas identidades para seus dados"
 date = 2026-03-15T10:00:00-03:00
 draft = false
-description = "Se seu time já usa GitHub, por que precisaria de credenciais separadas para armazenamento de dados? Este repositório resolve essa fricção."
+description = "Se seu time já tem acesso ao código via GitHub, por que o acesso aos dados precisa ser um processo separado? Conheça o lazy-dvc."
 author = "Guilherme de Castro"
-tags = ["go", "dvc", "github", "ssh", "devops", "docker"]
-aliases = ["/posts/lazy-dvc-github-ssh-dvc-storage/"]
+tags = ["go", "dvc", "github", "ssh", "devops", "platform-engineering"]
 +++
 
-## O Problema  
+## A "Lacuna de Identidade" no Onboarding de Times
 
-Times de ML e Data Science que usam DVC para versionar datasets e modelos grandes enfrentam um problema recorrente: **autenticação duplicada**.
+Todo mundo que trabalha em times de engenharia já passou por isso: um novo colega entra no time, você dá acesso ao repositório no GitHub e, cinco minutos depois, ele te manda uma mensagem no Slack:
 
-Você já tem chaves SSH no GitHub para acessar repositórios. Mas para usar DVC com armazenamento remoto, precisa:
+> *"Consegui clonar o projeto, mas não consigo baixar as dependências/assets/datasets. Onde pego a chave de acesso do storage?"*
 
-1. Gerar um novo par de chaves SSH
-2. Distribuir para cada membro do time
-3. Configurar no servidor de armazenamento
-4. Gerenciar revogação manual quando alguém sai do time
+Nesse momento, começa o **ritual do segundo onboarding**: você precisa criar um usuário no IAM do provedor de cloud, gerar um par de chaves Access/Secret, enviar de forma segura para o colega e torcer para que ele saiba onde configurar isso localmente.
 
-Quando um novo engenheiro entra no time, o processo de "onboarding de storage" se torna um ritual `separado do onboarding de código. Quando alguém sai, você lembra de remover o acesso do GitHub, mas esquece de revogar a chave do servidor S3.
+Quando esse colega sai do time, o processo se repete ao contrário — e é aqui que o risco de segurança mora: muitas vezes removemos o acesso ao código, mas esquecemos de revogar a chave do bucket S3.
 
-## Alternativas Consideradas
+**Por que o acesso aos assets não é automático, se o acesso ao código já foi concedido?**
 
-**Git LFS** funciona, mas introduz problemas próprios:
+## Apresentando o lazy-dvc
 
-- Requer credenciais HTTPS separadas para o storage LFS
-- Limites rígidos no plano gratuito (10 GB storage + 10 GB bandwidth/mês)
-- Rebase e filter-branch corrompem ponteiros LFS
-- Quota excedida =Sem escrita, só leitura
+O **lazy-dvc** nasceu para fechar essa lacuna. A filosofia é simples: **Sua identidade no GitHub deve ser a única que você precisa.**
 
-**DVC padrão** resolve o problema de arquivos grandes, mas não resolve autenticação:
+Ele atua como uma ponte de autenticação entre DVC e o Git provider. Em vez de você gerenciar chaves de storage para cada membro do time, o `lazy-dvc` utiliza as **chaves SSH públicas que seus desenvolvedores já cadastraram no GitHub**.
 
-- Cada pessoa precisa configurar credenciais AWS/GCS/etc.
-- Alternativamente, distribuir chaves SSH manualmente para cada pessoa
-- Sem integração com controle de acesso existente
+### Como a mágica acontece (sem esforço)
 
-## A Solução
+O `lazy-dvc` unifica o fluxo de trabalho. Se o seu desenvolvedor já usa chaves SSH para dar `git push`, ele agora usa **essas mesmas chaves** para dar `dvc pull`.
 
-**lazy-dvc** usa o que você já tem: chaves SSH registradas no GitHub.
-
-```bash
-# Configure uma vez
-export LDVC_GH_TOKEN=ghp_seu_token
-export LDVC_GH_ORG_NAME=sua-organizacao
-
-docker compose up -d
-
-# Use DVC normalmente
-dvc remote add -d storage ssh://dvc-storage@seu-servidor:2222/data
-dvc push
-```
-
-Se você está na organização GitHub, você tem acesso ao storage. Se sai, perde acesso automaticamente.
-
-## Como Funciona 
+1. **Identidade como Código:** O `lazy-dvc` consulta a sua Organização ou Time no GitHub em tempo real.
+2. **Autenticação Dinâmica:** Quando alguém tenta acessar o storage via DVC, o servidor verifica se a chave SSH daquela pessoa pertence a um membro autorizado no GitHub.
+3. **Storage Agregado:** Uma vez autenticado, o usuário tem acesso a um mount (via `rclone`) que aponta diretamente para o seu backend (S3, MinIO, Ceph, etc).
 
 ```
 ┌─────────────┐                        ┌─────────────────┐
@@ -62,36 +39,68 @@ Se você está na organização GitHub, você tem acesso ao storage. Se sai, per
 │             │ ─────────────────────► │   (org/team)    │
 └─────────────┘                        └─────────────────┘
        │                                      │
-       │                                      │ mesmas chaves
+       │                                      │ same keys
+       │                                      │
        ▼                                      ▼
 ┌─────────────┐                        ┌─────────────────┐
-│   dvc push  │ ──── SSH/SFTP ───────► │   lazy-dvc      │
-│   dvc pull   │                        │   → S3 Backend   │
+│   dvc push  │ ──── SSH/SFTP ───────► │   lazy-dvc      │ 
+│   dvc pull  │                        │                 │
 └─────────────┘                        └─────────────────┘
+                                              │
+                                              │ S3 Backend
+                                              │
+                                              ▼
+                                       ┌─────────────────┐
+                                       │   AWS,B2,MinIO  |
+                                       │                 │
+                                       └─────────────────┘
 ```
 
-1. Você conecta via SSH/SFTP (como faria com qualquer servidor)
-2. `authpubk` busca suas chaves públicas no GitHub, filtrado por org/team
-3. Se a chave corresponde, acesso liberado ao mount S3
-4. DVC funciona normalmente — `dvc push`, `dvc pull`
+## Como isso ajuda?
 
-O container Docker inclui OpenSSH, rclone (para montar S3), e os binários Go para autenticação.
+### 1. Onboarding em 0 Segundos
 
-## Comparação Rápida
+Adicionou o desenvolvedor ao time no GitHub? Pronto. Ele já pode rodar um `dvc pull`. Não há necessidade de distribuir credenciais adicionais.
 
-| Aspecto | Git LFS | DVC padrão | lazy-dvc |
-|---------|---------|-------------|-----------|
-| Auth para storage | HTTPS + PAT | Chaves SSH separadas | GitHub SSH |
-| Onboarding | Adicionar ao repo | + distribuir chave SSH | + adicionar ao GitHub team |
-| Offboarding | Remover do repo | + revogar chave do servidor | + remover do GitHub team |
-| CI/CD | Configurar LFS + credenciais | Configurar credenciais storage | Usar deploy keys SSH existentes |
-| Storage limits | Limitado pelo plano | Seu backend | Seu backend |
+### 2. Offboarding Garantido
 
-## Próximos Passos
+Removeu o colaborador da Organização? O acesso ao storage é cortado instantaneamente. A segurança do seu storage de ativos pesados passa a herdar a mesma governança que você já aplica ao seu código.
 
-- **Testar:** `docker compose up -d --build` com suas variáveis de ambiente
-- **Repositório:** [github.com/guilycst/lazy-dvc](https://github.com/guilycst/lazy-dvc)
-- **Contribuir:** Issues e PRs são bem-vindos
-- **Docker:** `ghcr.io/guilycst/lazy-dvc:latest`
+### 3. Infraestrutura Transparente
 
- funciona com qualquer backend S3-compatible — MinIO, Ceph, AWS S3, VersityGW. Se rclone suporta, funciona.
+Para o desenvolvedor, é apenas SSH. Ele não precisa saber se os dados estão no S3 da Amazon, em um servidor MinIO local ou em um storage distribuído. O `lazy-dvc` abstrai a complexidade do backend.
+
+### 4. CI/CD Simplificado
+
+Em pipelines, você pode usar as mesmas *Deploy Keys* que já usa para o Git.
+
+## Testando o lazy-dvc
+
+O setup é de teste é via docker compose e pode ser verificado em poucos minutos.
+
+1. Clone https://github.com/guilycst/lazy-dvc 
+
+2. Execute no seu shell
+
+```bash
+# Configure as variáveis de ambiente
+export LDVC_GH_TOKEN=ghp_seu_token_com_leitura_de_org
+export LDVC_GH_ORG_NAME=sua-organizacao-no-github
+
+# Suba o serviço
+docker compose up -d
+
+# No lado do cliente, o DVC agora fala SSH puro com as chaves que já estão na máquina
+dvc remote add -d meu-storage ssh://dvc-storage@meu-servidor:2222/data
+
+```
+---
+
+## Conclusão
+
+O objetivo do `lazy-dvc` é ser uma ferramenta para reduzir a carga cognitiva de quem opera infraestrutura e de quem interage com ela. Menos chaves para gerenciar significa menos chances de erro humano e mais tempo focando no que realmente importa: o produto.
+
+O projeto é **Open Source** e você pode conferir o código, contribuir ou abrir issues aqui:
+
+👉 **[github.com/guilycst/lazy-dvc](https://github.com/guilycst/lazy-dvc)**
+
