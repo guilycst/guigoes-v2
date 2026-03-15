@@ -1,8 +1,8 @@
 [[blogs]]
-title = "lazy-dvc: Gerenciando dados grandes no DVC com autenticação GitHub SSH"
+title = "Acessar storage DVC com as mesmas chaves SSH do GitHub"
 date = "2026-03-15"
 link = "/blogs/lazy-dvc-github-ssh-dvc-storage/"
-summary = "Um bridge de autenticação que permite usar chaves SSH do GitHub para acessar armazenamento DVC, filtrado por organização e time."
+summary = "Se seu time já usa GitHub, por que precisaria de credenciais separadas para armazenamento de dados? Este repositório resolve essa fricção."
 tags = ["go", "dvc", "github", "ssh", "devops", "docker"]
 
 [[blogs]]
