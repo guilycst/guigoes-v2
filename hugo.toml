@@ -5,6 +5,7 @@ title = "Guigoes"
 theme = "hugo-noir"
 relativeURLs = true
 canonifyURLs = false
+buildFuture = true
 
 [taxonomies]
   tag = "tags"
