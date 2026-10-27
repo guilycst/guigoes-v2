@@ -121,7 +121,3 @@ Ferramentas e experimentos publicados em [guilycst](https://github.com/guilycst)
 <p>CLI em Go para espelhar repositórios do GitHub em instâncias Forgejo ou Codeberg. Permite selecionar contas, organizações ou repositórios e trabalhar com espelhos por push ou pull.</p>
 </li>
 </ul>
-
-Os repositórios têm código, instruções de uso e detalhes sobre o estágio de cada projeto. Veja outros projetos nos perfis de [guilycst](https://github.com/guilycst?tab=repositories) e da [Araihu](https://github.com/orgs/araihu/repositories).
-
-<p>Versões consultadas em 27/10/2026. Neste blog, 0.0.x indica alpha; demais versões 0.x.x indicam beta. Releases por data não recebem essa classificação.</p>

@@ -3,7 +3,7 @@
 A seleção, as versões e os links ficam em `content/projects/index.md`.
 Atualize as badges ao revisar a página, consultando releases públicas no GitHub
 e mantendo o nome exato da tag e o link para a release. Não há consulta à API
-no navegador ou no build. A data da consulta aparece na página.
+no navegador ou no build. Última consulta das versões: 27/10/2026.
 
 Sites oficiais conferidos em 27/10/2026: `goshtoso.araihu.com`,
 `margo.araihu.com`, `manja.araihu.com`, `balemoh.araihu.com` e `muamba.araihu.com`.
