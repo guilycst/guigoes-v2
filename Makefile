@@ -1,14 +1,18 @@
-HUGO ?= hugo
+.PHONY: install build run check rundocker
 
 install:
-	@echo "Install Hugo Extended first: https://gohugo.io/installation/"
+	sh scripts/install-margo.sh
 
-run:
-	$(HUGO) server -D --disableFastRender
+build: install
+	python3 scripts/build.py
 
-build:
-	$(HUGO) --minify
+check: build
+	python3 -m unittest discover -s tests -v
+	python3 scripts/check-site.py
+
+run: build
+	python3 -m http.server 1313 --bind 127.0.0.1 --directory public
 
 rundocker:
-	docker build -t guigoes-hugo:latest .
-	docker run --platform linux/amd64 -p 8080:80 --rm -it guigoes-hugo:latest
+	docker build -t guigoes-margo:latest .
+	docker run -p 8080:80 --rm -it guigoes-margo:latest

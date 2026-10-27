@@ -1,0 +1,26 @@
+version: 1
+source: .build/content
+output: public
+assets: local
+offline: true
+site:
+  name: Guigoes
+  description: Go, Kubernetes e engenharia de software por Guilherme de Castro.
+  base_url: https://guigoes.com
+  home: index.md
+  logo: assets/icon.svg
+  icon: assets/icon.svg
+  social_image:
+    path: assets/social.png
+    alt: Guigoes, blog de Guilherme de Castro sobre Go, Kubernetes e engenharia de software.
+layout:
+  kind: article
+locales:
+  default: pt-BR
+  supported: [pt-BR]
+theme:
+  builtin: true
+  name: modern
+  color_mode: system
+custom_css:
+  - css_url: assets/blog.css

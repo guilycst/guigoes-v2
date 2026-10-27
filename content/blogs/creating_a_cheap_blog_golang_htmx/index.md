@@ -1,14 +1,15 @@
 +++
 title = "Criando um blog serverless eficiente e econômico com GO, HTMX e TailwindCSS"
-date = 2023-12-24T11:06:29-03:00
 draft = false
 description = "Vamos explorar a experiência de criar um blog do zero usando Golang, HTMX e TailwindCSS, rodando em AWS Lambdas com boa performance e sem quebrar o banco 💸"
-author = "Guilherme de Castro"
 tags = ["go", "htmx", "tailwind", "serverless", "aws"]
 aliases = ["/posts/creating_a_cheap_blog_golang_htmx/"]
 cover = "./assets/poor_man_coding.webp"
 cover_alt = "Imagem de um homem pobre codando em um computador antigo"
 md_cover_position = "0 34%"
+publishedAt = "2023-12-24T11:06:29-03:00"
+authors = ["Guilherme de Castro"]
+language = "pt-BR"
 +++
 Essa é uma stack que recentemente vem ganhando bastante popularidade, principalmente entre os devs que como eu, tem uma carreira mais focada em backend.
 
