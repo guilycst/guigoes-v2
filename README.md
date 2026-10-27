@@ -68,6 +68,12 @@ recentes, com destaque para o primeiro. `cover = "./assets/capa.webp"` e `cover_
 definem a capa do artigo e das listagens. O cabeçalho próprio formata datas em
 `DD/MM/AAAA` e liga tags aos arquivos, mantendo os metadados semânticos do Margo.
 
+O seletor de tema oferece Sistema, Claro e Escuro. Sistema é o padrão e acompanha
+mudanças no sistema operacional. Uma escolha explícita fica no armazenamento local
+do navegador; selecionar Sistema remove essa preferência. Sem JavaScript, o CSS
+continua seguindo o sistema. Os testes desse controle rodam no CI com
+`node --test cmd/blog/theme.test.cjs`, sem pacotes adicionais.
+
 O build habilita `--allow-unsafe-html` porque os posts existentes incluem demos
 HTML/JavaScript. Publique apenas conteúdo revisado. A demo Hyperscript preserva
 sua dependência externa fixa em `hyperscript.org@0.9.12`.
