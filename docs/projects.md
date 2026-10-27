@@ -6,11 +6,14 @@ e mantendo o nome exato da tag e o link para a release. Não há consulta à API
 no navegador ou no build. A data da consulta aparece na página.
 
 Sites oficiais conferidos em 27/10/2026: `goshtoso.araihu.com`,
-`margo.araihu.com`, `manja.araihu.com` e `balemoh.araihu.com`.
+`margo.araihu.com`, `manja.araihu.com`, `balemoh.araihu.com` e `muamba.araihu.com`.
 Cada endereço consta na documentação do respectivo repositório e o site aponta
 de volta para ele. Mantenha os links junto do GitHub na página; ao alterar um
 domínio, confira também o campo Website da seção About do repositório.
 Não há site próprio confirmado para Talaria-Mem, lazy-dvc ou gitmeout.
+O link `charts.goshtoso.araihu.com`, divulgado pelo site Goshtoso, não resolveu
+no DNS nesta consulta. Goshtoso Charts mantém somente o GitHub até confirmar
+um site público acessível.
 
 Regra editorial solicitada pelo autor: `0.0.x` é **alpha** e `0.x.x`, com minor
 maior que zero, é **beta**. A classificação usa os números, mesmo quando um
@@ -30,11 +33,17 @@ Projetos sem marca encontrada mantêm somente o nome.
 | `manja.svg` | `araihu/assets`, `dist/icons/brand/manja-icon-light-plate-optical.svg` |
 | `balemoh.svg` | `araihu/assets`, `dist/icons/brand/balemoh-icon-light-plate-optical.svg` |
 | `margo.svg` | `araihu/margo`, `assets/icon.svg` |
+| `muamba.svg` | `araihu/muamba`, `site/public/brand/muamba-mark.svg` |
+
+Goshtoso Charts reutiliza o ícone de Goshtoso, como o próprio site do projeto.
+Referência: `araihu/goshtoso-charts/docs/ARAIHU_ASSETS.md`.
 
 Pin de `araihu/assets`: `0d2c111fde69171e1957fe75e5379711fa4115db`.
 Pin de `araihu/margo`: `88624bafda10dc7b82d7804f9d8d53e609ab88b9`, tag `v0.0.25`.
+Pin de `araihu/muamba`: `c791c996ee9ecbff11723f603264e08ed3703790`.
 Licenças e avisos preservados em `licenses/araihu-assets.txt`,
-`licenses/araihu-assets-NOTICE.txt`, `licenses/goshtoso.txt` e `licenses/margo.txt`.
+`licenses/araihu-assets-NOTICE.txt`, `licenses/goshtoso.txt`, `licenses/margo.txt`
+e `licenses/muamba.txt`.
 
 Antes de atualizar as marcas, inspecione os SVGs e confira a página nos temas
 claro e escuro, em desktop e celular. Use os assets oficiais dos projetos.
