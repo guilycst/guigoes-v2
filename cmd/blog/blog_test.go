@@ -59,6 +59,19 @@ func TestStructuredData(t *testing.T) {
 	}
 }
 
+func TestAuthorProfile(t *testing.T) {
+	d := testDocument(t, "")
+	d.Meta.Authors = []string{"Guilherme de Castro", "Guest"}
+	data := structuredData(d)
+	if data.Authors[0].URL != "https://guigoes.com/about/" || data.Authors[1].URL != "" {
+		t.Fatalf("incorrect author profiles: %+v", data.Authors)
+	}
+	header := publicationDetails(d.Meta)
+	if !strings.Contains(header, `<a rel="author" href="https://guigoes.com/about/">Guilherme de Castro</a>`) || !strings.Contains(header, `<span rel="author">Guest</span>`) {
+		t.Fatalf("incorrect visible author links: %s", header)
+	}
+}
+
 func TestSchemaValidationRejectsDrift(t *testing.T) {
 	d := testDocument(t, "")
 	script, err := schemaScript(d)

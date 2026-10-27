@@ -9,6 +9,14 @@ import (
 type person struct {
 	Type string `json:"@type"`
 	Name string `json:"name"`
+	URL  string `json:"url,omitempty"`
+}
+
+func authorURL(name string) string {
+	if name == "Guilherme de Castro" {
+		return baseURL + "/about/"
+	}
+	return ""
 }
 
 type blogPosting struct {
@@ -30,7 +38,7 @@ func structuredData(d document) blogPosting {
 	canonical := baseURL + (&url.URL{Path: d.Route}).String()
 	data := blogPosting{Context: "https://schema.org", Type: "BlogPosting", ID: canonical + "#blogposting", URL: canonical, MainEntityOfPage: canonical, Headline: d.Meta.Title, Description: d.Meta.Description, Language: d.Meta.Language, Published: d.Meta.PublishedAt, Modified: d.Meta.ModifiedAt}
 	for _, author := range d.Meta.Authors {
-		data.Authors = append(data.Authors, person{Type: "Person", Name: author})
+		data.Authors = append(data.Authors, person{Type: "Person", Name: author, URL: authorURL(author)})
 	}
 	if d.Meta.Cover != "" {
 		data.Image = baseURL + (&url.URL{Path: path.Join(d.Route, d.Meta.Cover)}).String()
