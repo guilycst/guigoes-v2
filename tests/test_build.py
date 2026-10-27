@@ -11,6 +11,22 @@ spec.loader.exec_module(build)
 
 
 class PublicationTests(unittest.TestCase):
+    def test_publication_details_preserve_dates_and_escape_text(self):
+        output = build.publication_details({"authors": ["Ana & Rui"], "publishedAt": "2024-04-30T01:37:09-03:00", "modifiedAt": "2024-05-01T10:00:00Z", "tags": ["<SEO>"]})
+        self.assertIn("Ana &amp; Rui", output)
+        self.assertIn('datetime="2024-04-30T01:37:09-03:00">30/04/2024</time>', output)
+        self.assertIn('datetime="2024-05-01T10:00:00Z">01/05/2024</time>', output)
+        self.assertIn('href="/tags/seo/">&lt;SEO&gt;</a>', output)
+        self.assertIn('data-margo-publication-metadata="true"', output)
+
+    def test_editorial_listing_escapes_metadata(self):
+        output = build.listing([{"title": '<script>alert("title")</script>', "route": "/blogs/test/", "publishedAt": "2024-04-30T01:37:09-03:00", "description": "Go & HTML", "cover": './assets/cover.webp', "cover_alt": 'A "cover"'}])
+        self.assertNotIn("<script>", output)
+        self.assertIn("&lt;script&gt;", output)
+        self.assertIn("Go &amp; HTML", output)
+        self.assertIn('src="blogs/test/assets/cover.webp"', output)
+        self.assertIn('alt="A &quot;cover&quot;"', output)
+
     def test_drafts_and_future_posts_stay_private(self):
         now = datetime(2026, 10, 27, tzinfo=timezone.utc)
         self.assertFalse(build.published({"draft": True}, now))

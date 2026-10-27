@@ -21,6 +21,6 @@ locales:
 theme:
   builtin: true
   name: modern
-  color_mode: system
+  color_mode: light
 custom_css:
   - css_url: assets/blog.css

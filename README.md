@@ -45,6 +45,12 @@ aparecer no próximo build após o horário informado, sem agendamento automáti
 canonicals, sitemap, imagens e código. `site.yaml` define identidade e tema.
 Os arquivos em `content/` são a única fonte dos posts e da ordenação das listas.
 
+O visual adapta o exemplo editorial [`examples/blog` do Margo](https://github.com/araihu/margo/tree/main/examples/blog),
+com licença preservada em `licenses/margo.txt`. A home mostra os cinco posts mais
+recentes, com destaque para o primeiro. `cover = "./assets/capa.webp"` e `cover_alt`
+definem a capa do artigo e das listagens. O cabeçalho próprio formata datas em
+`DD/MM/AAAA` e liga tags aos arquivos, mantendo os metadados semânticos do Margo.
+
 O build habilita `--allow-unsafe-html` porque os posts existentes incluem demos
 HTML/JavaScript. Publique apenas conteúdo revisado. A demo Hyperscript preserva
 sua dependência externa fixa em `hyperscript.org@0.9.12`.
