@@ -29,3 +29,24 @@ dos shells nem adicionamos dependências para a navegação.
   links ao cabeçalho e foca Blog.
 - Conferir temas claro/escuro, largura de 320 px, ausência de overflow e fallback
   com os scripts removidos de uma cópia temporária do HTML gerado.
+
+## Correção do botão de fechar
+
+A primeira versão usou o caractere `×` dentro de um botão sem alinhamento interno.
+Isso deixou o desenho dependente da linha de base e das métricas da fonte. A
+inspeção inicial cobriu foco e comportamento, mas não mediu o centro do ícone.
+
+O [Manja](https://github.com/araihu/manja/blob/main/internal/web/templates/catalog.templ)
+usa SVG de tamanho fixo com `inline-flex`, `items-center` e `justify-center`.
+O [shell usado pelo Balemoh](https://github.com/araihu/goshtoso-app-shells/blob/5b2222e54637/consoleshell/assets/shell.css)
+centraliza seus botões de ícone da mesma forma e define o tamanho do SVG.
+
+Aqui, o botão nativo recebe centralização flex nos dois eixos e padding zero.
+O SVG decorativo mede 20 px dentro da área de toque de 44 px. O ícone `x-lg`
+vem do Bootstrap Icons, pelo mesmo Muamba, versão fixa e licença já usados no
+blog. O texto acessível continua sendo `Fechar menu`.
+
+Na revisão visual, medir os centros do botão e da imagem: a diferença deve ser
+menor que 0,5 px nos dois eixos, em 320 e 390 px e nos temas claro/escuro. Conferir
+também o alinhamento vertical do título com o botão. O hambúrguer já usa flex e
+traços CSS centralizados; não depende de métricas de texto.

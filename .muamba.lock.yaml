@@ -30,3 +30,8 @@ files:
     path: content/contact/assets/icons/twitter.svg
     size: 586
     integrity: sha384-IBCexGvRxazimjc0ihfSB/Dcp4HZa41LB/Rc9hT4Ge3K1kCTobG/ld7cdRgSvaga
+  - id: bootstrap-icons/x-lg
+    url: https://raw.githubusercontent.com/twbs/icons/ce0e49dd063243118a115f17ad1fe1fe7576d552/icons/x-lg.svg
+    path: content/contact/assets/icons/x-lg.svg
+    size: 308
+    integrity: sha384-vgGRw7L4jtlJV/NJ4N6s2k/ashhOL8HkYLlYavreCpFhxpAXEawqwGnkq+Qptkq5
