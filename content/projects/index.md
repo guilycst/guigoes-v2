@@ -53,11 +53,6 @@ Ferramentas e experimentos publicados em [guilycst](https://github.com/guilycst)
 <p class="guigoes-project-kind">Portabilidade · GitHub, Forgejo, Codeberg</p>
 <p>CLI em Go para espelhar repositórios do GitHub em instâncias Forgejo ou Codeberg. Permite selecionar contas, organizações ou repositórios e trabalhar com espelhos por push ou pull.</p>
 </li>
-<li>
-<h3><a href="https://github.com/guilycst/go-htmx-todo-list">Go + HTMX To-Do List</a></h3>
-<p class="guigoes-project-kind">Experimento · Go, HTMX, PostgreSQL</p>
-<p>Uma lista de tarefas para explorar interfaces com HTML renderizado no servidor. Implementa criação, edição, conclusão e exclusão de tarefas, com PostgreSQL e atualizações de página via HTMX.</p>
-</li>
 </ul>
 
 Os repositórios têm código, instruções de uso e detalhes sobre o estágio de cada projeto. Veja outros projetos nos perfis de [guilycst](https://github.com/guilycst?tab=repositories) e da [Araihu](https://github.com/orgs/araihu/repositories).
