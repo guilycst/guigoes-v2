@@ -15,10 +15,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - name: Setup Go
+        uses: actions/setup-go@v6
         with:
-          python-version-file: ".python-version"
+          go-version-file: "go.mod"
       - name: Build and validate
         run: make check
       - name: Upload static site
