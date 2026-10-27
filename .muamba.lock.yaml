@@ -1,0 +1,32 @@
+schema: 1
+files:
+  - id: bootstrap-icons/discord
+    url: https://raw.githubusercontent.com/twbs/icons/ce0e49dd063243118a115f17ad1fe1fe7576d552/icons/discord.svg
+    path: content/contact/assets/icons/discord.svg
+    size: 1149
+    integrity: sha384-/fBTOHECuJd1bEoO5ahsqjidnIjhO0L9XS5Bjo9waMrujyVNHr1TEOYN1S41qQCI
+  - id: bootstrap-icons/envelope
+    url: https://raw.githubusercontent.com/twbs/icons/ce0e49dd063243118a115f17ad1fe1fe7576d552/icons/envelope.svg
+    path: content/contact/assets/icons/envelope.svg
+    size: 421
+    integrity: sha384-fXcFfGbDstlKzOIwnl+giCQQcfL6SWPgWGVjFj8oX1CLiIEdRCc4k3MJZPJrLr1Y
+  - id: bootstrap-icons/github
+    url: https://raw.githubusercontent.com/twbs/icons/ce0e49dd063243118a115f17ad1fe1fe7576d552/icons/github.svg
+    path: content/contact/assets/icons/github.svg
+    size: 708
+    integrity: sha384-ex+wB31va0VeWj3xemA498HirRom204xehartSzkDnmcfifl6Ixa83AGn6kktXtr
+  - id: bootstrap-icons/license
+    url: https://raw.githubusercontent.com/twbs/icons/ce0e49dd063243118a115f17ad1fe1fe7576d552/LICENSE
+    path: content/contact/assets/icons/LICENSE
+    size: 1093
+    integrity: sha384-LfT9QJSWg5rdFgGpoZQZYmAgmK8qoIufiu7WaZdEtHliNaP0yBEkDhBsr0PFCk4S
+  - id: bootstrap-icons/linkedin
+    url: https://raw.githubusercontent.com/twbs/icons/ce0e49dd063243118a115f17ad1fe1fe7576d552/icons/linkedin.svg
+    path: content/contact/assets/icons/linkedin.svg
+    size: 666
+    integrity: sha384-tIpv08OOu4jJ4v88iiC7ptE9M5NAC0g//nXKwDuSfKHuNxp4twcrfAyNSFZZ7Oz8
+  - id: bootstrap-icons/twitter
+    url: https://raw.githubusercontent.com/twbs/icons/ce0e49dd063243118a115f17ad1fe1fe7576d552/icons/twitter.svg
+    path: content/contact/assets/icons/twitter.svg
+    size: 586
+    integrity: sha384-IBCexGvRxazimjc0ihfSB/Dcp4HZa41LB/Rc9hT4Ge3K1kCTobG/ld7cdRgSvaga
