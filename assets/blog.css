@@ -90,6 +90,7 @@ body .margo-document :not(pre) > code { background: var(--guigoes-surface-alt); 
 .guigoes-footer { display: flex; justify-content: space-between; gap: 2rem; border-top: 1px solid var(--guigoes-outline); padding-block: 2rem; color: var(--guigoes-muted); font: .85rem/1.8 ui-sans-serif, system-ui, sans-serif; }
 .guigoes-footer > span:last-child { text-align: right; }
 /* The archived Hyperscript article relies on these demo classes. */
+body .guigoes-content button.bg-blue-599 { background: var(--guigoes-accent); color: var(--guigoes-surface); padding: .5rem .8rem; border-radius: .35rem; cursor: pointer; }
 .hidden { display: none; }
 .modal { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; }
 .modal-underlay { position: absolute; inset: 0; background: #0009; }
