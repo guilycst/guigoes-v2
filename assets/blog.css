@@ -89,6 +89,10 @@ body .margo-document :not(pre) > code { background: var(--guigoes-surface-alt); 
 .guigoes-content { overflow-wrap: anywhere; }
 body .guigoes-projects { list-style: none; padding: 0; margin-block: 2rem; }
 body .guigoes-projects > li { margin: 0; padding-block: 1.5rem; border-top: 1px solid var(--guigoes-outline); }
+.guigoes-project-heading { display: flex; align-items: center; gap: 1rem; margin-bottom: .8rem; }
+.guigoes-project-heading > div { min-width: 0; }
+body .guigoes-projects .guigoes-project-icon { width: 4rem; height: 4rem; flex: 0 0 4rem; object-fit: contain; margin: 0; border-radius: .8rem; background: #f3f2e9; }
+body .guigoes-project-version { display: inline-block; max-width: 100%; padding: .15rem .6rem; border: 1px solid var(--guigoes-outline); border-radius: 2rem; background: var(--guigoes-surface-alt); color: var(--guigoes-text); font: .8rem/1.6 ui-sans-serif, system-ui, sans-serif; }
 body .guigoes-projects h3 { margin: 0 0 .4rem; letter-spacing: -.025em; }
 body .guigoes-projects h3 a { color: var(--guigoes-heading); text-decoration-thickness: 1px; }
 body .guigoes-projects .guigoes-project-kind { color: var(--guigoes-muted); font: .85rem/1.6 ui-sans-serif, system-ui, sans-serif; margin: 0 0 .8rem; }
