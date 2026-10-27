@@ -6,6 +6,8 @@ tags = ["go", "dvc", "github", "ssh", "devops", "platform-engineering"]
 publishedAt = "2026-03-15T10:00:00-03:00"
 authors = ["Guilherme de Castro"]
 language = "pt-BR"
+cover = "./assets/cover-cartoon.png"
+cover_alt = "Uma chave sorridente abre uma pasta de código e um banco de dados, representando acesso unificado."
 +++
 ## A "Lacuna de Identidade" no Onboarding de Times
 

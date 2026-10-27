@@ -49,7 +49,8 @@ Os arquivos em `content/` são a única fonte dos posts e da ordenação das lis
 Cada post publicado recebe um único JSON-LD `BlogPosting`, gerado no build:
 
 - `title` e `description` geram `headline` e `description`.
-- Cada entrada de `authors` gera uma entidade `Person`.
+- Cada entrada de `authors` gera uma entidade `Person`. Guilherme de Castro usa
+  `https://guigoes.com/about/` como perfil, também ligado no cabeçalho do artigo.
 - `publishedAt` e, quando presente, `modifiedAt` preservam o timestamp e o fuso.
 - `cover` gera uma URL absoluta em `image`. Sem capa, o campo é omitido.
 - URL, identificador e `mainEntityOfPage` usam o endereço canônico do post.
@@ -59,8 +60,10 @@ posts sem autor/data, capas ausentes e JSON-LD divergente dos metadados. A
 serialização JSON escapa texto que poderia encerrar a tag `script`.
 
 Referências: [Google Article](https://developers.google.com/search/docs/appearance/structured-data/article)
-e [Schema.org BlogPosting](https://schema.org/BlogPosting). O post sobre lazy-dvc
-ainda não tem `cover`; os outros três usam suas capas existentes.
+e [Schema.org BlogPosting](https://schema.org/BlogPosting).
+
+As quatro capas seguem a direção cartoon do Guigoes. Consulte
+[o guia de mídia](docs/media-style.md) para paleta, composição e prompts utilizados.
 
 O visual adapta o exemplo editorial [`examples/blog` do Margo](https://github.com/araihu/margo/tree/main/examples/blog),
 com licença preservada em `licenses/margo.txt`. A home mostra os cinco posts mais

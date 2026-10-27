@@ -26,7 +26,7 @@ const themeToggle = `<button type="button" class="guigoes-theme-toggle" data-gui
 //go:embed theme.js
 var themeScript string
 
-const footer = `<footer class="guigoes-footer"><span>Guilherme de Castro<br>Blumenau, Santa Catarina</span><span><a href="https://github.com/guilycst">GitHub</a> · <a href="https://www.linkedin.com/in/guicas">LinkedIn</a><br>Publicado com <a href="https://github.com/araihu/margo">Margo</a></span></footer>`
+const footer = `<footer class="guigoes-footer"><span>Guilherme de Castro</span><span><a href="https://github.com/guilycst">GitHub</a> · <a href="https://www.linkedin.com/in/guicas">LinkedIn</a><br>Publicado com <a href="https://github.com/araihu/margo">Margo</a></span></footer>`
 
 type metadata struct {
 	Title       string   `toml:"title"`
@@ -180,6 +180,9 @@ func publicationDetails(m metadata) string {
 	authors := make([]string, len(m.Authors))
 	for i, author := range m.Authors {
 		authors[i] = `<span rel="author">` + html.EscapeString(author) + `</span>`
+		if profile := authorURL(author); profile != "" {
+			authors[i] = `<a rel="author" href="` + html.EscapeString(profile) + `">` + html.EscapeString(author) + `</a>`
+		}
 	}
 	var dates, tags []string
 	for _, item := range []struct{ value, label string }{{m.PublishedAt, "Publicado"}, {m.ModifiedAt, "Atualizado"}} {
