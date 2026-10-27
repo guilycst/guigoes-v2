@@ -32,7 +32,7 @@ Sou mantenedor da [Araihu](https://github.com/araihu), organização onde desenv
 </div>
 <p class="guigoes-project-kind">Visualização de dados · Go, templ, SVG</p>
 <p>Componentes de gráficos para aplicações Go com Goshtoso. Renderiza SVG no servidor ou gráficos interativos no navegador, com configurações tipadas, temas compartilhados e recursos de acessibilidade.</p>
-<p class="guigoes-project-links"><a href="https://github.com/araihu/goshtoso-charts" aria-label="Repositório de Goshtoso Charts no GitHub">GitHub</a></p>
+<p class="guigoes-project-links"><a href="https://goshtoso.araihu.com/modules/charts" aria-label="Site oficial de Goshtoso Charts">Site oficial</a> · <a href="https://github.com/araihu/goshtoso-charts" aria-label="Repositório de Goshtoso Charts no GitHub">GitHub</a></p>
 </li>
 <li>
 <div class="guigoes-project-heading">
