@@ -1,0 +1,10 @@
+name = "guigoes-v2"
+compatibility_date = "2026-03-09"
+workers_dev = true
+preview_urls = true
+routes = [{ pattern = "guigoes.com", custom_domain = true }]
+
+[assets]
+directory = "./public"
+html_handling = "auto-trailing-slash"
+not_found_handling = "404-page"

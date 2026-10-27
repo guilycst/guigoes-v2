@@ -1,57 +1,77 @@
-# Guigoes (Hugo)
+# Guigoes
 
-Este repositório foi migrado de uma aplicação Go + HTMX para um site estático com [Hugo](https://gohugo.io/) usando o tema [hugo-noir](https://github.com/prxshetty/hugo-noir).
+Blog de Guilherme de Castro, publicado em https://guigoes.com com
+[Margo v0.0.25](https://github.com/araihu/margo/releases/tag/v0.0.25).
 
-## Stack atual
+## Desenvolvimento
 
-- Hugo (Extended)
-- Tema: `themes/hugo-noir`
-- Conteúdo em `content/`
-- Dados do tema em `data/pt-br/`
+Requisitos: Python 3.11+, Make e curl. `make install` baixa o binário oficial
+do Margo para Linux ou macOS e verifica SHA-256 antes de instalá-lo em `.tools/`.
+Não é necessário instalar Go, Node ou Hugo para gerar o site.
 
-## Estrutura principal
-
-- `hugo.toml`: configuração principal do site
-- `content/blogs/*/index.md`: posts migrados
-- `content/blogs/*/assets/*`: assets dos posts
-- `themes/hugo-noir`: tema aplicado
-
-## Rodando localmente
-
-Pré-requisito: Hugo Extended instalado.
-
-```bash
-make run
+```sh
+make check  # Build, testes e verificação de URLs, imagens, links, fragmentos e RSS
+make run    # Preview em http://127.0.0.1:1313; refaça make build após editar
 ```
 
-Ou diretamente:
+`public/` contém a publicação. `.build/` e `.tools/` são locais e ignorados pelo Git.
+O build renderiza em staging antes de substituir `public/`; erros de renderização
+preservam a saída anterior. `make rundocker` testa a imagem estática com Nginx.
 
-```bash
-hugo server -D --disableFastRender
+## Publicar um post
+
+Crie `content/blogs/meu-post/index.md` com metadados TOML entre `+++`:
+
+```markdown
++++
+title = "Título do post"
+description = "Resumo do artigo."
+language = "pt-BR"
+authors = ["Guilherme de Castro"]
+publishedAt = "2026-10-27T09:00:00-03:00"
+tags = ["go", "kubernetes"]
+draft = false
++++
+Texto do artigo em Markdown.
 ```
 
-## Build
+Imagens ficam em `content/blogs/meu-post/assets/` e usam links `./assets/imagem.png`.
+A pasta define a URL `/blogs/meu-post/`. `draft = true` e datas futuras excluem
+o post de páginas, assets, listagens, sitemap e feeds. Datas futuras passam a
+aparecer no próximo build após o horário informado, sem agendamento automático.
 
-```bash
-make build
-```
+`scripts/build.py` converte TOML para o frontmatter YAML aceito pelo Margo e gera
+índices, tags, RSS e redirects. Margo renderiza Markdown, metadados semânticos,
+canonicals, sitemap, imagens e código. `site.yaml` define identidade e tema.
+Os arquivos em `content/` são a única fonte dos posts e da ordenação das listas.
 
-Gera o site estático em `public/`.
+O build habilita `--allow-unsafe-html` porque os posts existentes incluem demos
+HTML/JavaScript. Publique apenas conteúdo revisado. A demo Hyperscript preserva
+sua dependência externa fixa em `hyperscript.org@0.9.12`.
 
-## Deploy
+## CI/CD
 
-Deploy feito via **Cloudflare Pages** conectado ao GitHub.
+GitHub Actions executa `make check` em pull requests e pushes em `main`, e guarda
+`public/` como artifact. Cloudflare Workers Builds usa a conexão GitHub existente
+para executar os mesmos checks antes de publicar o Worker `guigoes-v2`.
 
-Configuração recomendada no projeto Pages:
+Configuração de Workers Builds em Settings > Builds:
 
-- Framework preset: `Hugo`
-- Build command: `hugo --minify`
-- Build output directory: `public`
-- Root directory: `/`
+- Repositório: `guilycst/guigoes-v2`, branch de produção `main`.
+- Build command: `make check`.
+- Deploy command: `npx --yes wrangler@4.153.0 deploy`.
+- Version command: `npx --yes wrangler@4.153.0 versions upload`.
+- Root directory: `/`.
+- Python: `3.13`, selecionado por `.python-version`.
 
-Variáveis de ambiente:
+Branches de trabalho geram versões de preview; apenas `main` publica produção.
+`wrangler.toml` mantém assets em `public/`, URLs com barra final e página 404.
+O domínio e a credencial de deploy continuam na integração existente do Cloudflare.
+Não é necessário copiar tokens para o GitHub.
 
-- `HUGO_VERSION=0.150.0`
-- `HUGO_ENV=production`
+`tests/legacy-urls.txt` registra URLs e feeds da versão anterior para impedir
+regressões. `/posts/.../` redireciona para `/blogs/.../` com HTTP 301 no Cloudflare.
 
-Depois de conectar a branch `main`, cada push gera um deploy automático.
+Para rollback, restaure a versão anterior em Workers Deployments. Reverter o
+código para antes da migração também exige restaurar o antigo build command
+`hugo --minify` no Cloudflare.

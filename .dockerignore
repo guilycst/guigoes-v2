@@ -1,14 +1,12 @@
 .git
 .github
 .vscode
-
-# Local output/cache
 public
-resources
-.hugo_build.lock
+.build
+.tools
+.wrangler
+__pycache__
 tmp
-
-# Local files
 .DS_Store
 .env
 .env.*

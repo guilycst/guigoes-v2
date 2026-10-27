@@ -1,23 +1,28 @@
-name: Hugo CI
+name: Margo CI
 
 on:
   push:
     branches: ["main"]
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   build:
-    name: Build Hugo site
+    name: Build and check blog
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Setup Hugo
-        uses: peaceiris/actions-hugo@v3
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
-          hugo-version: "0.150.0"
-          extended: true
-
-      - name: Build
-        run: hugo --minify
+          python-version: "3.13"
+      - name: Build and validate
+        run: make check
+      - name: Upload static site
+        uses: actions/upload-artifact@v4
+        with:
+          name: guigoes-site
+          path: public/

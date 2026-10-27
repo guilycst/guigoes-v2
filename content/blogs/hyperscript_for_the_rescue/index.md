@@ -1,13 +1,14 @@
 +++
 title = "Quando não dá para fugir do JavaScript: Hyperscript te salva"
-date = 2024-04-30T01:37:09-03:00
 draft = false
 description = "As vezes não tem jeito, você vai ter que usar JavaScript. Mas não se preocupe, o Hyperscript vai te ajudar a escrever menos código e deixar seu código mais legível."
-author = "Guilherme de Castro"
 tags = ["web", "frontend", "JS", "hyperscript"]
 aliases = ["/posts/hyperscript_for_the_rescue/"]
 cover = "./assets/js_headache.webp"
 cover_alt = "Dev de frente para o computador sofrendo com o JavaScript"
+publishedAt = "2024-04-30T01:37:09-03:00"
+authors = ["Guilherme de Castro"]
+language = "pt-BR"
 +++
 Recentemente escrevi um post sobre [HTMX e como ele pode ajudar a escrever menos JS](/blogs/creating_a_cheap_blog_golang_htmx), mas a realidade cruel do desenvolvimento web é que SSR (Server Side Rendering) só te leva até certo ponto, algumas experiências desejáveis na Web só vão ser possibilitadas executando código do lado cliente.
 

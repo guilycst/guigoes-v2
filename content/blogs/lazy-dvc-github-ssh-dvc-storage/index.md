@@ -1,12 +1,12 @@
 +++
 title = "Anunciando lazy-dvc: Chega de gerenciar múltiplas identidades para seus dados"
-date = 2026-03-15T10:00:00-03:00
 draft = false
 description = "Se seu time já tem acesso ao código via GitHub, por que o acesso aos dados precisa ser um processo separado? Conheça o lazy-dvc."
-author = "Guilherme de Castro"
 tags = ["go", "dvc", "github", "ssh", "devops", "platform-engineering"]
+publishedAt = "2026-03-15T10:00:00-03:00"
+authors = ["Guilherme de Castro"]
+language = "pt-BR"
 +++
-
 ## A "Lacuna de Identidade" no Onboarding de Times
 
 Todo mundo que trabalha em times de engenharia já passou por isso: um novo colega entra no time, você dá acesso ao repositório no GitHub e, cinco minutos depois, ele te manda uma mensagem no Slack:

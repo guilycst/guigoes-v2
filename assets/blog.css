@@ -1,0 +1,29 @@
+html body { background: #fafbf9; color: #273c36; }
+body .margo-document { max-width: 76ch; margin: 0 auto; padding: 1rem; }
+body .margo-document :is(p, li, nav, footer, figcaption, blockquote) { color: #273c36; }
+body .margo-document :is(h1, h2, h3, h4) { color: #142b24; }
+body .margo-document a { color: #12684f; }
+body .margo-document pre { background: #101d27; color: #edf7f2; }
+body .margo-document pre code { color: inherit; }
+body .margo-document :not(pre) > code { background: #e4ece7; color: #173e30; }
+.guigoes-nav, .guigoes-footer { margin: 1.5rem 0; padding: 1rem 0; }
+.guigoes-nav { display: flex; flex-wrap: wrap; gap: 1.25rem; border-bottom: 1px solid #8a9b9944; }
+.guigoes-nav a { color: inherit; text-decoration: underline; text-underline-offset: .2em; }
+.guigoes-footer { border-top: 1px solid #8a9b9944; }
+.margo-document { overflow-wrap: anywhere; }
+.margo-document pre { overflow-x: auto; }
+.margo-document img { max-width: 100%; height: auto; }
+/* The archived Hyperscript article relies on these demo classes. */
+.hidden { display: none; }
+.modal { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; }
+.modal-underlay { position: absolute; inset: 0; background: #0009; }
+.modal-content { position: relative; padding: 2rem; border-radius: .5rem; background: #fff; color: #111; }
+.modal.closing { animation: guigoes-close .15s; }
+@keyframes guigoes-close { to { opacity: 0; } }
+@media (prefers-color-scheme: dark) {
+  html body { background: #101d27; color: #d0dfd8; }
+  body .margo-document :is(p, li, nav, footer, figcaption, blockquote) { color: #d0dfd8; }
+  body .margo-document :is(h1, h2, h3, h4) { color: #f1f8f6; }
+  body .margo-document a { color: #6de4c2; }
+  body .margo-document :not(pre) > code { background: #243a3a; color: #eef8f4; }
+}

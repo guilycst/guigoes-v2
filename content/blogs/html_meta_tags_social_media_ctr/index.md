@@ -1,14 +1,15 @@
 +++
 title = "A Importância das Meta Tags: Impulsionando SEO, Redes Sociais e Taxa de Cliques"
-date = 2024-04-30T01:37:09-03:00
 draft = false
 description = "Se você já se perguntou como as redes sociais como o Facebook, LinkedIn e o Twitter (X) extraem informações de um site, este artigo é para você. O assunto é meta tags e como elas influenciam o seu conteúdo a ser mais compartilhado e melhor ranqueado nos motores de busca."
-author = "Guilherme de Castro"
 tags = ["web", "SEO", "CTR", "social media", "meta tags"]
 aliases = ["/posts/html_meta_tags_social_media_ctr/"]
 cover = "./assets/search_engine_optimization.webp"
 cover_alt = "Representação de um motor de busca"
 md_cover_position = "0 34%"
+publishedAt = "2024-04-30T01:37:09-03:00"
+authors = ["Guilherme de Castro"]
+language = "pt-BR"
 +++
 Se você planeja criar conteúdo compartilhável para a internet, as meta tags desempenham um papel vital, influenciando diretamente a visibilidade nos motores de busca e a apresentação do conteúdo nas redes sociais. Ao adicionar meta tags, os desenvolvedores podem não apenas melhorar o SEO, mas também aumentar significativamente a Taxa de Cliques (CTR - Click Through Rate) por meio de uma representação mais atrativa e informativa nas plataformas online.
 
