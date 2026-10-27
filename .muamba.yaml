@@ -1,0 +1,24 @@
+schema: 1
+resources:
+  bootstrap-icons:
+    # Bootstrap Icons v1.13.1, pinned to its release commit.
+    version: ce0e49dd063243118a115f17ad1fe1fe7576d552
+    downloads:
+      github:
+        url: https://raw.githubusercontent.com/twbs/icons/${version}/icons/github.svg
+        path: content/contact/assets/icons/github.svg
+      linkedin:
+        url: https://raw.githubusercontent.com/twbs/icons/${version}/icons/linkedin.svg
+        path: content/contact/assets/icons/linkedin.svg
+      twitter:
+        url: https://raw.githubusercontent.com/twbs/icons/${version}/icons/twitter.svg
+        path: content/contact/assets/icons/twitter.svg
+      discord:
+        url: https://raw.githubusercontent.com/twbs/icons/${version}/icons/discord.svg
+        path: content/contact/assets/icons/discord.svg
+      envelope:
+        url: https://raw.githubusercontent.com/twbs/icons/${version}/icons/envelope.svg
+        path: content/contact/assets/icons/envelope.svg
+      license:
+        url: https://raw.githubusercontent.com/twbs/icons/${version}/LICENSE
+        path: content/contact/assets/icons/LICENSE
