@@ -220,6 +220,9 @@ func buildSite(root string, now time.Time) error {
 	if err := writeFile(filepath.Join(render, "robots.txt"), []byte("User-agent: *\nAllow: /\nSitemap: "+baseURL+"/sitemap.xml\n")); err != nil {
 		return err
 	}
+	if err := applySocialCovers(root, render, posts); err != nil {
+		return err
+	}
 	if err := applyBranding(root, render); err != nil {
 		return err
 	}

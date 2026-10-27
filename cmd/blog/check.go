@@ -21,10 +21,11 @@ type htmlPage struct {
 	Refs                []string
 	Canonical, Language string
 	Schemas             []json.RawMessage
+	HeadMetadata        map[string][]string
 }
 
 func readHTML(data []byte) (htmlPage, error) {
-	page := htmlPage{IDs: map[string]bool{}}
+	page := htmlPage{IDs: map[string]bool{}, HeadMetadata: map[string][]string{}}
 	root, err := html.Parse(strings.NewReader(string(data)))
 	if err != nil {
 		return page, err
@@ -41,6 +42,13 @@ func readHTML(data []byte) (htmlPage, error) {
 			}
 			if n.Data == "html" {
 				page.Language = attrs["lang"]
+			}
+			if n.Data == "meta" && n.Parent != nil && n.Parent.Data == "head" {
+				key := attrs["property"]
+				if key == "" {
+					key = attrs["name"]
+				}
+				page.HeadMetadata[key] = append(page.HeadMetadata[key], attrs["content"])
 			}
 			if n.Data == "link" && attrs["rel"] == "canonical" {
 				page.Canonical = attrs["href"]
@@ -208,6 +216,18 @@ func checkSite(root, public string, now time.Time) error {
 	}
 	for route, post := range expected {
 		file := filepath.Join(public, strings.TrimPrefix(route, "/"), "index.html")
+		if post.Meta.Cover != "" {
+			values, err := coverMetadata(root, *post)
+			if err != nil {
+				return err
+			}
+			for key, value := range values {
+				got := pages[file].HeadMetadata[key]
+				if len(got) != 1 || got[0] != value {
+					failures = append(failures, route+": missing, duplicate or incorrect "+key)
+				}
+			}
+		}
 		if _, ok := pages[file]; !ok {
 			failures = append(failures, "missing post: "+route)
 		}
