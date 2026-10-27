@@ -59,7 +59,7 @@ body .margo-document a:focus-visible, body .margo-document button:focus-visible,
 body .guigoes-nav a { text-decoration: none; color: var(--guigoes-text); }
 body .guigoes-nav .guigoes-brand { color: var(--guigoes-heading); font-size: 2rem; font-weight: 850; letter-spacing: -.08em; }
 .guigoes-brand span { color: var(--guigoes-accent); }
-.guigoes-nav-links { display: flex; align-items: center; flex-wrap: wrap; gap: 1.5rem; }
+.guigoes-nav-links { margin-left: auto; display: flex; align-items: center; flex-wrap: wrap; gap: 1.5rem; }
 .guigoes-nav-links a:hover { text-decoration: underline; }
 .guigoes-home { padding-block: clamp(3rem, 6vw, 6rem); }
 body .guigoes-home > h1 { max-width: 16ch; font-size: clamp(2.7rem, 5.6vw, 5.5rem); line-height: 1.02; margin: 0 0 1.5rem; }
@@ -170,3 +170,27 @@ body .guigoes-nav .guigoes-brand {
 @media (max-width: 42rem) {
   body .guigoes-nav .guigoes-brand { width: 8rem; height: 2rem; }
 }
+
+.guigoes-menu-trigger { display: none; }
+.guigoes-menu { position: fixed; inset: 0 auto 0 0; margin: 0; padding: 1.25rem; width: min(20rem, 85vw); max-width: none; height: 100%; height: 100dvh; max-height: none; border: 0; border-right: 1px solid var(--guigoes-outline); background: var(--guigoes-surface); color: var(--guigoes-text); overflow-y: auto; font: 1rem/1.5 ui-sans-serif, system-ui, sans-serif; }
+.guigoes-menu::backdrop { background: rgb(0 0 0 / .55); }
+.guigoes-menu-open { overflow: hidden; }
+.guigoes-menu-header { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1.5rem; font-weight: 700; }
+.guigoes-menu-header button, .guigoes-menu-trigger { width: 2.75rem; height: 2.75rem; flex-shrink: 0; padding: .7rem; border: 1px solid var(--guigoes-outline); border-radius: .5rem; background: var(--guigoes-surface); color: var(--guigoes-text); cursor: pointer; }
+.guigoes-menu-header button { font-size: 1.75rem; line-height: 1; }
+.guigoes-menu .guigoes-nav-links { flex-direction: column; align-items: stretch; gap: .5rem; margin: 0; font-size: 1.1rem; }
+body .guigoes-menu a { display: block; padding: .75rem; border-radius: .5rem; text-decoration: none; color: var(--guigoes-text); }
+body .guigoes-menu a:hover { background: var(--guigoes-surface-alt); }
+.guigoes-menu[open] { animation: guigoes-menu-enter .18s ease-out; }
+@keyframes guigoes-menu-enter { from { transform: translateX(-100%); } to { transform: translateX(0); } }
+@media screen and (max-width: 700px) {
+  .guigoes-menu-ready .guigoes-nav { align-items: center; gap: .75rem; }
+  .guigoes-menu-ready .guigoes-brand { margin-right: auto; }
+  .guigoes-menu-ready .guigoes-menu-trigger { display: inline-flex; align-items: center; justify-content: center; }
+  .guigoes-menu-trigger span, .guigoes-menu-trigger span::before, .guigoes-menu-trigger span::after { display: block; width: 1.2rem; height: 2px; background: currentColor; position: relative; }
+  .guigoes-menu-trigger span::before, .guigoes-menu-trigger span::after { content: ""; position: absolute; left: 0; }
+  .guigoes-menu-trigger span::before { top: -.4rem; }
+  .guigoes-menu-trigger span::after { top: .4rem; }
+}
+@media (prefers-reduced-motion: reduce) { .guigoes-menu[open] { animation: none; } }
+@media print { .guigoes-menu { display: none; } }

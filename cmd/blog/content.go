@@ -19,12 +19,15 @@ import (
 )
 
 const baseURL = "https://guigoes.com"
-const nav = `<nav class="guigoes-nav" aria-label="Navegação principal"><a class="guigoes-brand" href="/">guigoes<span aria-hidden="true">.</span></a><span class="guigoes-nav-links"><a href="/blogs/">Blog</a><a href="/projects/">Projetos</a><a href="/about/">Sobre</a><a href="/contact/">Contato</a><a href="/index.xml">RSS</a>` + themeToggle + `</span></nav>`
+const nav = `<nav class="guigoes-nav" aria-label="Navegação principal"><button type="button" class="guigoes-menu-trigger" aria-label="Abrir menu" aria-controls="guigoes-menu" aria-haspopup="dialog" aria-expanded="false" hidden><span aria-hidden="true"></span></button><a class="guigoes-brand" href="/">guigoes<span aria-hidden="true">.</span></a><span class="guigoes-nav-links"><a href="/blogs/">Blog</a><a href="/projects/">Projetos</a><a href="/about/">Sobre</a><a href="/contact/">Contato</a><a href="/index.xml">RSS</a></span>` + themeToggle + `</nav><dialog id="guigoes-menu" class="guigoes-menu" aria-labelledby="guigoes-menu-title"><div class="guigoes-menu-header"><span id="guigoes-menu-title">Menu</span><button type="button" aria-label="Fechar menu" autofocus><span aria-hidden="true">×</span></button></div></dialog>`
 
 const themeToggle = `<button type="button" class="guigoes-theme-toggle" data-guigoes-color-mode role="switch" aria-label="Tema escuro" aria-checked="false" hidden><svg class="sun" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg><svg class="moon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20.5 13A9 9 0 0 1 11 3.5 9 9 0 1 0 20.5 13Z"/></svg></button>`
 
 //go:embed theme.js
 var themeScript string
+
+//go:embed navigation.js
+var navigationScript string
 
 const footer = `<footer class="guigoes-footer"><span>Guilherme de Castro</span><span><a class="guigoes-footer-social" href="https://github.com/guilycst"><img class="guigoes-social-icon" src="%[1]s/github.svg" alt="" width="16" height="16">GitHub</a> · <a class="guigoes-footer-social" href="https://www.linkedin.com/in/guicas"><img class="guigoes-social-icon" src="%[1]s/linkedin.svg" alt="" width="16" height="16">LinkedIn</a><br>Publicado com <a href="https://github.com/araihu/margo">Margo</a></span></footer>`
 
@@ -249,5 +252,5 @@ func writePage(stage string, d document) error {
 		return err
 	}
 	pageFooter := fmt.Sprintf(footer, html.EscapeString(filepath.ToSlash(iconDir)))
-	return writeFile(filepath.Join(stage, filepath.FromSlash(d.Source)), []byte("---\n"+string(front)+"\n---\n\n<script>"+themeScript+"</script>\n\n"+nav+"\n\n<div class=\""+class+"\">\n\n"+heading+body+"\n\n</div>\n\n"+pageFooter+"\n"))
+	return writeFile(filepath.Join(stage, filepath.FromSlash(d.Source)), []byte("---\n"+string(front)+"\n---\n\n<script>"+themeScript+"\n"+navigationScript+"</script>\n\n"+nav+"\n\n<div class=\""+class+"\">\n\n"+heading+body+"\n\n</div>\n\n"+pageFooter+"\n"))
 }
