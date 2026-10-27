@@ -9,6 +9,13 @@
   --guigoes-accent: #007d9c;
   --guigoes-outline: #d9c7c2;
   --guigoes-code: #00627b;
+  --margo-mermaid-canvas: var(--guigoes-surface);
+  --margo-mermaid-node: var(--guigoes-surface-alt);
+  --margo-mermaid-node-border: var(--guigoes-accent);
+  --margo-mermaid-text: var(--guigoes-heading);
+  --margo-mermaid-edge: var(--guigoes-accent);
+  --margo-mermaid-edge-label: var(--guigoes-text);
+  --margo-mermaid-edge-label-background: var(--guigoes-surface);
   --document-font-body: Georgia, Cambria, "Times New Roman", serif;
   --document-font-heading: ui-sans-serif, system-ui, sans-serif;
   color-scheme: light dark;
@@ -94,6 +101,7 @@ body .guigoes-home .guigoes-post:first-child p { max-width: 62ch; font-size: 1.2
 body .margo-document pre { overflow-x: auto; max-width: 100%; background: var(--guigoes-surface-alt); color: var(--guigoes-text); border-radius: .7rem; }
 body .margo-document pre code { color: inherit; }
 body .margo-document :not(pre) > code { background: var(--guigoes-surface-alt); color: var(--guigoes-code); }
+body .margo-document .margo-mermaid { background: var(--margo-mermaid-canvas); border-color: var(--guigoes-outline); }
 .guigoes-content { overflow-wrap: anywhere; }
 body .guigoes-contact-links { list-style: none; padding: 0; margin-block: 2rem; }
 body .guigoes-contact-links > li { margin: 0; }

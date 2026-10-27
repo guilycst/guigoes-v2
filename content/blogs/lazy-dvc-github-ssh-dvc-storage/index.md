@@ -35,27 +35,15 @@ O `lazy-dvc` unifica o fluxo de trabalho. Se o seu desenvolvedor já usa chaves 
 2. **Autenticação Dinâmica:** Quando alguém tenta acessar o storage via DVC, o servidor verifica se a chave SSH daquela pessoa pertence a um membro autorizado no GitHub.
 3. **Storage Agregado:** Uma vez autenticado, o usuário tem acesso a um mount (via `rclone`) que aponta diretamente para o seu backend (S3, MinIO, Ceph, etc).
 
-```
-┌─────────────┐                        ┌─────────────────┐
-│   Developer │     SSH keys           │    GitHub       │
-│             │ ─────────────────────► │   (org/team)    │
-└─────────────┘                        └─────────────────┘
-       │                                      │
-       │                                      │ same keys
-       │                                      │
-       ▼                                      ▼
-┌─────────────┐                        ┌─────────────────┐
-│   dvc push  │ ──── SSH/SFTP ───────► │   lazy-dvc      │ 
-│   dvc pull  │                        │                 │
-└─────────────┘                        └─────────────────┘
-                                              │
-                                              │ S3 Backend
-                                              │
-                                              ▼
-                                       ┌─────────────────┐
-                                       │   AWS,B2,MinIO  |
-                                       │                 │
-                                       └─────────────────┘
+```mermaid
+flowchart TB
+    accTitle: Acesso aos dados com lazy-dvc
+    accDescr: O desenvolvedor usa as mesmas chaves SSH do GitHub para acessar o lazy-dvc via DVC. O lazy-dvc valida a identidade e as permissões no GitHub e dá acesso ao storage.
+    developer["Desenvolvedor"] -->|Chaves SSH| github["GitHub<br/>Organização / time"]
+    developer --> dvc["dvc push / dvc pull"]
+    dvc -->|SSH/SFTP| lazy["lazy-dvc"]
+    github -->|Chaves e permissões| lazy
+    lazy -->|rclone| storage["Storage<br/>AWS S3, B2, MinIO"]
 ```
 
 ## Como isso ajuda?
