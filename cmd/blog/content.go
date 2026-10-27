@@ -1,6 +1,7 @@
 package main
 
 import (
+	_ "embed"
 	"encoding/json"
 	"fmt"
 	"html"
@@ -18,7 +19,11 @@ import (
 )
 
 const baseURL = "https://guigoes.com"
-const nav = `<nav class="guigoes-nav" aria-label="Navegação principal"><a class="guigoes-brand" href="/">guigoes<span aria-hidden="true">.</span></a><span class="guigoes-nav-links"><a href="/blogs/">Artigos</a><a href="/about/">Sobre</a><a href="/contact/">Contato</a><a href="/index.xml">RSS</a></span></nav>`
+const nav = `<nav class="guigoes-nav" aria-label="Navegação principal"><a class="guigoes-brand" href="/">guigoes<span aria-hidden="true">.</span></a><span class="guigoes-nav-links"><a href="/blogs/">Artigos</a><a href="/about/">Sobre</a><a href="/contact/">Contato</a><a href="/index.xml">RSS</a><select class="guigoes-theme-select" data-guigoes-color-mode aria-label="Tema" hidden><option value="system">Sistema</option><option value="light">Claro</option><option value="dark">Escuro</option></select></span></nav>`
+
+//go:embed theme.js
+var themeScript string
+
 const footer = `<footer class="guigoes-footer"><span>Guilherme de Castro<br>Blumenau, Santa Catarina</span><span><a href="https://github.com/guilycst">GitHub</a> · <a href="https://www.linkedin.com/in/guicas">LinkedIn</a><br>Publicado com <a href="https://github.com/araihu/margo">Margo</a></span></footer>`
 
 type metadata struct {
@@ -234,5 +239,5 @@ func writePage(stage string, d document) error {
 	if err != nil {
 		return err
 	}
-	return writeFile(filepath.Join(stage, filepath.FromSlash(d.Source)), []byte("---\n"+string(front)+"\n---\n\n"+nav+"\n\n<div class=\""+class+"\">\n\n"+heading+body+"\n\n</div>\n\n"+footer+"\n"))
+	return writeFile(filepath.Join(stage, filepath.FromSlash(d.Source)), []byte("---\n"+string(front)+"\n---\n\n<script>"+themeScript+"</script>\n\n"+nav+"\n\n<div class=\""+class+"\">\n\n"+heading+body+"\n\n</div>\n\n"+footer+"\n"))
 }
