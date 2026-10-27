@@ -19,6 +19,9 @@ resources:
       envelope:
         url: https://raw.githubusercontent.com/twbs/icons/${version}/icons/envelope.svg
         path: content/contact/assets/icons/envelope.svg
+      x-lg:
+        url: https://raw.githubusercontent.com/twbs/icons/${version}/icons/x-lg.svg
+        path: content/contact/assets/icons/x-lg.svg
       license:
         url: https://raw.githubusercontent.com/twbs/icons/${version}/LICENSE
         path: content/contact/assets/icons/LICENSE
