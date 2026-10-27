@@ -1,0 +1,18 @@
+{
+  "id": "/",
+  "name": "Guigoes",
+  "short_name": "Guigoes",
+  "description": "Go, Kubernetes e engenharia de software por Guilherme de Castro.",
+  "lang": "pt-BR",
+  "start_url": "/",
+  "scope": "/",
+  "display": "browser",
+  "theme_color": "#007d9c",
+  "background_color": "#fffaf5",
+  "icons": [
+    {"src": "/assets/brand/icon-192-v2.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "/assets/brand/icon-512-v2.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "/assets/brand/maskable-192-v2.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable"},
+    {"src": "/assets/brand/maskable-512-v2.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}

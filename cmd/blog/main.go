@@ -3,6 +3,7 @@ package main
 
 import (
 	"fmt"
+	"mime"
 	"net/http"
 	"os"
 	"time"
@@ -20,6 +21,10 @@ func main() {
 	case "check":
 		err = checkSite(".", "public", time.Now())
 	case "serve":
+		if err := mime.AddExtensionType(".webmanifest", "application/manifest+json"); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
 		fmt.Println("Preview: http://127.0.0.1:1313")
 		server := &http.Server{Addr: "127.0.0.1:1313", Handler: http.FileServer(http.Dir("public")), ReadHeaderTimeout: 5 * time.Second}
 		err = server.ListenAndServe()
