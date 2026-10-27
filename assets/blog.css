@@ -105,8 +105,17 @@ body .margo-document :not(pre) > code { background: var(--guigoes-surface-alt); 
 }
 @media print {
   .guigoes-nav, .guigoes-footer { display: none; }
-  html body { background: white; }
-  body .margo-document :is(p, li, h1, h2, h3, h4, figcaption, blockquote) { color: black; }
+  html[data-color-mode] {
+    --guigoes-surface: white;
+    --guigoes-surface-alt: #eee;
+    --guigoes-text: #222;
+    --guigoes-heading: black;
+    --guigoes-muted: #444;
+    --guigoes-accent: #80304f;
+    --guigoes-outline: #ccc;
+    --guigoes-code: #80304f;
+    color-scheme: light;
+  }
 }
 
 .guigoes-theme-select { font: inherit; color: var(--guigoes-text); background: var(--guigoes-surface-alt); border: 1px solid var(--guigoes-outline); border-radius: .4rem; padding: .3rem .5rem; }
