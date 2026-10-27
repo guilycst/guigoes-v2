@@ -45,6 +45,12 @@ html[data-color-mode="dark"] {
 
 html body { margin: 0; background: var(--guigoes-surface); color: var(--guigoes-text); }
 body .margo-document { max-width: 76rem; margin-inline: auto; padding: 0 2rem; background: transparent; font: 1.15rem/1.75 Georgia, Cambria, serif; }
+@media screen {
+  body .margo-frame--main { min-height: 100vh; min-height: 100dvh; }
+  body .margo-area--main-content { display: flex; }
+  body .margo-document { display: flex; flex-direction: column; width: 100%; }
+  .guigoes-footer { margin-top: auto; }
+}
 body .margo-document :is(p, li, figcaption, blockquote) { color: var(--guigoes-text); }
 body .margo-document :is(h1, h2, h3, h4) { color: var(--guigoes-heading); font-family: ui-sans-serif, system-ui, sans-serif; letter-spacing: -.045em; text-wrap: balance; }
 body .margo-document a { color: var(--guigoes-accent); text-underline-offset: .2em; }
