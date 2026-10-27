@@ -11,6 +11,8 @@
   function apply() {
     root.dataset.colorMode = preference === 'system'
       ? (system.matches ? 'dark' : 'light') : preference;
+    // Margo's code blocks and component styles use the dark class.
+    root.classList.toggle('dark', root.dataset.colorMode === 'dark');
     if (control) {
       const dark = root.dataset.colorMode === 'dark';
       control.setAttribute('aria-checked', String(dark));
