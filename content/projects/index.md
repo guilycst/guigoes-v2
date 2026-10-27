@@ -7,7 +7,9 @@ Uma seleção dos projetos que construo e mantenho. O fio condutor é Go, softwa
 
 ## Na Araihu
 
-Sou mantenedor da [Araihu](https://github.com/araihu), organização onde desenvolvemos bibliotecas e aplicações em Go. Estes são alguns dos destaques da organização.
+Sou mantenedor da [Araihu](https://araihu.com/), organização onde desenvolvemos bibliotecas e aplicações em Go. Estes são alguns dos destaques da organização.
+
+<p class="guigoes-project-links"><a href="https://araihu.com/" aria-label="Site oficial da Araihu">Site oficial</a> · <a href="https://github.com/araihu" aria-label="Organização Araihu no GitHub">GitHub</a></p>
 
 <ul class="guigoes-projects" aria-label="Projetos da Araihu">
 <li>
