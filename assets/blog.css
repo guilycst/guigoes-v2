@@ -1,39 +1,42 @@
 /* Adapted from araihu/margo examples/blog/site/assets/blog.css. MIT: licenses/margo.txt. */
 :root {
+  --guigoes-wordmark: url("/assets/brand/logo-v2.svg");
   --guigoes-surface: #fffaf5;
   --guigoes-surface-alt: #f4e8df;
   --guigoes-text: #392f38;
   --guigoes-heading: #17131b;
   --guigoes-muted: #675c65;
-  --guigoes-accent: #a43f67;
+  --guigoes-accent: #007d9c;
   --guigoes-outline: #d9c7c2;
-  --guigoes-code: #80304f;
+  --guigoes-code: #00627b;
   --document-font-body: Georgia, Cambria, "Times New Roman", serif;
   --document-font-heading: ui-sans-serif, system-ui, sans-serif;
   color-scheme: light dark;
 }
 html[data-color-mode="light"] { color-scheme: light; }
 html[data-color-mode="dark"] {
+  --guigoes-wordmark: url("/assets/brand/logo-light-v2.svg");
   --guigoes-surface: #19171f;
   --guigoes-surface-alt: #28232e;
   --guigoes-text: #ddd4de;
   --guigoes-heading: #fcf5ff;
   --guigoes-muted: #b7aaba;
-  --guigoes-accent: #ef9abb;
+  --guigoes-accent: #67d3ed;
   --guigoes-outline: #554657;
-  --guigoes-code: #f1b4ce;
+  --guigoes-code: #91deef;
   color-scheme: dark;
 }
 @media (prefers-color-scheme: dark) {
   html[data-color-mode="system"] {
-    --guigoes-surface: #19171f;
+    --guigoes-wordmark: url("/assets/brand/logo-light-v2.svg");
+  --guigoes-surface: #19171f;
     --guigoes-surface-alt: #28232e;
     --guigoes-text: #ddd4de;
     --guigoes-heading: #fcf5ff;
     --guigoes-muted: #b7aaba;
-    --guigoes-accent: #ef9abb;
+    --guigoes-accent: #67d3ed;
     --guigoes-outline: #554657;
-    --guigoes-code: #f1b4ce;
+    --guigoes-code: #91deef;
     color-scheme: dark;
   }
 }
@@ -111,12 +114,26 @@ body .margo-document :not(pre) > code { background: var(--guigoes-surface-alt); 
     --guigoes-text: #222;
     --guigoes-heading: black;
     --guigoes-muted: #444;
-    --guigoes-accent: #80304f;
+    --guigoes-accent: #00627b;
     --guigoes-outline: #ccc;
-    --guigoes-code: #80304f;
+    --guigoes-code: #00627b;
     color-scheme: light;
   }
 }
 
 .guigoes-theme-select { font: inherit; color: var(--guigoes-text); background: var(--guigoes-surface-alt); border: 1px solid var(--guigoes-outline); border-radius: .4rem; padding: .3rem .5rem; }
 .guigoes-theme-select[hidden] { display: none; }
+
+/* Keep the accessible text while using the existing light/dark wordmarks. */
+body .guigoes-nav .guigoes-brand {
+  display: block;
+  flex: 0 0 auto;
+  width: 10rem;
+  height: 2.45rem;
+  font-size: 0;
+  background: var(--guigoes-wordmark) left center / contain no-repeat;
+}
+.guigoes-brand span { display: none; }
+@media (max-width: 42rem) {
+  body .guigoes-nav .guigoes-brand { width: 8rem; height: 2rem; }
+}
