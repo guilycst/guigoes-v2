@@ -11,7 +11,7 @@ site:
   logo: assets/brand/logo-v2.svg
   icon: assets/brand/icon-v2.svg
   social_image:
-    path: assets/brand/social-v2.png
+    path: assets/brand/social-v3.png
     alt: Guigoes, blog de Guilherme de Castro sobre Go, Kubernetes e engenharia de software.
 layout:
   kind: article

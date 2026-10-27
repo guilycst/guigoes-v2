@@ -18,7 +18,7 @@ import (
 
 func TestBrandHeadPreservesArticleAndSchema(t *testing.T) {
 	body := `<body><article><script type="application/ld+json">{"headline":"Go & HTML"}</script><p>Article &amp; demos</p></article></body></html>`
-	input := []byte(`<html><head><link rel="icon" href="/old.svg"><meta property="og:image" content="https://guigoes.com/assets/brand/social-v2.png"></head>` + body)
+	input := []byte(`<html><head><link rel="icon" href="/old.svg"><meta property="og:image" content="https://guigoes.com/assets/brand/social-v3.png"></head>` + body)
 	output, err := addBrandHead(input)
 	if err != nil {
 		t.Fatal(err)
@@ -116,7 +116,7 @@ func TestBrandAssetDimensionsAndHead(t *testing.T) {
 			}
 		}
 	}
-	for _, name := range []string{"logo-v2.svg", "logo-light-v2.svg", "icon-v2.svg", "social-v2.svg", "social-square-v2.svg"} {
+	for _, name := range []string{"logo-v2.svg", "logo-light-v2.svg", "icon-v2.svg", "social-v3.svg", "social-square-v3.svg"} {
 		data, err := os.ReadFile(filepath.Join(root, "assets/brand", name))
 		if err != nil {
 			t.Fatal(err)
