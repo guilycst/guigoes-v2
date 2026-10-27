@@ -20,6 +20,7 @@ Sou mantenedor da [Araihu](https://github.com/araihu), organização onde desenv
 </div>
 <p class="guigoes-project-kind">Interfaces web · Go, templ, HTMX</p>
 <p>Biblioteca de componentes para aplicações que renderizam HTML no servidor. Integra templ, HTMX e Alpine.js, com estilos e assets distribuídos junto da biblioteca. A API ainda está em evolução.</p>
+<p class="guigoes-project-links"><a href="https://goshtoso.araihu.com/" aria-label="Site oficial de Goshtoso">Site oficial</a> · <a href="https://github.com/araihu/goshtoso" aria-label="Repositório de Goshtoso no GitHub">GitHub</a></p>
 </li>
 <li>
 <div class="guigoes-project-heading">
@@ -31,6 +32,7 @@ Sou mantenedor da [Araihu](https://github.com/araihu), organização onde desenv
 </div>
 <p class="guigoes-project-kind">Publicação · Markdown, HTML, PDF</p>
 <p>Transforma Markdown em páginas HTML, sites estáticos, PDFs e apresentações. Pode ser usado pela linha de comando ou como biblioteca Go. É o motor de publicação deste blog.</p>
+<p class="guigoes-project-links"><a href="https://margo.araihu.com/" aria-label="Site oficial de Margo">Site oficial</a> · <a href="https://github.com/araihu/margo" aria-label="Repositório de Margo no GitHub">GitHub</a></p>
 </li>
 <li>
 <div class="guigoes-project-heading">
@@ -42,6 +44,7 @@ Sou mantenedor da [Araihu](https://github.com/araihu), organização onde desenv
 </div>
 <p class="guigoes-project-kind">Documentação de APIs · OpenAPI, Goshtoso</p>
 <p>Renderiza e publica documentação OpenAPI com busca por operações e schemas. Exporta um site estático que funciona sem servidor Manja e também oferece execução como servidor de documentação.</p>
+<p class="guigoes-project-links"><a href="https://manja.araihu.com/" aria-label="Site oficial de Manja">Site oficial</a> · <a href="https://github.com/araihu/manja" aria-label="Repositório de Manja no GitHub">GitHub</a></p>
 </li>
 <li>
 <div class="guigoes-project-heading">
@@ -53,6 +56,7 @@ Sou mantenedor da [Araihu](https://github.com/araihu), organização onde desenv
 </div>
 <p class="guigoes-project-kind">Infraestrutura · Kubernetes, Docker, Podman</p>
 <p>Descobre serviços e organiza uma página inicial com os que interessam. Combina catálogo persistente, revisão das descobertas e uma interface em Go, com plugins para integrar outras ferramentas.</p>
+<p class="guigoes-project-links"><a href="https://balemoh.araihu.com/" aria-label="Site oficial de Balemoh">Site oficial</a> · <a href="https://github.com/araihu/balemoh" aria-label="Repositório de Balemoh no GitHub">GitHub</a></p>
 </li>
 <li>
 <div class="guigoes-project-heading">

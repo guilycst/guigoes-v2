@@ -5,6 +5,13 @@ Atualize as badges ao revisar a página, consultando releases públicas no GitHu
 e mantendo o nome exato da tag e o link para a release. Não há consulta à API
 no navegador ou no build. A data da consulta aparece na página.
 
+Sites oficiais conferidos em 27/10/2026: `goshtoso.araihu.com`,
+`margo.araihu.com`, `manja.araihu.com` e `balemoh.araihu.com`.
+Cada endereço consta na documentação do respectivo repositório e o site aponta
+de volta para ele. Mantenha os links junto do GitHub na página; ao alterar um
+domínio, confira também o campo Website da seção About do repositório.
+Não há site próprio confirmado para Talaria-Mem, lazy-dvc ou gitmeout.
+
 Regra editorial solicitada pelo autor: `0.0.x` é **alpha** e `0.x.x`, com minor
 maior que zero, é **beta**. A classificação usa os números, mesmo quando um
 sufixo da tag diz outra coisa. Por isso `v0.0.1-beta.1` do gitmeout aparece como
