@@ -62,7 +62,7 @@ Configuração de Workers Builds em Settings > Builds:
 - Deploy command: `npx --yes wrangler@4.153.0 deploy`.
 - Version command: `npx --yes wrangler@4.153.0 versions upload`.
 - Root directory: `/`.
-- Python: `3.13`, selecionado por `.python-version`.
+- Python: `3.14.8`, já disponível na imagem do Cloudflare e selecionado por `.python-version`.
 
 Branches de trabalho geram versões de preview; apenas `main` publica produção.
 `wrangler.toml` mantém assets em `public/`, URLs com barra final e página 404.
