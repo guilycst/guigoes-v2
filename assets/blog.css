@@ -83,13 +83,14 @@ body .guigoes-home .guigoes-post:first-child p { max-width: 62ch; font-size: 1.2
 .guigoes-content .guigoes-posts { grid-template-columns: 1fr; margin-top: 2rem; }
 .guigoes-content .guigoes-post { padding-bottom: 2rem; border-bottom: 1px solid var(--guigoes-outline); }
 .guigoes-content .guigoes-post:has(img) { display: grid; grid-template-columns: 12rem 1fr; gap: 2rem; }
-body .margo-document pre { overflow-x: auto; max-width: 100%; background: #241f2b; color: #fffaf5; border-radius: .7rem; }
+body .margo-document pre { overflow-x: auto; max-width: 100%; background: var(--guigoes-surface-alt); color: var(--guigoes-text); border-radius: .7rem; }
 body .margo-document pre code { color: inherit; }
 body .margo-document :not(pre) > code { background: var(--guigoes-surface-alt); color: var(--guigoes-code); }
 .guigoes-content { overflow-wrap: anywhere; }
 .guigoes-footer { display: flex; justify-content: space-between; gap: 2rem; border-top: 1px solid var(--guigoes-outline); padding-block: 2rem; color: var(--guigoes-muted); font: .85rem/1.8 ui-sans-serif, system-ui, sans-serif; }
 .guigoes-footer > span:last-child { text-align: right; }
 /* The archived Hyperscript article relies on these demo classes. */
+body .guigoes-content button.bg-blue-599 { background: var(--guigoes-accent); color: var(--guigoes-surface); padding: .5rem .8rem; border-radius: .35rem; cursor: pointer; }
 .hidden { display: none; }
 .modal { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; }
 .modal-underlay { position: absolute; inset: 0; background: #0009; }
