@@ -26,7 +26,7 @@ const themeToggle = `<button type="button" class="guigoes-theme-toggle" data-gui
 //go:embed theme.js
 var themeScript string
 
-const footer = `<footer class="guigoes-footer"><span>Guilherme de Castro</span><span><a href="https://github.com/guilycst">GitHub</a> · <a href="https://www.linkedin.com/in/guicas">LinkedIn</a><br>Publicado com <a href="https://github.com/araihu/margo">Margo</a></span></footer>`
+const footer = `<footer class="guigoes-footer"><span>Guilherme de Castro</span><span><a class="guigoes-footer-social" href="https://github.com/guilycst"><img class="guigoes-social-icon" src="%[1]s/github.svg" alt="" width="16" height="16">GitHub</a> · <a class="guigoes-footer-social" href="https://www.linkedin.com/in/guicas"><img class="guigoes-social-icon" src="%[1]s/linkedin.svg" alt="" width="16" height="16">LinkedIn</a><br>Publicado com <a href="https://github.com/araihu/margo">Margo</a></span></footer>`
 
 type metadata struct {
 	Title       string   `toml:"title"`
@@ -244,5 +244,10 @@ func writePage(stage string, d document) error {
 	if err != nil {
 		return err
 	}
-	return writeFile(filepath.Join(stage, filepath.FromSlash(d.Source)), []byte("---\n"+string(front)+"\n---\n\n<script>"+themeScript+"</script>\n\n"+nav+"\n\n<div class=\""+class+"\">\n\n"+heading+body+"\n\n</div>\n\n"+footer+"\n"))
+	iconDir, err := filepath.Rel(filepath.FromSlash(path.Dir(d.Source)), filepath.FromSlash("contact/assets/icons"))
+	if err != nil {
+		return err
+	}
+	pageFooter := fmt.Sprintf(footer, html.EscapeString(filepath.ToSlash(iconDir)))
+	return writeFile(filepath.Join(stage, filepath.FromSlash(d.Source)), []byte("---\n"+string(front)+"\n---\n\n<script>"+themeScript+"</script>\n\n"+nav+"\n\n<div class=\""+class+"\">\n\n"+heading+body+"\n\n</div>\n\n"+pageFooter+"\n"))
 }

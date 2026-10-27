@@ -1,6 +1,6 @@
 # Ícones de contato
 
-A página usa cinco SVGs de Bootstrap Icons v1.13.1, MIT, adquiridos pelo
+A página Contato e o rodapé compartilham SVGs de Bootstrap Icons v1.13.1, MIT, adquiridos pelo
 Muamba v0.0.6. O commit de origem está fixado em `.muamba.yaml`; URLs, tamanhos
 e hashes SHA-384 estão em `.muamba.lock.yaml`. A licença acompanha os SVGs em
 `content/contact/assets/icons/LICENSE` e é publicada junto deles.
