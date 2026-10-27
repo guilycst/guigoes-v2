@@ -4,6 +4,7 @@
 public
 .build
 .tools
+.wrangler
 __pycache__
 tmp
 .DS_Store

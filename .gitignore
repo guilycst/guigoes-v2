@@ -3,6 +3,7 @@
 public/
 .build/
 .tools/
+.wrangler/
 __pycache__/
 .vscode/
 tmp/
