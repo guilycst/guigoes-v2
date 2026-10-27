@@ -4,6 +4,10 @@ Direção escolhida em 27/10/2026: cartoon fofo de objetos de tecnologia, inspir
 
 Geradas com a ferramenta integrada `imagegen`, uma chamada por capa. Os originais anteriores permanecem nas mesmas URLs. Novas capas em `content/blogs/<slug>/assets/cover-cartoon.png`, consumidas pelo frontmatter `cover` e `cover_alt`, pela home, listagens e JSON-LD.
 
+## Referências para as próximas capas
+
+Use o [catálogo de personagens](media/characters/README.md) e anexe as fichas PNG correspondentes à geração. Ele registra anatomia, símbolos, poses e sugestões de elenco por assunto da bio e dos projetos. Os prompts históricos abaixo documentam a origem; as fichas atuais definem a identidade visual para novas cenas.
+
 ## Prompt comum da primeira geração
 
 ```text
@@ -16,13 +20,17 @@ O prompt acima registra a geração original. Para novas capas, remova `stubby l
 
 ### lazy-dvc-github-ssh-dvc-storage
 
-Arquivo: `content/blogs/lazy-dvc-github-ssh-dvc-storage/assets/cover-cartoon.png`.
+Arquivo atual: `content/blogs/lazy-dvc-github-ssh-dvc-storage/assets/cover-holding-hands.png`.
+
+Edição aprovada: pasta, chave e banco de dados de mãos dadas. Removidas as duas chaves pequenas e as fechaduras. A chave central conserva dois braços e uma única haste dentada, sem pernas. A versão anterior permanece em `cover-cartoon.png`. Prompt da edição em `docs/lazy-dvc-holding-hands-prompt.md`.
+
+Prompt original:
 
 ```text
 Subject: A smiling cyan SSH key character in the middle opens two friendly adjacent boxes: one little lavender code-folder with simple branching line symbol, and one teal stacked data-cylinder with a tiny heart. Both have matching keyholes. A gentle curved path joins them. The single key grants access to both code and data. Small stars convey relief and simplicity. Three main objects only.
 ```
 
-Texto alternativo: Uma chave sorridente abre uma pasta de código e um banco de dados, representando acesso unificado.
+Texto alternativo: Uma pasta, uma chave e um banco de dados sorridentes de mãos dadas, representando acesso unificado a código e dados.
 
 ### hyperscript_for_the_rescue
 
