@@ -2,6 +2,7 @@
 .github
 .vscode
 public
+public.previous
 .build
 .tools
 .wrangler

@@ -4,14 +4,14 @@ install:
 	sh scripts/install-margo.sh
 
 build: install
-	python3 scripts/build.py
+	go run ./cmd/blog build
 
 check: build
-	python3 -m unittest discover -s tests -v
-	python3 scripts/check-site.py
+	go test ./...
+	go vet ./...
 
 run: build
-	python3 -m http.server 1313 --bind 127.0.0.1 --directory public
+	go run ./cmd/blog serve
 
 rundocker:
 	docker build -t guigoes-margo:latest .
