@@ -19,7 +19,9 @@ import (
 )
 
 const baseURL = "https://guigoes.com"
-const nav = `<nav class="guigoes-nav" aria-label="Navegação principal"><a class="guigoes-brand" href="/">guigoes<span aria-hidden="true">.</span></a><span class="guigoes-nav-links"><a href="/blogs/">Artigos</a><a href="/about/">Sobre</a><a href="/contact/">Contato</a><a href="/index.xml">RSS</a><select class="guigoes-theme-select" data-guigoes-color-mode aria-label="Tema" hidden><option value="system">Sistema</option><option value="light">Claro</option><option value="dark">Escuro</option></select></span></nav>`
+const nav = `<nav class="guigoes-nav" aria-label="Navegação principal"><a class="guigoes-brand" href="/">guigoes<span aria-hidden="true">.</span></a><span class="guigoes-nav-links"><a href="/blogs/">Artigos</a><a href="/about/">Sobre</a><a href="/contact/">Contato</a><a href="/index.xml">RSS</a>` + themeToggle + `</span></nav>`
+
+const themeToggle = `<button type="button" class="guigoes-theme-toggle" data-guigoes-color-mode role="switch" aria-label="Tema escuro" aria-checked="false" hidden><svg class="sun" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg><svg class="moon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20.5 13A9 9 0 0 1 11 3.5 9 9 0 1 0 20.5 13Z"/></svg></button>`
 
 //go:embed theme.js
 var themeScript string
