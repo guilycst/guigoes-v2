@@ -119,6 +119,12 @@ def build():
     write_page("404.md", dict(page_meta, title="Página não encontrada"), "Este endereço não existe. [Voltar ao blog](/blogs/).")
     # Published articles contain reviewed HTML/JS demos. Never use untrusted Markdown here.
     subprocess.run([str(ROOT / ".tools/margo/margo"), "site", "site.yaml", "--output-dir", str(RENDER), "--allow-unsafe-html"], cwd=ROOT, check=True)
+    # Keep old image URLs even when an article no longer references its thumbnail.
+    for asset in STAGE.rglob("*"):
+        if asset.is_file() and "assets" in asset.relative_to(STAGE).parts:
+            target = RENDER / asset.relative_to(STAGE)
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(asset, target)
     shutil.copytree(ROOT / "static", RENDER, dirs_exist_ok=True)
     feed(RENDER / "index.xml", posts, "Guigoes")
     feed(RENDER / "blogs/index.xml", posts, "Guigoes · Blog")
