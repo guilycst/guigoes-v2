@@ -11,9 +11,8 @@ Cada endereço consta na documentação do respectivo repositório e o site apon
 de volta para ele. Mantenha os links junto do GitHub na página; ao alterar um
 domínio, confira também o campo Website da seção About do repositório.
 Não há site próprio confirmado para Talaria-Mem, lazy-dvc ou gitmeout.
-O link `charts.goshtoso.araihu.com`, divulgado pelo site Goshtoso, não resolveu
-no DNS nesta consulta. Goshtoso Charts mantém somente o GitHub até confirmar
-um site público acessível.
+Goshtoso Charts usa `https://goshtoso.araihu.com/modules/charts`, endereço
+indicado pelo autor e conferido em 27/10/2026.
 
 Regra editorial solicitada pelo autor: `0.0.x` é **alpha** e `0.x.x`, com minor
 maior que zero, é **beta**. A classificação usa os números, mesmo quando um
