@@ -87,6 +87,12 @@ body .margo-document pre { overflow-x: auto; max-width: 100%; background: var(--
 body .margo-document pre code { color: inherit; }
 body .margo-document :not(pre) > code { background: var(--guigoes-surface-alt); color: var(--guigoes-code); }
 .guigoes-content { overflow-wrap: anywhere; }
+body .guigoes-projects { list-style: none; padding: 0; margin-block: 2rem; }
+body .guigoes-projects > li { margin: 0; padding-block: 1.5rem; border-top: 1px solid var(--guigoes-outline); }
+body .guigoes-projects h3 { margin: 0 0 .4rem; letter-spacing: -.025em; }
+body .guigoes-projects h3 a { color: var(--guigoes-heading); text-decoration-thickness: 1px; }
+body .guigoes-projects .guigoes-project-kind { color: var(--guigoes-muted); font: .85rem/1.6 ui-sans-serif, system-ui, sans-serif; margin: 0 0 .8rem; }
+body .guigoes-projects p:last-child { margin-bottom: 0; }
 .guigoes-footer { display: flex; justify-content: space-between; gap: 2rem; border-top: 1px solid var(--guigoes-outline); padding-block: 2rem; color: var(--guigoes-muted); font: .85rem/1.8 ui-sans-serif, system-ui, sans-serif; }
 .guigoes-footer > span:last-child { text-align: right; }
 /* The archived Hyperscript article relies on these demo classes. */
