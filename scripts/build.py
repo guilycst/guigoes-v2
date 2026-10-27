@@ -5,6 +5,7 @@ from email.utils import format_datetime
 from html import escape
 from pathlib import Path
 import json
+import posixpath
 import re
 import shutil
 import subprocess
@@ -16,8 +17,8 @@ ROOT = Path(__file__).resolve().parents[1]
 BASE = "https://guigoes.com"
 STAGE = ROOT / ".build/content"
 RENDER = ROOT / ".build/render"
-NAV = '<nav class="guigoes-nav" aria-label="Navegação principal"><a href="/">Guigoes</a><a href="/blogs/">Blog</a><a href="/about/">Sobre</a><a href="/contact/">Contato</a><a href="/index.xml">RSS</a></nav>'
-FOOTER = '<footer class="guigoes-footer">Guilherme de Castro · Publicado com <a href="https://github.com/araihu/margo">Margo</a></footer>'
+NAV = '<nav class="guigoes-nav" aria-label="Navegação principal"><a class="guigoes-brand" href="/">guigoes<span aria-hidden="true">.</span></a><span class="guigoes-nav-links"><a href="/blogs/">Artigos</a><a href="/about/">Sobre</a><a href="/contact/">Contato</a><a href="/index.xml">RSS</a></span></nav>'
+FOOTER = '<footer class="guigoes-footer"><span>Guilherme de Castro<br>Blumenau, Santa Catarina</span><span><a href="https://github.com/guilycst">GitHub</a> · <a href="https://www.linkedin.com/in/guicas">LinkedIn</a><br>Publicado com <a href="https://github.com/araihu/margo">Margo</a></span></footer>'
 
 
 def read_post(path):
@@ -44,17 +45,51 @@ def published(metadata, now):
 def write_page(path, metadata, body):
     target = STAGE / path
     target.parent.mkdir(parents=True, exist_ok=True)
-    heading = "" if body.startswith("# ") else f"# {metadata['title']}\n\n"
+    if body.startswith("# "):
+        heading, _, body = body.partition("\n")
+        heading += "\n\n"
+    else:
+        heading = f"# {metadata['title']}\n\n"
+    if metadata.get("publishedAt"):
+        body = publication_details(metadata) + "\n\n" + body
+    page_class = "guigoes-home" if str(path) == "index.md" else "guigoes-content"
     target.write_text("---\n" + json.dumps(metadata, ensure_ascii=False) + "\n---\n\n"
-                      + NAV + "\n\n" + heading + body + "\n\n" + FOOTER + "\n")
+                      + NAV + f'\n\n<div class="{page_class}">\n\n' + heading + body
+                      + "\n\n</div>\n\n" + FOOTER + "\n")
 
 
-def listing(posts):
-    return "\n\n".join(
-        f"## [{p['title']}]({p['route']})\n\n"
-        f"{datetime.fromisoformat(p['publishedAt']).strftime('%d/%m/%Y')}\n\n{p.get('description', '')}"
-        for p in posts
-    ) + "\n"
+def publication_details(metadata):
+    authors = ", ".join(escape(author) for author in metadata.get("authors", []))
+    dates = []
+    for key, label in (("publishedAt", "Publicado"), ("modifiedAt", "Atualizado")):
+        if metadata.get(key):
+            value = metadata[key]
+            date = datetime.fromisoformat(value).strftime("%d/%m/%Y")
+            dates.append(f'{label} <time datetime="{escape(value, quote=True)}">{date}</time>')
+    tags = "".join(f'<li><a href="/tags/{tag_slug(tag)}/">{escape(tag)}</a></li>' for tag in metadata.get("tags", []))
+    # Margo's marker preserves this header while still generating head metadata.
+    return ('<header class="margo-document__metadata" data-margo-publication-metadata="true" aria-label="Sobre este artigo">'
+            f'<address>{authors}</address><span>{" · ".join(dates)}</span>'
+            f'<ul aria-label="Tags">{tags}</ul></header>')
+
+
+def listing(posts, source="index.md"):
+    cards = []
+    for post in posts:
+        route = escape(post["route"], quote=True)
+        cover = post.get("cover")
+        image = ""
+        if cover:
+            asset = post["route"].lstrip("/") + cover.removeprefix("./")
+            src = escape(posixpath.relpath(asset, posixpath.dirname(source) or "."), quote=True)
+            alt = escape(post.get("cover_alt", ""), quote=True)
+            image = f'<a class="guigoes-post-image" href="{route}" tabindex="-1" aria-hidden="true"><img src="{src}" alt="{alt}" loading="lazy" width="640" height="360"></a>'
+        date = datetime.fromisoformat(post["publishedAt"]).strftime("%d/%m/%Y")
+        cards.append(f'<li class="guigoes-post">{image}<div class="guigoes-post-text">'
+                     f'<time datetime="{escape(post["publishedAt"], quote=True)}">{date}</time>'
+                     f'<h2><a href="{route}">{escape(post["title"])}</a></h2>'
+                     f'<p>{escape(post.get("description", ""))}</p></div></li>')
+    return '<ol class="guigoes-posts" aria-label="Artigos">' + "".join(cards) + "</ol>\n"
 
 
 def feed(path, posts, title):
@@ -90,8 +125,6 @@ def build():
                 raise ValueError(f"Missing publishedAt: {source}")
             post = dict(metadata, route="/" + relative.parent.as_posix() + "/")
             posts.append(post)
-            tags = " · ".join(f"[{t}](/tags/{tag_slug(t)}/)" for t in metadata.get("tags", []))
-            body = f"Explorar tags: {tags}\n\n" + body
             cover = metadata.get("cover")
             if cover:
                 body = f"![{metadata.get('cover_alt', metadata['title'])}]({cover})\n\n" + body
@@ -104,10 +137,10 @@ def build():
     posts.sort(key=lambda p: (datetime.fromisoformat(p["publishedAt"]), p["route"]), reverse=True)
     for relative, metadata, body in documents:
         if relative == Path("index.md"):
-            body += "\n\n## Publicações\n\n" + listing(posts)
+            body += "\n\n" + listing(posts[:5]) + '\n\n[Todos os artigos](/blogs/)\n'
         write_page(relative, metadata, body)
     page_meta = {"language": "pt-BR"}
-    write_page("blogs/index.md", dict(page_meta, title="Blog"), listing(posts))
+    write_page("blogs/index.md", dict(page_meta, title="Blog"), listing(posts, "blogs/index.md"))
     tags = {}
     for post in posts:
         for tag in post.get("tags", []):
@@ -115,7 +148,7 @@ def build():
     write_page("tags/index.md", dict(page_meta, title="Tags"), "\n".join(f"- [{v['label']}](/tags/{k}/)" for k, v in sorted(tags.items())))
     write_page("categories/index.md", dict(page_meta, title="Categorias"), "As publicações estão organizadas por [tags](/tags/).")
     for slug, tag in tags.items():
-        write_page(f"tags/{slug}/index.md", dict(page_meta, title=tag["label"]), listing(tag["posts"]))
+        write_page(f"tags/{slug}/index.md", dict(page_meta, title=tag["label"]), listing(tag["posts"], f"tags/{slug}/index.md"))
     write_page("404.md", dict(page_meta, title="Página não encontrada"), "Este endereço não existe. [Voltar ao blog](/blogs/).")
     # Published articles contain reviewed HTML/JS demos. Never use untrusted Markdown here.
     subprocess.run([str(ROOT / ".tools/margo/margo"), "site", "site.yaml", "--output-dir", str(RENDER), "--allow-unsafe-html"], cwd=ROOT, check=True)
