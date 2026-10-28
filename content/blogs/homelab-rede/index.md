@@ -107,4 +107,3 @@ Com os caminhos de acesso definidos, falta cuidar da manutenção. Na [parte 4](
 [^caminho]: Os diagramas mostram o caminho lógico da requisição, sem desenhar cada interface ou encapsulamento. Tailscale pode usar conexão direta ou retransmissão, conforme a conectividade. A VPS recebe os serviços publicados, mas não é o ponto de saída de toda a navegação da casa.
 
 [^switch]: Gigabit é a velocidade nominal por porta. A velocidade real depende do restante da rede, dos discos e do uso das máquinas.
-
