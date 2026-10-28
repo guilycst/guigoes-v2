@@ -1,16 +1,10 @@
 package main
 
 import (
-	"encoding/json"
 	"net/url"
 	"path"
+	"strings"
 )
-
-type person struct {
-	Type string `json:"@type"`
-	Name string `json:"name"`
-	URL  string `json:"url,omitempty"`
-}
 
 func authorURL(name string) string {
 	if name == "Guilherme de Castro" {
@@ -19,38 +13,78 @@ func authorURL(name string) string {
 	return ""
 }
 
-type blogPosting struct {
-	Context          string   `json:"@context"`
-	Type             string   `json:"@type"`
-	ID               string   `json:"@id"`
-	URL              string   `json:"url"`
-	MainEntityOfPage string   `json:"mainEntityOfPage"`
-	Headline         string   `json:"headline"`
-	Description      string   `json:"description,omitempty"`
-	Language         string   `json:"inLanguage,omitempty"`
-	Authors          []person `json:"author"`
-	Published        string   `json:"datePublished"`
-	Modified         string   `json:"dateModified,omitempty"`
-	Image            string   `json:"image,omitempty"`
+// pageStructuredData declares editorial meaning; Margo owns JSON-LD emission.
+func pageStructuredData(d document) any {
+	if d.Route != "" {
+		options := map[string]any{"type": "BlogPosting"}
+		if image := coverURL(d); image != "" {
+			options["image"] = image
+		}
+		profiles := map[string]string{}
+		for _, author := range d.Meta.Authors {
+			if profile := authorURL(author); profile != "" {
+				profiles[author] = profile
+			}
+		}
+		if len(profiles) > 0 {
+			options["author_urls"] = profiles
+		}
+		return options
+	}
+	if d.Source == "404.md" {
+		return nil
+	}
+	route := "/" + strings.TrimSuffix(d.Source, "index.md")
+	canonical := baseURL + (&url.URL{Path: route}).String()
+	kind := "WebPage"
+	switch {
+	case d.Source == "about/index.md":
+		kind = "AboutPage"
+	case d.Source == "contact/index.md":
+		kind = "ContactPage"
+	case d.Source == "projects/index.md", d.Source == "blogs/index.md", strings.HasPrefix(d.Source, "tags/"):
+		kind = "CollectionPage"
+	}
+	page := map[string]any{
+		"@context": "https://schema.org", "@type": kind, "@id": canonical + "#webpage", "url": canonical,
+		"name": d.Meta.Title, "inLanguage": "pt-BR", "isPartOf": map[string]string{"@id": baseURL + "/#website"},
+	}
+	if d.Meta.Description != "" {
+		page["description"] = d.Meta.Description
+	}
+	if d.Source == "about/index.md" {
+		page["mainEntity"] = map[string]string{"@type": "Person", "@id": baseURL + "/about/#person", "name": "Guilherme de Castro", "url": baseURL + "/about/"}
+	}
+	if d.SchemaItems != nil {
+		page["mainEntity"] = map[string]any{"@type": "ItemList", "numberOfItems": len(d.SchemaItems), "itemListElement": d.SchemaItems}
+	}
+	if d.Source == "index.md" {
+		delete(page, "@context")
+		return map[string]any{"@context": "https://schema.org", "@graph": []any{
+			map[string]any{"@type": "WebSite", "@id": baseURL + "/#website", "url": baseURL + "/", "name": "Guigoes", "inLanguage": "pt-BR"}, page,
+		}}
+	}
+	return page
 }
 
-func structuredData(d document) blogPosting {
-	canonical := baseURL + (&url.URL{Path: d.Route}).String()
-	data := blogPosting{Context: "https://schema.org", Type: "BlogPosting", ID: canonical + "#blogposting", URL: canonical, MainEntityOfPage: canonical, Headline: d.Meta.Title, Description: d.Meta.Description, Language: d.Meta.Language, Published: d.Meta.PublishedAt, Modified: d.Meta.ModifiedAt}
-	for _, author := range d.Meta.Authors {
-		data.Authors = append(data.Authors, person{Type: "Person", Name: author, URL: authorURL(author)})
-	}
-	if d.Meta.Cover != "" {
-		data.Image = baseURL + (&url.URL{Path: path.Join(d.Route, d.Meta.Cover)}).String()
-	}
-	return data
+type schemaListItem struct {
+	Type     string `json:"@type"`
+	Position int    `json:"position"`
+	Name     string `json:"name"`
+	URL      string `json:"url"`
 }
 
-func schemaScript(d document) (string, error) {
-	// encoding/json escapes '<', including '</script>' embedded in metadata.
-	data, err := json.Marshal(structuredData(d))
-	if err != nil {
-		return "", err
+func postSchemaItems(posts []document) []schemaListItem {
+	items := make([]schemaListItem, 0, len(posts))
+	for _, post := range posts {
+		items = append(items, schemaListItem{Type: "ListItem", Position: len(items) + 1, Name: post.Meta.Title, URL: baseURL + post.Route})
 	}
-	return `<script type="application/ld+json">` + string(data) + `</script>`, nil
+	return items
+}
+
+func coverURL(d document) string {
+	if d.Meta.Cover == "" {
+		return ""
+	}
+	return baseURL + (&url.URL{Path: path.Join(d.Route, d.Meta.Cover)}).String()
 }

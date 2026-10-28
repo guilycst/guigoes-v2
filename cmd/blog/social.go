@@ -31,7 +31,7 @@ func coverMetadata(root string, post document) (map[string]string, error) {
 	if alt == "" {
 		alt = post.Meta.Title
 	}
-	url := structuredData(post).Image
+	url := coverURL(post)
 	return map[string]string{
 		"og:image": url, "og:image:alt": alt, "og:image:type": "image/" + format,
 		"og:image:width": strconv.Itoa(cfg.Width), "og:image:height": strconv.Itoa(cfg.Height),

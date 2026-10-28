@@ -1,12 +1,13 @@
 # Guigoes
 
 Blog de Guilherme de Castro, publicado em https://guigoes.com com
-[Margo v0.0.25](https://github.com/araihu/margo/releases/tag/v0.0.25).
+[Margo, PR #86 integrado](https://github.com/araihu/margo/pull/86), fixado em
+`v0.0.27-0.20261027211411-b8b2986ce4aa` do commit integrado em `main`.
 
 ## Desenvolvimento
 
-Requisitos: Go 1.26+, Make e curl. `make install` baixa o binário oficial
-do Margo para Linux ou macOS e verifica SHA-256 antes de instalá-lo em `.tools/`.
+Requisitos: Go 1.27.3+ e Make. `make install` compila o commit fixado do Margo
+com `go install` e a verificação padrão de módulos, instalando o binário em `.tools/`.
 Não é necessário instalar Node ou Hugo para gerar o site.
 
 ```sh
@@ -44,6 +45,12 @@ aparecer no próximo build após o horário informado, sem agendamento automáti
 índices, tags, RSS e redirects. Margo renderiza Markdown, metadados semânticos,
 canonicals, sitemap, imagens e código. `site.yaml` define identidade e tema.
 Os arquivos em `content/` são a única fonte dos posts e da ordenação das listas.
+Posts de uma série usam `series = "Homelab K8s"` e `seriesPart = 1`, com número
+positivo e único dentro da série. O build gera o índice com a parte atual e os
+links anterior/próximo apenas para artigos visíveis. Home e arquivo oferecem uma
+entrada pela parte 1 quando o post mais recente pertence à série e essa primeira
+parte está disponível. A listagem continua ordenada por data, sem alterar datas
+para representar a ordem de leitura.
 `go run ./cmd/blog check` valida uma saída existente; `serve` inicia o preview local.
 
 Cada post publicado recebe um único JSON-LD `BlogPosting`, gerado no build:
@@ -55,9 +62,20 @@ Cada post publicado recebe um único JSON-LD `BlogPosting`, gerado no build:
 - `cover` gera uma URL absoluta em `image`. Sem capa, o campo é omitido.
 - URL, identificador e `mainEntityOfPage` usam o endereço canônico do post.
 
-Home, arquivos, aliases e rascunhos não recebem `BlogPosting`. O build rejeita
-posts sem autor/data, capas ausentes e JSON-LD divergente dos metadados. A
-serialização JSON escapa texto que poderia encerrar a tag `script`.
+O blog declara `structured_data` no frontmatter intermediário. O Margo emite um
+único script JSON-LD no head, com escape seguro e rejeição de scripts duplicados.
+Não há mais injeção local de scripts no corpo do artigo.
+
+- Home: `WebSite` e `WebPage`, com a lista dos quatro posts exibidos.
+- Arquivo e tags: `CollectionPage`; as listagens de posts incluem `ItemList` na mesma ordem visível.
+- Projetos: `CollectionPage`, sem inventar preços, avaliações ou versões de software.
+- Sobre: `AboutPage` com `Person`, usando a mesma identidade dos autores dos posts.
+- Contato: `ContactPage`. Categorias, que apenas aponta para tags: `WebPage`.
+- Aliases e 404: sem JSON-LD. Rascunhos e posts futuros ficam fora do build público.
+
+O validador confere o HTML final de cada tipo de página, canonical, autoria,
+datas, capas, idioma e itens das listas. `SearchAction` e breadcrumbs não são
+anunciados porque o blog não oferece esses contratos de navegação.
 
 Referências: [Google Article](https://developers.google.com/search/docs/appearance/structured-data/article)
 e [Schema.org BlogPosting](https://schema.org/BlogPosting).
@@ -66,15 +84,14 @@ As quatro capas seguem a direção cartoon do Guigoes. Consulte
 [o guia de mídia](docs/media-style.md) para paleta, composição e prompts utilizados.
 
 O visual adapta o exemplo editorial [`examples/blog` do Margo](https://github.com/araihu/margo/tree/main/examples/blog),
-com licença preservada em `licenses/margo.txt`. A home mostra os cinco posts mais
+com licença preservada em `licenses/margo.txt`. A home mostra os quatro posts mais
 recentes, com destaque para o primeiro. `cover = "./assets/capa.webp"` e `cover_alt`
 definem a capa do artigo e das listagens. O cabeçalho próprio formata datas em
 `DD/MM/AAAA` e liga tags aos arquivos, mantendo os metadados semânticos do Margo.
 
-O toggle alterna entre Claro e Escuro. Sem preferência salva, acompanha o sistema
-operacional. Ao clicar, a escolha fica no armazenamento local do navegador.
-Sem JavaScript, o CSS continua seguindo o sistema. Os testes desse controle rodam no CI com
-`node --test cmd/blog/theme.test.cjs`, sem pacotes adicionais.
+O cabeçalho, a busca, o menu móvel e a alternância de tema são nativos do
+Margo. `site.yaml` declara os links e as duas versões do logo. `assets/blog.css`
+fornece a paleta e os estilos editoriais pelos tokens públicos do tema.
 
 O build habilita `--allow-unsafe-html` porque os posts existentes incluem demos
 HTML/JavaScript. Publique apenas conteúdo revisado. A demo Hyperscript preserva
@@ -106,3 +123,9 @@ regressões. `/posts/.../` redireciona para `/blogs/.../` com HTTP 301 no Cloudf
 Para rollback, restaure a versão anterior em Workers Deployments. Reverter o
 código para antes da migração também exige restaurar o antigo build command
 `hugo --minify` no Cloudflare.
+
+Todas as páginas usam o layout `docs` do Margo com `sidebar: false` e
+`pagination: false`. Apenas os posts habilitam `toc: true`. O sumário lateral
+nativo respeita o cabeçalho e acompanha a seção em leitura em telas largas.
+A navegação da série continua definida pelo blog; não há outra navegação,
+controle de tema ou rodapé injetado no corpo do artigo.

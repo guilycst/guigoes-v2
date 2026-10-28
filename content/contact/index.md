@@ -1,5 +1,6 @@
 +++
 title = "Contato"
+description = "Canais de contato de Guilherme de Castro para conversar sobre Go, Kubernetes, engenharia de dados e arquitetura de plataformas."
 language = "pt-BR"
 +++
 Aberto para conversar sobre Go, Kubernetes, cloud-native, engenharia de dados e arquitetura de plataformas.

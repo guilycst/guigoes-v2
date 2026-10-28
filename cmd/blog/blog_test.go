@@ -21,6 +21,12 @@ func testDocument(t *testing.T, extra string) document {
 	return d
 }
 
+// Test fixture only. Production serializes through Margo's structured_data.
+func schemaScript(d document) (string, error) {
+	data, err := json.Marshal(structuredData(d))
+	return `<script type="application/ld+json">` + string(data) + `</script>`, err
+}
+
 func TestStructuredData(t *testing.T) {
 	d := testDocument(t, "cover = './assets/a capa.webp'\nmodifiedAt = '2024-05-01T12:00:00Z'")
 	d.Meta.Title = "Go </script><script>alert(1)</script> & HTML"
@@ -31,7 +37,7 @@ func TestStructuredData(t *testing.T) {
 	if strings.Count(script, "</script>") != 1 || strings.Contains(script, "<script>alert") {
 		t.Fatal("metadata can break out of script")
 	}
-	page, err := readHTML([]byte(`<html><head><link rel="canonical" href="https://guigoes.com/blogs/test/"></head><body>` + script + `</body></html>`))
+	page, err := readHTML([]byte(`<html><head><link rel="canonical" href="https://guigoes.com/blogs/test/">` + script + `</head><body></body></html>`))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -78,7 +84,7 @@ func TestSchemaValidationRejectsDrift(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	valid := `<html><head><link rel="canonical" href="https://guigoes.com/blogs/test/"></head><body>` + script + `</body></html>`
+	valid := `<html><head><link rel="canonical" href="https://guigoes.com/blogs/test/">` + script + `</head><body></body></html>`
 	for name, markup := range map[string]string{
 		"missing":         strings.Replace(valid, script, "", 1),
 		"duplicate":       strings.Replace(valid, script, script+script, 1),
@@ -161,7 +167,7 @@ func TestEditorialHTML(t *testing.T) {
 	}
 }
 
-func TestPageHasOneSchemaAfterHeading(t *testing.T) {
+func TestPageDeclaresNativeStructuredData(t *testing.T) {
 	d := testDocument(t, "")
 	stage := t.TempDir()
 	if err := writePage(stage, d); err != nil {
@@ -172,11 +178,17 @@ func TestPageHasOneSchemaAfterHeading(t *testing.T) {
 		t.Fatal(err)
 	}
 	text := string(data)
+	if strings.Contains(text, `class="guigoes-footer"`) {
+		t.Fatal("post must use the page footer supplied by Margo")
+	}
 	if strings.Index(text, "# Go & HTML") > strings.Index(text, "data-margo-publication-metadata") {
 		t.Fatal("metadata before title")
 	}
-	if strings.Count(text, `application/ld+json`) != 1 {
-		t.Fatal("expected one JSON-LD block")
+	if strings.Contains(text, `application/ld+json`) || strings.Count(text, `"structured_data":`) != 1 {
+		t.Fatal("expected native structured_data without handwritten script")
+	}
+	if !strings.Contains(text, `"layout":{"kind":"docs","values":{"toc":true}}`) {
+		t.Fatal("post must enable Margo's native TOC without the docs sidebar")
 	}
 	d.Route = ""
 	d.Source = "index.md"
@@ -187,8 +199,14 @@ func TestPageHasOneSchemaAfterHeading(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if strings.Contains(string(data), "application/ld+json") {
-		t.Fatal("schema leaked to home")
+	if strings.Contains(string(data), "BlogPosting") || !strings.Contains(string(data), "WebSite") {
+		t.Fatal("home must describe WebSite, not BlogPosting")
+	}
+	if strings.Contains(string(data), `"kind":"docs"`) {
+		t.Fatal("post layout leaked to home through shared frontmatter")
+	}
+	if strings.Contains(string(data), `class="guigoes-footer"`) {
+		t.Fatal("Margo must own the page footer")
 	}
 }
 
