@@ -17,11 +17,12 @@ import (
 )
 
 type htmlPage struct {
-	IDs                 map[string]bool
-	Refs                []string
-	Canonical, Language string
-	Schemas             []json.RawMessage
-	HeadMetadata        map[string][]string
+	IDs                         map[string]bool
+	Refs                        []string
+	Canonical, Language         string
+	Schemas                     []json.RawMessage
+	HeadSchemas, CanonicalCount int
+	HeadMetadata                map[string][]string
 }
 
 func readHTML(data []byte) (htmlPage, error) {
@@ -52,6 +53,7 @@ func readHTML(data []byte) (htmlPage, error) {
 			}
 			if n.Data == "link" && attrs["rel"] == "canonical" {
 				page.Canonical = attrs["href"]
+				page.CanonicalCount++
 			}
 			for _, key := range []string{"href", "src"} {
 				if attrs[key] != "" {
@@ -66,6 +68,9 @@ func readHTML(data []byte) (htmlPage, error) {
 					}
 				}
 				page.Schemas = append(page.Schemas, json.RawMessage(text.String()))
+				if n.Parent != nil && n.Parent.Data == "head" {
+					page.HeadSchemas++
+				}
 			}
 		}
 		for child := n.FirstChild; child != nil; child = child.NextSibling {
@@ -98,7 +103,7 @@ func checkSchema(page htmlPage, post *document) error {
 		}
 		return nil
 	}
-	if len(page.Schemas) != 1 {
+	if len(page.Schemas) != 1 || page.HeadSchemas != 1 || page.CanonicalCount != 1 {
 		return fmt.Errorf("expected one BlogPosting, got %d JSON-LD blocks", len(page.Schemas))
 	}
 	var got map[string]any
@@ -185,7 +190,11 @@ func checkSite(root, public string, now time.Time) error {
 		if !strings.HasPrefix(page.Canonical, baseURL+"/") {
 			failures = append(failures, route+": invalid canonical")
 		}
-		if err := checkSchema(page, expected[route]); err != nil {
+		schemaErr := checkSchema(page, expected[route])
+		if expected[route] == nil && route != "/404.html" && !isAlias(route, posts) {
+			schemaErr = checkNonPostSchema(page, route, posts)
+		}
+		if err := schemaErr; err != nil {
 			failures = append(failures, route+": "+err.Error())
 		}
 		pageURL := &url.URL{Scheme: "https", Host: "guigoes.com", Path: route}
@@ -231,7 +240,7 @@ func checkSite(root, public string, now time.Time) error {
 		if _, ok := pages[file]; !ok {
 			failures = append(failures, "missing post: "+route)
 		}
-		if image := structuredData(*post).Image; image != "" {
+		if image := coverURL(*post); image != "" {
 			u, err := url.Parse(image)
 			if err != nil {
 				return err
@@ -284,6 +293,6 @@ func checkSite(root, public string, now time.Time) error {
 	if len(failures) > 0 {
 		return fmt.Errorf("site validation failed:\n%s", strings.Join(failures, "\n"))
 	}
-	fmt.Printf("Checked %d HTML pages, %d BlogPosting blocks, local links/fragments, legacy URLs and RSS\n", len(pages), len(posts))
+	fmt.Printf("Checked %d HTML pages, %d BlogPosting blocks, page JSON-LD, local links/fragments, legacy URLs and RSS\n", len(pages), len(posts))
 	return nil
 }

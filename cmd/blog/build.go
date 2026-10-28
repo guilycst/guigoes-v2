@@ -79,8 +79,8 @@ func writeFeed(file, title string, posts []document) error {
 	return writeFile(file, append([]byte(xml.Header), data...))
 }
 
-func generatedPage(stage, source, title, body string) error {
-	return writePage(stage, document{Source: source, Body: body, Meta: metadata{Title: title, Language: "pt-BR"}, Front: map[string]any{"title": title, "language": "pt-BR"}})
+func generatedPage(stage, source, title, body string, items ...schemaListItem) error {
+	return writePage(stage, document{SchemaItems: items, Source: source, Body: body, Meta: metadata{Title: title, Language: "pt-BR"}, Front: map[string]any{"title": title, "language": "pt-BR"}})
 }
 
 func buildSite(root string, now time.Time) error {
@@ -106,6 +106,10 @@ func buildSite(root string, now time.Time) error {
 		} else if !os.IsNotExist(err) {
 			return err
 		}
+		if d.Route != "" {
+			index, pagination := seriesNavigation(d, posts)
+			d.Body = index + d.Body + "\n\n" + pagination
+		}
 		if d.Route != "" && d.Meta.Cover != "" {
 			alt := d.Meta.CoverAlt
 			if alt == "" {
@@ -114,11 +118,12 @@ func buildSite(root string, now time.Time) error {
 			d.Body = "![" + alt + "](" + d.Meta.Cover + ")\n\n" + d.Body
 		}
 		if d.Source == "index.md" {
-			list, err := listing(posts[:min(5, len(posts))], d.Source)
+			d.SchemaItems = postSchemaItems(posts[:min(4, len(posts))])
+			list, err := listing(posts[:min(4, len(posts))], d.Source)
 			if err != nil {
 				return err
 			}
-			d.Body += "\n\n" + list + "\n\n[Todos os artigos](/blogs/)\n"
+			d.Body += "\n\n" + seriesEntry(posts) + "\n\n" + list + "\n\n[Todos os artigos](/blogs/)\n"
 		}
 		if err := writePage(stage, d); err != nil {
 			return err
@@ -128,7 +133,7 @@ func buildSite(root string, now time.Time) error {
 	if err != nil {
 		return err
 	}
-	if err := generatedPage(stage, "blogs/index.md", "Blog", list); err != nil {
+	if err := generatedPage(stage, "blogs/index.md", "Blog", seriesEntry(posts)+"\n\n"+list, postSchemaItems(posts)...); err != nil {
 		return err
 	}
 	type topic struct {
@@ -159,7 +164,7 @@ func buildSite(root string, now time.Time) error {
 		if err != nil {
 			return err
 		}
-		if err := generatedPage(stage, source, tag.label, list); err != nil {
+		if err := generatedPage(stage, source, tag.label, list, postSchemaItems(tag.posts)...); err != nil {
 			return err
 		}
 	}

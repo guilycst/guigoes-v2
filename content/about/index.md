@@ -1,5 +1,6 @@
 +++
 title = "Sobre"
+description = "Guilherme de Castro, engenheiro de software com foco em Go, Kubernetes, infraestrutura e automação."
 language = "pt-BR"
 +++
 **Olá, eu sou o Guilherme.** 👋

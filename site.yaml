@@ -9,18 +9,36 @@ site:
   base_url: https://guigoes.com
   home: index.md
   logo: assets/brand/logo-v2.svg
+  logo_dark: assets/brand/logo-light-v2.svg
+  hide_name: true
   icon: assets/brand/icon-v2.svg
   social_image:
     path: assets/brand/social-v3.png
     alt: Guigoes, blog de Guilherme de Castro sobre Go, Kubernetes e engenharia de software.
 layout:
-  kind: article
+  kind: docs
+  default:
+    sidebar: false
+    toc: false
+    pagination: false
+navigation:
+  links:
+    - {label: Blog, href: /blogs/}
+    - {label: Projetos, href: /projects/}
+    - {label: Sobre, href: /about/}
+    - {label: Contato, href: /contact/}
+  footer_links:
+    - {label: RSS, href: /index.xml}
+search:
+  label: Search post
+  placeholder: Search post
 locales:
   default: pt-BR
   supported: [pt-BR]
 theme:
   builtin: true
   name: modern
+  allow_switch_theme: true
   color_mode: system
 custom_css:
   - css_url: assets/blog.css

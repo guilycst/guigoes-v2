@@ -1,7 +1,6 @@
 package main
 
 import (
-	_ "embed"
 	"encoding/json"
 	"fmt"
 	"html"
@@ -19,17 +18,6 @@ import (
 )
 
 const baseURL = "https://guigoes.com"
-const nav = `<nav class="guigoes-nav" aria-label="Navegação principal"><button type="button" class="guigoes-menu-trigger" aria-label="Abrir menu" aria-controls="guigoes-menu" aria-haspopup="dialog" aria-expanded="false" hidden><span aria-hidden="true"></span></button><a class="guigoes-brand" href="/">guigoes<span aria-hidden="true">.</span></a><span class="guigoes-nav-links"><a href="/blogs/">Blog</a><a href="/projects/">Projetos</a><a href="/about/">Sobre</a><a href="/contact/">Contato</a><a href="/index.xml">RSS</a></span>` + themeToggle + `</nav><dialog id="guigoes-menu" class="guigoes-menu" aria-labelledby="guigoes-menu-title"><div class="guigoes-menu-header"><span id="guigoes-menu-title">Menu</span><button type="button" aria-label="Fechar menu" autofocus><img src="%[1]s/x-lg.svg" alt="" width="20" height="20"></button></div></dialog>`
-
-const themeToggle = `<button type="button" class="guigoes-theme-toggle" data-guigoes-color-mode role="switch" aria-label="Tema escuro" aria-checked="false" hidden><svg class="sun" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg><svg class="moon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20.5 13A9 9 0 0 1 11 3.5 9 9 0 1 0 20.5 13Z"/></svg></button>`
-
-//go:embed theme.js
-var themeScript string
-
-//go:embed navigation.js
-var navigationScript string
-
-const footer = `<footer class="guigoes-footer"><span>Guilherme de Castro</span><span><a class="guigoes-footer-social" href="https://github.com/guilycst"><img class="guigoes-social-icon" src="%[1]s/github.svg" alt="" width="16" height="16">GitHub</a> · <a class="guigoes-footer-social" href="https://www.linkedin.com/in/guicas"><img class="guigoes-social-icon" src="%[1]s/linkedin.svg" alt="" width="16" height="16">LinkedIn</a><br>Publicado com <a href="https://github.com/araihu/margo">Margo</a></span></footer>`
 
 type metadata struct {
 	Title       string   `toml:"title"`
@@ -43,9 +31,12 @@ type metadata struct {
 	Tags        []string `toml:"tags"`
 	Aliases     []string `toml:"aliases"`
 	Draft       bool     `toml:"draft"`
+	Series      string   `toml:"series"`
+	SeriesPart  int      `toml:"seriesPart"`
 }
 
 type document struct {
+	SchemaItems         []schemaListItem
 	Meta                metadata
 	Front               map[string]any
 	Body, Source, Route string
@@ -70,6 +61,9 @@ func parseDocument(data []byte) (document, error) {
 	}
 	if strings.TrimSpace(d.Meta.Title) == "" {
 		return d, fmt.Errorf("missing title")
+	}
+	if (d.Meta.Series == "") != (d.Meta.SeriesPart == 0) || d.Meta.SeriesPart < 0 || (d.Meta.Series != "" && strings.TrimSpace(d.Meta.Series) == "") {
+		return d, fmt.Errorf("series and a positive seriesPart must be set together")
 	}
 	var err error
 	if d.Meta.PublishedAt != "" {
@@ -96,6 +90,7 @@ func (d document) visible(now time.Time) bool {
 
 func loadDocuments(root string, now time.Time) ([]document, []document, error) {
 	var docs, posts []document
+	seriesParts := map[string]map[int]bool{}
 	err := filepath.WalkDir(filepath.Join(root, "content"), func(file string, entry fs.DirEntry, err error) error {
 		if err != nil {
 			return err
@@ -154,12 +149,28 @@ func loadDocuments(root string, now time.Time) ([]document, []document, error) {
 				}
 			}
 			posts = append(posts, d)
+			if d.Meta.Series != "" {
+				if seriesParts[d.Meta.Series] == nil {
+					seriesParts[d.Meta.Series] = map[int]bool{}
+				}
+				if seriesParts[d.Meta.Series][d.Meta.SeriesPart] {
+					return fmt.Errorf("duplicate part %d in series %s", d.Meta.SeriesPart, d.Meta.Series)
+				}
+				seriesParts[d.Meta.Series][d.Meta.SeriesPart] = true
+			}
 		}
 		docs = append(docs, d)
 		return nil
 	})
 	sort.Slice(posts, func(i, j int) bool {
 		if posts[i].Published.Equal(posts[j].Published) {
+			// Group equal-date series before ordering their parts to keep the comparator transitive.
+			if posts[i].Meta.Series != posts[j].Meta.Series {
+				return posts[i].Meta.Series > posts[j].Meta.Series
+			}
+			if posts[i].Meta.Series != "" {
+				return posts[i].Meta.SeriesPart < posts[j].Meta.SeriesPart
+			}
 			return posts[i].Route > posts[j].Route
 		}
 		return posts[i].Published.After(posts[j].Published)
@@ -232,26 +243,26 @@ func writePage(stage string, d document) error {
 	if d.Meta.PublishedAt != "" {
 		body = publicationDetails(d.Meta) + "\n\n" + body
 	}
-	if d.Route != "" {
-		schema, err := schemaScript(d)
-		if err != nil {
-			return err
-		}
-		body += "\n\n" + schema + "\n"
-	}
 	class := "guigoes-content"
 	if d.Source == "index.md" {
 		class = "guigoes-home"
 	}
-	front, err := json.Marshal(d.Front)
+	frontmatter := make(map[string]any, len(d.Front)+1)
+	for key, value := range d.Front {
+		frontmatter[key] = value
+	}
+	if d.Route != "" {
+		frontmatter["layout"] = map[string]any{
+			"kind":   "docs",
+			"values": map[string]any{"toc": true},
+		}
+	}
+	if data := pageStructuredData(d); data != nil {
+		frontmatter["structured_data"] = data
+	}
+	front, err := json.Marshal(frontmatter)
 	if err != nil {
 		return err
 	}
-	iconDir, err := filepath.Rel(filepath.FromSlash(path.Dir(d.Source)), filepath.FromSlash("contact/assets/icons"))
-	if err != nil {
-		return err
-	}
-	pageNav := fmt.Sprintf(nav, html.EscapeString(filepath.ToSlash(iconDir)))
-	pageFooter := fmt.Sprintf(footer, html.EscapeString(filepath.ToSlash(iconDir)))
-	return writeFile(filepath.Join(stage, filepath.FromSlash(d.Source)), []byte("---\n"+string(front)+"\n---\n\n<script>"+themeScript+"\n"+navigationScript+"</script>\n\n"+pageNav+"\n\n<div class=\""+class+"\">\n\n"+heading+body+"\n\n</div>\n\n"+pageFooter+"\n"))
+	return writeFile(filepath.Join(stage, filepath.FromSlash(d.Source)), []byte("---\n"+string(front)+"\n---\n\n<div class=\""+class+"\">\n\n"+heading+body+"\n\n</div>\n"))
 }
