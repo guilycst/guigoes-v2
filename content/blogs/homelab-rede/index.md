@@ -10,6 +10,7 @@ series = "Homelab K8s"
 seriesPart = 3
 cover = "./assets/cover-series-v2.jpg"
 cover_alt = "Nuvem sorridente com uma mão apoiada no roteador, ao lado de uma casa e de placas de direção."
+margo = { imageViewer = true }
 +++
 
 Para abrir sua biblioteca de fotos, basta digitar o endereço no navegador. Parece simples, mas o caminho da conexão muda conforme o local de acesso. Em casa, ela passa pelo gateway local. Pela internet, o caminho inclui a entrada pública na VPS e uma VPN até os equipamentos de casa.
@@ -22,7 +23,7 @@ A VPS é um servidor virtual alugado e também um nó do cluster. Uso [Envoy Gat
 
 As fotos ficam em casa. Para encaminhar a conexão até a aplicação, a VPS precisa se comunicar com os nós locais. Uso [Tailscale](https://tailscale.com/) para fazer essa ligação. Ele cria uma rede privada entre os dispositivos, chamada tailnet, com tráfego criptografado por [WireGuard](https://www.wireguard.com/).
 
-![Cliente Tailscale com a lista de dispositivos da rede privada, indicadores de conexão e endereços IP desfocados.](./assets/tailscale-client-blur.png)
+![Cliente Tailscale com a lista de dispositivos da rede privada, indicadores de conexão e endereços IP desfocados.](./assets/tailscale-client-blur.png "Dispositivos no Tailscale")
 
 *O cliente Tailscale reúne os dispositivos da rede privada. Endereços IP desfocados.*
 

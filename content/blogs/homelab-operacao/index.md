@@ -10,6 +10,7 @@ series = "Homelab K8s"
 seriesPart = 4
 cover = "./assets/cover-series-v1.jpg"
 cover_alt = "Robô operador confere uma lista entre uma pasta Git e um mini servidor, representando a aplicação das configurações do homelab."
+margo = { imageViewer = true }
 +++
 
 Colocar uma aplicação para rodar costuma ser a parte mais rápida. Depois é preciso atualizar versões, trocar credenciais, cuidar do espaço em disco e conferir se os backups continuam funcionando.
@@ -41,7 +42,7 @@ A integração contínua, ou CI, executa as verificações antes do merge. Depoi
 
 No Argo, cada recurso do tipo `Application` define o que deve ser sincronizado a partir de uma fonte. Uso o padrão app of apps: uma Application principal acompanha as definições das demais aplicações no Git. Cada uma aponta para manifestos, charts e arquivos de valores do [Helm](https://helm.sh/), ou configurações do [Kustomize](https://kustomize.io/).
 
-![Painel de aplicações do Argo CD com app-of-apps, serviços e runners, mostrando origem da configuração, sincronização e saúde dos recursos.](./assets/argocd-applications.png)
+![Painel de aplicações do Argo CD com app-of-apps, serviços e runners, mostrando origem da configuração, sincronização e saúde dos recursos.](./assets/argocd-applications.png "Aplicações no Argo CD")
 
 *No Argo CD, cada aplicação reúne a origem da configuração e os indicadores de sincronização e saúde dos recursos.*
 
@@ -57,7 +58,7 @@ Com tantas aplicações, acompanhar as versões de cada uma dá trabalho. O [Ren
 
 No homelab, ele verifica imagens de containers, charts e versões definidas em manifestos Kubernetes, arquivos do Helm e do Kustomize, Dockerfiles e automações. As propostas de atualização chegam ao mesmo repositório usado pelo Argo.
 
-![Pull request do Renovate no GitHub propondo uma atualização do kube-prometheus-stack, com comparação de versões, notas de versão e merge automático desativado.](./assets/renovate-pr.jpg)
+![Pull request do Renovate no GitHub propondo uma atualização do kube-prometheus-stack, com comparação de versões, notas de versão e merge automático desativado.](./assets/renovate-pr.jpg "Proposta de atualização do Renovate")
 
 *O [PR do Renovate](https://github.com/guilycst/home-lab/pull/710) reúne a versão atual, a proposta de atualização e as notas de versão. É onde reviso a mudança e acompanho as verificações antes de integrá-la ao repositório.*
 
@@ -75,7 +76,7 @@ flowchart TB
 
 O merge automático está desativado. O Renovate abre a proposta, mas ela ainda precisa passar pela revisão e pelas verificações da CI antes de ser aplicada pelo Argo. Também limito a quantidade de pull requests e a frequência das atualizações.[^renovate]
 
-![Dependency Dashboard do Renovate no GitHub, com avisos de consulta às dependências e atualizações aguardando aprovação.](./assets/renovate-dashboard.jpg)
+![Dependency Dashboard do Renovate no GitHub, com avisos de consulta às dependências e atualizações aguardando aprovação.](./assets/renovate-dashboard.jpg "Dependency Dashboard do Renovate")
 
 *O [Dependency Dashboard](https://github.com/guilycst/home-lab/issues/170) é uma issue que o Renovate mantém atualizada com as dependências detectadas, os PRs abertos e as atualizações pendentes. Os avisos ajudam a identificar o que ele não conseguiu consultar; as aprovações controlam quais propostas podem virar PRs.*
 
@@ -191,11 +192,11 @@ O [Tailscale](https://tailscale.com/) mantém a VPS e as máquinas de casa na me
 
 [Prometheus](https://prometheus.io/) coleta métricas, e [Grafana](https://grafana.com/oss/grafana/) oferece os painéis. [Alloy](https://grafana.com/oss/alloy/) coleta os logs e os envia ao [Loki](https://grafana.com/oss/loki/), que os armazena para consulta. O [Alertmanager](https://prometheus.io/docs/alerting/latest/alertmanager/) organiza os alertas.
 
-![Painel do Grafana com uso de CPU e memória do cluster, gráficos por namespace e comparação com requests e limits configurados.](./assets/grafana-cluster-recursos.png)
+![Painel do Grafana com uso de CPU e memória do cluster, gráficos por namespace e comparação com requests e limits configurados.](./assets/grafana-cluster-recursos.png "Recursos do cluster no Grafana")
 
 *Este painel mostra o consumo de CPU e memória por namespace e permite compará-lo com os recursos solicitados e os limites configurados para as aplicações. Assim, consigo identificar quais serviços consomem mais recursos e onde vale revisar essas configurações.*
 
-![Grafana Logs Drilldown com registros agrupados por serviço, gráficos de volume e mensagens de log consultadas no Loki.](./assets/grafana-logs-drilldown-crop.png)
+![Grafana Logs Drilldown com registros agrupados por serviço, gráficos de volume e mensagens de log consultadas no Loki.](./assets/grafana-logs-drilldown-crop.png "Logs Drilldown no Grafana")
 
 *No Logs Drilldown, filtro os registros armazenados no Loki por serviço e período. Os gráficos mostram quando o volume de mensagens muda, e os logs ao lado ajudam a investigar o que aconteceu naquele intervalo.*
 

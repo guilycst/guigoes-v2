@@ -10,6 +10,7 @@ series = "Homelab K8s"
 seriesPart = 1
 cover = "./assets/cover-series-v1.jpg"
 cover_alt = "Mini servidor e NAS sobre uma bancada, ao lado de um cofrinho, moedas e uma régua de tomadas, representando os custos do homelab."
+margo = { imageViewer = true }
 +++
 
 Três mini PCs, um Raspberry Pi, um NAS, uma VPS e um switch. Parece muita coisa para guardar fotos, e seria mesmo se o homelab servisse só para isso. Também uso essas máquinas para assistir aos vídeos da minha biblioteca, organizar projetos e compilar os programas que desenvolvo.
@@ -20,7 +21,7 @@ As aplicações rodam em um cluster [Kubernetes](https://kubernetes.io/), que di
 
 Uso três [Beelink](https://www.bee-link.com/) Mini S com [Intel N100](https://www.intel.com/content/www/us/en/products/sku/231803/intel-processor-n100-6m-cache-up-to-3-40-ghz/specifications.html). Cada um tem 16 GB de RAM, um SSD M.2 de 500 GB e um SSD SATA de 1 TB. Ao todo, são 48 GB de RAM, compartilhados entre as aplicações e os componentes do próprio Kubernetes.
 
-![Vistas frontal e traseira do Beelink Mini S12 Pro N100, com portas USB, Ethernet, HDMI e alimentação.](./assets/beelink-mini-s12-pro.jpg)
+![Vistas frontal e traseira do Beelink Mini S12 Pro N100, com portas USB, Ethernet, HDMI e alimentação.](./assets/beelink-mini-s12-pro.jpg "Beelink Mini S12 Pro N100")
 
 *Mini S12 Pro N100, modelo de referência para a foto e o orçamento. Imagem de catálogo da Beelink.*[^imagens]
 
@@ -28,7 +29,7 @@ Com três máquinas, posso manter cópias dos dados em nós diferentes. Para iss
 
 O [Raspberry Pi 4 Model B](https://www.raspberrypi.com/products/raspberry-pi-4-model-b/) também faz parte do cluster e ajuda no roteamento da rede. Como ele usa a arquitetura ARM64 e os mini PCs usam AMD64, preciso conferir se a imagem de cada container é compatível com a máquina em que vai rodar.
 
-![Placa Raspberry Pi 4 Model B vista em perspectiva, com GPIO, portas USB, Ethernet e duas saídas micro-HDMI.](./assets/raspberry-pi-4b.jpg)
+![Placa Raspberry Pi 4 Model B vista em perspectiva, com GPIO, portas USB, Ethernet e duas saídas micro-HDMI.](./assets/raspberry-pi-4b.jpg "Raspberry Pi 4 Model B")
 
 *Raspberry Pi 4B. Foto publicada no [anúncio do fabricante](https://www.raspberrypi.com/news/raspberry-pi-4-on-sale-now-from-35/).*
 
@@ -36,11 +37,11 @@ O [Raspberry Pi 4 Model B](https://www.raspberrypi.com/products/raspberry-pi-4-m
 
 O [TerraMaster F4-424](https://www.terra-master.com/products/f4-424-nas) abriga quatro HDs [Western Digital Red Plus WD80EFPX de 8 TB](https://www.westerndigital.com/en-gb/products/internal-drives/wd-red-plus-sata-3-5-hdd?sku=WD80EFPX), em RAID. Os quatro discos somam 32 TB de capacidade bruta. O espaço útil para arquivos é menor e depende da configuração do RAID e da formatação.
 
-![NAS TerraMaster F4-424 preto, com quatro baias de disco na frente e ventilação lateral.](./assets/terramaster-f4-424.jpg)
+![NAS TerraMaster F4-424 preto, com quatro baias de disco na frente e ventilação lateral.](./assets/terramaster-f4-424.jpg "TerraMaster F4-424")
 
 *TerraMaster F4-424. Imagem de catálogo da TerraMaster.*
 
-![HD Western Digital Red Plus de 8 TB, com etiqueta vermelha e indicação de uso em NAS.](./assets/wd-red-plus-8tb.png)
+![HD Western Digital Red Plus de 8 TB, com etiqueta vermelha e indicação de uso em NAS.](./assets/wd-red-plus-8tb.png "Western Digital Red Plus de 8 TB")
 
 *WD Red Plus de 8 TB. Imagem de catálogo da Western Digital.*
 
@@ -48,7 +49,7 @@ Fotos e vídeos ocupam bastante espaço, por isso ficam no NAS, acessível às a
 
 O último equipamento da lista é o [TP-Link TL-SG108E](https://www.tp-link.com/br/business-networking/soho-switch-easy-smart/tl-sg108e/), um switch com oito portas Gigabit. Ele conecta os equipamentos por cabo. Mesmo que uma máquina tenha uma placa de rede mais rápida, cada conexão a uma porta desse switch fica limitada a 1 Gbit/s.
 
-![Switch TP-Link TL-SG108E visto de frente, com oito portas Ethernet numeradas e gabinete metálico.](./assets/tp-link-tl-sg108e.jpg)
+![Switch TP-Link TL-SG108E visto de frente, com oito portas Ethernet numeradas e gabinete metálico.](./assets/tp-link-tl-sg108e.jpg "TP-Link TL-SG108E")
 
 *TP-Link TL-SG108E. Imagem de catálogo da TP-Link.*
 
