@@ -1,8 +1,7 @@
 # Guigoes
 
 Blog de Guilherme de Castro, publicado em https://guigoes.com com
-[Margo, PR #86 integrado](https://github.com/araihu/margo/pull/86), fixado em
-`v0.0.27-0.20261027211411-b8b2986ce4aa` do commit integrado em `main`.
+[Margo v0.0.27](https://github.com/araihu/margo/releases/tag/v0.0.27).
 
 ## Desenvolvimento
 
@@ -129,3 +128,9 @@ Todas as páginas usam o layout `docs` do Margo com `sidebar: false` e
 nativo respeita o cabeçalho e acompanha a seção em leitura em telas largas.
 A navegação da série continua definida pelo blog; não há outra navegação,
 controle de tema ou rodapé injetado no corpo do artigo.
+
+Os artigos da série Homelab habilitam o visualizador nativo com
+`margo = { imageViewer = true }` no frontmatter TOML. Imagens Markdown
+isoladas com título recebem zoom, deslocamento, tamanho original e expansão.
+Capas sem título e miniaturas com links permanecem estáticas. Para habilitar
+o controle em uma imagem, use `![Descrição](./assets/imagem.png "Legenda")`.

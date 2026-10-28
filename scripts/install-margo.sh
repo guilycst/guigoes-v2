@@ -1,8 +1,8 @@
 #!/bin/sh
 set -eu
 cd "$(dirname "$0")/.."
-# Merged PR #86. Pin the main commit until the next upstream release.
-version=v0.0.27-0.20261027211411-b8b2986ce4aa
+# Stable release with native image zoom and pan.
+version=v0.0.27
 mkdir -p .tools
 if test -x .tools/margo/margo && .tools/margo/margo version | head -1 | grep -qx "margo $version"; then
   exit 0

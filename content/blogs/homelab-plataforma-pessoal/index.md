@@ -10,6 +10,7 @@ series = "Homelab K8s"
 seriesPart = 2
 cover = "./assets/cover-series-v1.jpg"
 cover_alt = "Álbum de fotos, claquete e mini servidor em uma sala, representando os aplicativos de fotos e mídia hospedados em casa."
+margo = { imageViewer = true }
 +++
 
 Na [parte 1](/blogs/homelab-hardware-custos/), mostrei os equipamentos que sustentam o homelab. Agora é hora de abrir os aplicativos. São eles que dão uso às máquinas: encontrar uma foto, assistir a um vídeo, guardar uma ideia ou acompanhar um projeto.
@@ -24,7 +25,7 @@ O [Pi-hole](https://pi-hole.net/) é um dos serviços mais usados por todos na m
 
 Uso o Pi-hole para bloquear domínios de anúncios, jogos de azar e outros domínios maliciosos. Nos dispositivos que usam esse DNS, as listas de bloqueio filtram os domínios consultados. Posso administrar essas regras em um só lugar e ajustar o que quero permitir ou bloquear na rede.
 
-![Painel do Pi-hole com totais de consultas DNS, bloqueios e gráficos de atividade da rede.](./assets/pihole-dashboard.png)
+![Painel do Pi-hole com totais de consultas DNS, bloqueios e gráficos de atividade da rede.](./assets/pihole-dashboard.png "Painel do Pi-hole")
 
 *O painel do Pi-hole reúne as consultas DNS e os bloqueios da rede.*
 
@@ -34,7 +35,7 @@ Ele também participa da estratégia de split DNS do homelab, resolvendo os nome
 
 O [Immich](https://immich.app/) organiza a biblioteca de fotos e vídeos. Ele permite navegar pelas fotos e pelos vídeos guardados no homelab sem precisar procurar os arquivos manualmente em pastas.
 
-![Biblioteca do Immich com linha do tempo, álbuns e miniaturas de fotos e vídeos desfocadas.](./assets/immich-dashboard-blur.jpg)
+![Biblioteca do Immich com linha do tempo, álbuns e miniaturas de fotos e vídeos desfocadas.](./assets/immich-dashboard-blur.jpg "Biblioteca do Immich")
 
 *Biblioteca do Immich, com as fotos, os vídeos e os avatares desfocados.*
 
@@ -46,7 +47,7 @@ Hospedar o Immich em casa me permite escolher onde guardar a biblioteca e como f
 
 O [Jellyfin](https://jellyfin.org/) cuida da reprodução da biblioteca de mídia. [Sonarr](https://sonarr.tv/) gerencia séries, [Radarr](https://radarr.video/) gerencia filmes e [Bazarr](https://www.bazarr.media/) busca e organiza legendas. Os arquivos maiores ficam no NAS, de onde as aplicações os acessam pela rede.
 
-![Página inicial do Jellyfin com categorias de mídia, itens em reprodução e adições recentes, com as capas desfocadas.](./assets/jellyfin-dashboard-blur.jpg)
+![Página inicial do Jellyfin com categorias de mídia, itens em reprodução e adições recentes, com as capas desfocadas.](./assets/jellyfin-dashboard-blur.jpg "Biblioteca do Jellyfin")
 
 *As bibliotecas e os itens recentes no Jellyfin, com as capas desfocadas.*
 
@@ -72,7 +73,7 @@ O [Forgejo](https://forgejo.org/) hospeda repositórios e faz parte das ferramen
 
 O [araihu/balemoh](https://github.com/araihu/balemoh) reúne o catálogo de serviços, telemetria e notificações. Com tantos serviços, fica mais fácil encontrar o que preciso quando os links e as informações estão reunidos em um só lugar. O Balemoh terá um post próprio, com espaço para explicar a arquitetura e as decisões de implementação.
 
-![Painel do Balemoh com uso de CPU e memória dos hosts e catálogo de serviços, com os endereços desfocados.](./assets/balemoh-dashboard-blur.jpg)
+![Painel do Balemoh com uso de CPU e memória dos hosts e catálogo de serviços, com os endereços desfocados.](./assets/balemoh-dashboard-blur.jpg "Painel do Balemoh")
 
 *O Balemoh reúne informações dos hosts e atalhos para os serviços. Endereços desfocados.*
 
