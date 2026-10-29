@@ -13,50 +13,20 @@ import (
 	"strings"
 	"testing"
 
-	"golang.org/x/net/html"
+	"github.com/araihu/margo/site"
 )
-
-func TestBrandHeadPreservesArticleAndSchema(t *testing.T) {
-	body := `<body><article><script type="application/ld+json">{"headline":"Go & HTML"}</script><p>Article &amp; demos</p></article></body></html>`
-	input := []byte(`<html><head><link rel="icon" href="/old.svg"><meta property="og:image" content="https://guigoes.com/assets/brand/social-v3.png"></head>` + body)
-	output, err := addBrandHead(input)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if !strings.HasSuffix(string(output), body) {
-		t.Fatal("article bytes changed")
-	}
-	if bytes.Contains(output, []byte("old.svg")) {
-		t.Fatal("old icon remains")
-	}
-	if strings.Count(string(output), `rel="manifest"`) != 1 || strings.Count(string(output), `property="og:image"`) != 1 {
-		t.Fatal("missing or duplicate metadata")
-	}
-	if _, err := addBrandHead(output); err == nil {
-		t.Fatal("repeated injection must fail")
-	}
-}
 
 func TestBrandAssetDimensionsAndHead(t *testing.T) {
 	root := "../.."
-	tokenizer := html.NewTokenizer(strings.NewReader(brandHead))
-	for {
-		kind := tokenizer.Next()
-		if kind == html.ErrorToken {
-			break
-		}
-		if kind != html.StartTagToken && kind != html.SelfClosingTagToken {
+	config, err := site.LoadConfig(filepath.Join(root, "site.yaml"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, icon := range config.Site.Icons {
+		if !strings.HasSuffix(icon.Path, ".png") {
 			continue
 		}
-		token := tokenizer.Token()
-		attrs := map[string]string{}
-		for _, a := range token.Attr {
-			attrs[a.Key] = a.Val
-		}
-		if token.Data != "link" || attrs["type"] != "image/png" && attrs["rel"] != "apple-touch-icon" {
-			continue
-		}
-		f, err := os.Open(filepath.Join(root, strings.TrimPrefix(attrs["href"], "/")))
+		f, err := os.Open(filepath.Join(root, icon.Path))
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -65,12 +35,11 @@ func TestBrandAssetDimensionsAndHead(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		size := fmtSize(cfg.Width, cfg.Height)
-		if attrs["sizes"] != size {
-			t.Fatalf("%s declares %s, has %s", attrs["href"], attrs["sizes"], size)
+		if icon.Sizes != fmtSize(cfg.Width, cfg.Height) {
+			t.Fatalf("wrong declared dimensions for %s", icon.Path)
 		}
 	}
-	data, err := os.ReadFile(filepath.Join(root, "static/site.webmanifest"))
+	data, err := os.ReadFile(filepath.Join(root, "site.webmanifest"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -137,7 +106,7 @@ func TestBrandManifestHashesFinalBytes(t *testing.T) {
 	if err := writeFile(filepath.Join(root, "margo-manifest.json"), []byte(`{"schemaVersion":"margo-site-manifest/v1","digest":"old","entries":[]}`)); err != nil {
 		t.Fatal(err)
 	}
-	if err := refreshBrandManifest(root); err != nil {
+	if err := writePublicationManifest(root, site.Result{}); err != nil {
 		t.Fatal(err)
 	}
 	data, err := os.ReadFile(filepath.Join(root, "margo-manifest.json"))
@@ -155,7 +124,7 @@ func TestBrandManifestHashesFinalBytes(t *testing.T) {
 	if len(m.Entries) != 1 || m.Entries[0].Digest != hex.EncodeToString(digest[:]) {
 		t.Fatal("artifact hash differs from output bytes")
 	}
-	if err := refreshBrandManifest(root); err != nil {
+	if err := writePublicationManifest(root, site.Result{}); err != nil {
 		t.Fatal(err)
 	}
 	again, err := os.ReadFile(filepath.Join(root, "margo-manifest.json"))

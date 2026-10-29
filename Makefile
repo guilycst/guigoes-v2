@@ -1,7 +1,7 @@
 .PHONY: install build run check rundocker
 
 install:
-	sh scripts/install-margo.sh
+	go mod download
 
 build: install
 	go run ./cmd/blog build

@@ -72,9 +72,9 @@ func TestAuthorProfile(t *testing.T) {
 	if data.Authors[0].URL != "https://guigoes.com/about/" || data.Authors[1].URL != "" {
 		t.Fatalf("incorrect author profiles: %+v", data.Authors)
 	}
-	header := publicationDetails(d.Meta)
-	if !strings.Contains(header, `<a rel="author" href="https://guigoes.com/about/">Guilherme de Castro</a>`) || !strings.Contains(header, `<span rel="author">Guest</span>`) {
-		t.Fatalf("incorrect visible author links: %s", header)
+	links := publicationLinks(d.Meta)["authors"].(map[string]string)
+	if links["Guilherme de Castro"] != baseURL+"/about/" || links["Guest"] != "" {
+		t.Fatalf("incorrect visible author destinations: %v", links)
 	}
 }
 
@@ -161,9 +161,9 @@ func TestEditorialHTML(t *testing.T) {
 			t.Errorf("slug %q: %q", tag, got)
 		}
 	}
-	output := publicationDetails(d.Meta)
-	if !strings.Contains(output, `>30/04/2024</time>`) || !strings.Contains(output, `href="/tags/automacao/"`) {
-		t.Fatalf("bad header: %s", output)
+	links := publicationLinks(d.Meta)["tags"].(map[string]string)
+	if links["Automação"] != baseURL+"/tags/automacao/" {
+		t.Fatalf("bad tag destination: %v", links)
 	}
 }
 
@@ -181,9 +181,10 @@ func TestPageDeclaresNativeStructuredData(t *testing.T) {
 	if strings.Contains(text, `class="guigoes-footer"`) {
 		t.Fatal("post must use the page footer supplied by Margo")
 	}
-	if strings.Index(text, "# Go & HTML") > strings.Index(text, "data-margo-publication-metadata") {
-		t.Fatal("metadata before title")
+	if strings.Contains(text, "data-margo-publication-metadata") || !strings.Contains(text, `"publication_links":`) {
+		t.Fatal("Margo must render publication details from declared metadata")
 	}
+
 	if strings.Contains(text, `application/ld+json`) || strings.Count(text, `"structured_data":`) != 1 {
 		t.Fatal("expected native structured_data without handwritten script")
 	}
@@ -284,12 +285,6 @@ func TestBuildIntegration(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	binary := filepath.Join(repo, ".tools/margo/margo")
-	if _, err := os.Stat(binary); os.IsNotExist(err) {
-		t.Skip("run make install to enable the real Margo integration test")
-	} else if err != nil {
-		t.Fatal(err)
-	}
 	root := t.TempDir()
 	for _, dir := range []string{"content", "assets", "static", "tests"} {
 		if err := copyTree(filepath.Join(repo, dir), filepath.Join(root, dir)); err != nil {
@@ -303,10 +298,11 @@ func TestBuildIntegration(t *testing.T) {
 	if err := writeFile(filepath.Join(root, "site.yaml"), config); err != nil {
 		t.Fatal(err)
 	}
-	if err := os.MkdirAll(filepath.Join(root, ".tools/margo"), 0755); err != nil {
+	webmanifest, err := os.ReadFile(filepath.Join(repo, "site.webmanifest"))
+	if err != nil {
 		t.Fatal(err)
 	}
-	if err := os.Symlink(binary, filepath.Join(root, ".tools/margo/margo")); err != nil {
+	if err := writeFile(filepath.Join(root, "site.webmanifest"), webmanifest); err != nil {
 		t.Fatal(err)
 	}
 	for _, name := range []string{"draft", "future"} {
@@ -321,11 +317,30 @@ func TestBuildIntegration(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	now := time.Date(2026, 10, 27, 12, 0, 0, 0, time.UTC)
+	now := time.Date(2026, 10, 29, 12, 0, 0, 0, time.UTC)
 	if err := buildSite(root, now); err != nil {
 		t.Fatal(err)
 	}
 	public := filepath.Join(root, "public")
+	_, posts, err := loadDocuments(root, now)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, post := range posts {
+		data, err := os.ReadFile(filepath.Join(public, strings.TrimPrefix(post.Route, "/"), "index.html"))
+		if err != nil {
+			t.Fatal(err)
+		}
+		text := string(data)
+		if !strings.Contains(text, `data-margo-publication-date="published"`) || !strings.Contains(text, ">"+post.Published.Format("02/01/2006")+"</time>") {
+			t.Fatalf("native date missing in %s", post.Route)
+		}
+		for _, tag := range post.Meta.Tags {
+			if !strings.Contains(text, `href="`+baseURL+`/tags/`+tagSlug(tag)+`/"`) {
+				t.Fatalf("native tag link missing in %s", post.Route)
+			}
+		}
+	}
 	for _, name := range []string{"draft", "future"} {
 		if _, err := os.Stat(filepath.Join(public, "blogs", name)); !os.IsNotExist(err) {
 			t.Fatalf("unpublished post leaked: %s", name)
