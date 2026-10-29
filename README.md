@@ -1,7 +1,7 @@
 # Guigoes
 
 Blog de Guilherme de Castro, publicado em https://guigoes.com com
-[Gazeta v0.0.1](https://github.com/araihu/gazeta/releases/tag/v0.0.1) sobre
+[Gazeta v0.0.2](https://github.com/araihu/gazeta/releases/tag/v0.0.2) sobre
 [Margo v0.0.29](https://github.com/araihu/margo/releases/tag/v0.0.29).
 
 ## Desenvolvimento
@@ -73,7 +73,7 @@ Não há mais injeção local de scripts no corpo do artigo.
 - Home: `WebSite` e `WebPage`, com a lista dos quatro posts exibidos.
 - Arquivo e tags: `CollectionPage`; as listagens de posts incluem `ItemList` na mesma ordem visível.
 - Projetos: `CollectionPage`, sem inventar preços, avaliações ou versões de software.
-- Sobre: `AboutPage` com `Person`, usando a mesma identidade dos autores dos posts.
+- Sobre: `ProfilePage` com `Person`, usando a mesma identidade dos autores dos posts.
 - Contato: `ContactPage`. Categorias, que apenas aponta para tags: `WebPage`.
 - Aliases e 404: sem JSON-LD. Rascunhos e posts futuros ficam fora do build público.
 
