@@ -1,0 +1,35 @@
+version: 1
+home_limit: 4
+# Existing articles include reviewed HTML/JavaScript demos.
+unsafe_html: true
+authors:
+  Guilherme de Castro:
+    url: /about/
+page_types:
+  /about/: AboutPage
+  /contact/: ContactPage
+  /projects/: CollectionPage
+required_urls: tests/legacy-urls.txt
+files:
+  - {source: assets/brand, target: assets/brand}
+  - {source: assets/brand/favicon-v2.ico, target: favicon.ico}
+  - {source: assets/brand/apple-touch-icon-180-v2.png, target: apple-touch-icon.png}
+labels:
+  articles: Artigos
+  blog: Blog
+  tags: Tags
+  categories: Categorias
+  categories_body: As publicações estão organizadas por [tags](/tags/).
+  not_found: Página não encontrada
+  not_found_body: Este endereço não existe. [Voltar ao blog](/blogs/).
+  all_articles: Todos os artigos
+  series: Série
+  part: Parte
+  series_index: Índice da série
+  continue_series: Continuar a série
+  start_series: Começar a série
+  start_first: Comece pela parte 1
+  previous: Anterior
+  next: Próximo
+  redirecting: Redirecionando
+  open_article: Abrir artigo
