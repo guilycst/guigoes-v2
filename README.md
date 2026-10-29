@@ -1,12 +1,14 @@
 # Guigoes
 
 Blog de Guilherme de Castro, publicado em https://guigoes.com com
+[Gazeta v0.0.1](https://github.com/araihu/gazeta/releases/tag/v0.0.1) sobre
 [Margo v0.0.29](https://github.com/araihu/margo/releases/tag/v0.0.29).
 
 ## Desenvolvimento
 
 Requisitos: Go 1.27.3+ e Make. `make install` baixa as dependências fixadas em
-`go.mod`. O build usa a biblioteca Margo diretamente, sem instalar outro binário.
+`go.mod`. O comando local delega à biblioteca Gazeta, que renderiza pelo Margo.
+Não há engine editorial copiada neste repositório nem instalação de outro binário.
 Não é necessário instalar Node ou Hugo para gerar o site.
 
 ```sh
@@ -40,9 +42,12 @@ A pasta define a URL `/blogs/meu-post/`. `draft = true` e datas futuras excluem
 o post de páginas, assets, listagens, sitemap e feeds. Datas futuras passam a
 aparecer no próximo build após o horário informado, sem agendamento automático.
 
-`go run ./cmd/blog build` converte TOML para o frontmatter YAML aceito pelo Margo e gera
+Gazeta, chamada por `go run ./cmd/blog build`, converte TOML para o frontmatter YAML aceito pelo Margo e gera
 índices, tags, RSS e redirects. Margo renderiza Markdown, metadados semânticos,
-canonicals, sitemap, imagens e código. `site.yaml` define identidade e tema.
+canonicals, sitemap, imagens e código. `site.yaml` define domínio, identidade visual e tema.
+`blog.yaml` configura perfis de autores, textos editoriais em português, tipos
+de página e arquivos/URLs legados. Novos blogs usam a mesma Gazeta com seus próprios
+arquivos de configuração, conteúdo e assets.
 Os arquivos em `content/` são a única fonte dos posts e da ordenação das listas.
 Posts de uma série usam `series = "Homelab K8s"` e `seriesPart = 1`, com número
 positivo e único dentro da série. O build gera o índice com a parte atual e os
@@ -61,7 +66,7 @@ Cada post publicado recebe um único JSON-LD `BlogPosting`, gerado no build:
 - `cover` gera uma URL absoluta em `image`. Sem capa, o campo é omitido.
 - URL, identificador e `mainEntityOfPage` usam o endereço canônico do post.
 
-O blog declara `structured_data` no frontmatter intermediário. O Margo emite um
+Gazeta declara `structured_data` no frontmatter intermediário. O Margo emite um
 único script JSON-LD no head, com escape seguro e rejeição de scripts duplicados.
 Não há mais injeção local de scripts no corpo do artigo.
 
@@ -82,6 +87,9 @@ e [Schema.org BlogPosting](https://schema.org/BlogPosting).
 As quatro capas seguem a direção cartoon do Guigoes. Consulte
 [o guia de mídia](docs/media-style.md) para paleta, composição e prompts utilizados.
 
+Os seletores editoriais `.blog-*` pertencem à Gazeta; paleta, fontes e marca
+continuam em `assets/blog.css`.
+
 O visual adapta o exemplo editorial [`examples/blog` do Margo](https://github.com/araihu/margo/tree/main/examples/blog),
 com licença preservada em `licenses/margo.txt`. A home mostra os quatro posts mais
 recentes, com destaque para o primeiro. `cover = "./assets/capa.webp"` e `cover_alt`
@@ -93,15 +101,15 @@ O cabeçalho, a busca, o menu móvel e a alternância de tema são nativos do
 Margo. `site.yaml` declara os links, as duas versões do logo, os ícones e o webmanifest. `assets/blog.css`
 fornece a paleta e os estilos editoriais pelos tokens públicos do tema.
 
-O build habilita `margo.WithUnsafeHTML()` porque os posts existentes incluem demos
+`blog.yaml` habilita `unsafe_html: true` porque os posts existentes incluem demos
 HTML/JavaScript. Publique apenas conteúdo revisado. A demo Hyperscript preserva
 sua dependência externa fixa em `hyperscript.org@0.9.12`.
 
 Capas sociais são declaradas em `social_image` e renderizadas pelo Margo com
-URL absoluta, dimensões, MIME e texto alternativo. O blog valida o resultado
+URL absoluta, dimensões, MIME e texto alternativo. Gazeta valida o resultado
 contra `cover` e `cover_alt`. Não há reescrita do head após renderizar.
 
-RSS, redirects e arquivos estáticos continuam sendo gerados pelo blog. Depois
+Gazeta gera RSS e redirects, e reúne os arquivos estáticos do blog. Depois
 de reuni-los aos artefatos do Margo, `site.MarshalManifest` descreve os bytes
 finais, preservando rotas e identidade do build sem copiar o algoritmo de hash.
 
