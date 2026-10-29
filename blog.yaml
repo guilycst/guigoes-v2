@@ -6,7 +6,7 @@ authors:
   Guilherme de Castro:
     url: /about/
 page_types:
-  /about/: AboutPage
+  /about/: ProfilePage
   /contact/: ContactPage
   /projects/: CollectionPage
 required_urls: tests/legacy-urls.txt

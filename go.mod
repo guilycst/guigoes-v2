@@ -3,7 +3,7 @@ module github.com/guilycst/guigoes-v2
 go 1.27.3
 
 require (
-	github.com/araihu/gazeta v0.0.1
+	github.com/araihu/gazeta v0.0.2
 	github.com/araihu/margo v0.0.29
 )
 

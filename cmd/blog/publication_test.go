@@ -84,6 +84,10 @@ func TestGuigoesConsumesGazeta(t *testing.T) {
 			t.Fatalf("missing consumer contract %q", want)
 		}
 	}
+	about := read("about/index.html")
+	if !strings.Contains(about, `"@type":"ProfilePage"`) || !strings.Contains(about, `"name":"Guilherme de Castro"`) {
+		t.Fatal("configured author profile schema missing")
+	}
 	home := read("index.html")
 	if !strings.Contains(home, `class="blog-home"`) || !strings.Contains(home, "Guigoes") {
 		t.Fatal("consumer home identity lost")
