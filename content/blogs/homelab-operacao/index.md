@@ -60,7 +60,7 @@ No homelab, ele verifica imagens de containers, charts e versões definidas em m
 
 ![Pull request do Renovate no GitHub propondo uma atualização do kube-prometheus-stack, com comparação de versões, notas de versão e merge automático desativado.](./assets/renovate-pr.jpg "Proposta de atualização do Renovate")
 
-*O [PR do Renovate](https://github.com/guilycst/home-lab/pull/710) reúne a versão atual, a proposta de atualização e as notas de versão. É onde reviso a mudança e acompanho as verificações antes de integrá-la ao repositório.*
+*O PR do Renovate reúne a versão atual, a proposta de atualização e as notas de versão. É onde reviso a mudança e acompanho as verificações antes de integrá-la ao repositório.*
 
 ```mermaid
 flowchart TB
@@ -78,7 +78,7 @@ O merge automático está desativado. O Renovate abre a proposta, mas ela ainda 
 
 ![Dependency Dashboard do Renovate no GitHub, com avisos de consulta às dependências e atualizações aguardando aprovação.](./assets/renovate-dashboard.jpg "Dependency Dashboard do Renovate")
 
-*O [Dependency Dashboard](https://github.com/guilycst/home-lab/issues/170) é uma issue que o Renovate mantém atualizada com as dependências detectadas, os PRs abertos e as atualizações pendentes. Os avisos ajudam a identificar o que ele não conseguiu consultar; as aprovações controlam quais propostas podem virar PRs.*
+*O Dependency Dashboard é uma issue que o Renovate mantém atualizada com as dependências detectadas, os PRs abertos e as atualizações pendentes. Os avisos ajudam a identificar o que ele não conseguiu consultar; as aprovações controlam quais propostas podem virar PRs.*
 
 Algumas dependências precisam ser atualizadas juntas, como os componentes do [AppFlowy](https://appflowy.io/) e do [RustFS](https://rustfs.com/). Outras ficam em uma linha de versões específica, como a versão de suporte prolongado, LTS, do [Forgejo](https://forgejo.org/). Essas regras permitem atualizar cada serviço de acordo com suas necessidades.
 
