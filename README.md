@@ -1,7 +1,7 @@
 # Guigoes
 
 Blog de Guilherme de Castro, publicado em https://guigoes.com com
-[Margo v0.0.27](https://github.com/araihu/margo/releases/tag/v0.0.27).
+[Margo v0.0.28](https://github.com/araihu/margo/releases/tag/v0.0.28).
 
 ## Desenvolvimento
 
