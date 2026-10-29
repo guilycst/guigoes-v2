@@ -190,26 +190,18 @@ func tagSlug(tag string) string {
 	return strings.Trim(slugSeparators.ReplaceAllString(strings.ToLower(ascii.String()), "-"), "-")
 }
 
-func publicationDetails(m metadata) string {
-	authors := make([]string, len(m.Authors))
-	for i, author := range m.Authors {
-		authors[i] = `<span rel="author">` + html.EscapeString(author) + `</span>`
+// publicationLinks declares destinations; Margo renders the metadata header.
+func publicationLinks(m metadata) map[string]any {
+	authors, tags := map[string]string{}, map[string]string{}
+	for _, author := range m.Authors {
 		if profile := authorURL(author); profile != "" {
-			authors[i] = `<a rel="author" href="` + html.EscapeString(profile) + `">` + html.EscapeString(author) + `</a>`
-		}
-	}
-	var dates, tags []string
-	for _, item := range []struct{ value, label string }{{m.PublishedAt, "Publicado"}, {m.ModifiedAt, "Atualizado"}} {
-		if item.value != "" {
-			date, _ := time.Parse(time.RFC3339, item.value)
-			dates = append(dates, item.label+` <time datetime="`+html.EscapeString(item.value)+`">`+date.Format("02/01/2006")+`</time>`)
+			authors[author] = profile
 		}
 	}
 	for _, tag := range m.Tags {
-		tags = append(tags, `<li><a href="/tags/`+tagSlug(tag)+`/">`+html.EscapeString(tag)+`</a></li>`)
+		tags[tag] = baseURL + "/tags/" + tagSlug(tag) + "/"
 	}
-	// Margo's marker preserves this header while still generating head metadata.
-	return `<header class="margo-document__metadata" data-margo-publication-metadata="true" aria-label="Sobre este artigo"><address>` + strings.Join(authors, ", ") + `</address><span>` + strings.Join(dates, " · ") + `</span><ul aria-label="Tags">` + strings.Join(tags, "") + `</ul></header>`
+	return map[string]any{"authors": authors, "tags": tags}
 }
 
 func listing(posts []document, source string) (string, error) {
@@ -240,9 +232,6 @@ func writePage(stage string, d document) error {
 		first, body, _ = strings.Cut(body, "\n")
 		heading = first + "\n\n"
 	}
-	if d.Meta.PublishedAt != "" {
-		body = publicationDetails(d.Meta) + "\n\n" + body
-	}
 	class := "guigoes-content"
 	if d.Source == "index.md" {
 		class = "guigoes-home"
@@ -252,6 +241,14 @@ func writePage(stage string, d document) error {
 		frontmatter[key] = value
 	}
 	if d.Route != "" {
+		frontmatter["publication_links"] = publicationLinks(d.Meta)
+		if d.Meta.Cover != "" {
+			alt := d.Meta.CoverAlt
+			if alt == "" {
+				alt = d.Meta.Title
+			}
+			frontmatter["social_image"] = map[string]string{"path": d.Meta.Cover, "alt": alt}
+		}
 		frontmatter["layout"] = map[string]any{
 			"kind":   "docs",
 			"values": map[string]any{"toc": true},

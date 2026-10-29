@@ -1,17 +1,20 @@
 package main
 
 import (
+	"context"
 	"encoding/xml"
 	"fmt"
 	"html"
 	"io/fs"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"regexp"
 	"sort"
 	"strings"
 	"time"
+
+	margo "github.com/araihu/margo"
+	"github.com/araihu/margo/site"
 )
 
 func writeFile(file string, data []byte) error {
@@ -178,16 +181,16 @@ func buildSite(root string, now time.Time) error {
 		}
 	}
 	// Existing articles contain reviewed HTML/JS demos. Never build untrusted Markdown.
-	binary, err := filepath.Abs(filepath.Join(root, ".tools/margo/margo"))
+	result, err := site.BuildConfig(context.Background(), site.ConfigRequest{
+		ConfigPath: filepath.Join(root, "site.yaml"), Compiler: margo.New(margo.WithUnsafeHTML()),
+	})
 	if err != nil {
 		return err
 	}
-	command := exec.Command(binary, "site", "site.yaml", "--output-dir", ".build/render", "--allow-unsafe-html")
-	command.Dir = root
-	command.Stdout = os.Stdout
-	command.Stderr = os.Stderr
-	if err := command.Run(); err != nil {
-		return err
+	for _, artifact := range result.Artifacts {
+		if err := writeFile(filepath.Join(render, filepath.FromSlash(artifact.Path)), artifact.Content); err != nil {
+			return err
+		}
 	}
 	// Retain legacy image URLs even when Margo does not render a reference to them.
 	for _, d := range docs {
@@ -225,10 +228,10 @@ func buildSite(root string, now time.Time) error {
 	if err := writeFile(filepath.Join(render, "robots.txt"), []byte("User-agent: *\nAllow: /\nSitemap: "+baseURL+"/sitemap.xml\n")); err != nil {
 		return err
 	}
-	if err := applySocialCovers(root, render, posts); err != nil {
+	if err := copyBrandAssets(root, render); err != nil {
 		return err
 	}
-	if err := applyBranding(root, render); err != nil {
+	if err := writePublicationManifest(render, result); err != nil {
 		return err
 	}
 	if err := checkSite(root, render, now); err != nil {

@@ -1,12 +1,12 @@
 # Guigoes
 
 Blog de Guilherme de Castro, publicado em https://guigoes.com com
-[Margo v0.0.28](https://github.com/araihu/margo/releases/tag/v0.0.28).
+[Margo v0.0.29](https://github.com/araihu/margo/releases/tag/v0.0.29).
 
 ## Desenvolvimento
 
-Requisitos: Go 1.27.3+ e Make. `make install` compila o commit fixado do Margo
-com `go install` e a verificação padrão de módulos, instalando o binário em `.tools/`.
+Requisitos: Go 1.27.3+ e Make. `make install` baixa as dependências fixadas em
+`go.mod`. O build usa a biblioteca Margo diretamente, sem instalar outro binário.
 Não é necessário instalar Node ou Hugo para gerar o site.
 
 ```sh
@@ -14,7 +14,7 @@ make check  # Build, testes e verificação de URLs, imagens, links, fragmentos 
 make run    # Preview em http://127.0.0.1:1313; refaça make build após editar
 ```
 
-`public/` contém a publicação. `.build/` e `.tools/` são locais e ignorados pelo Git.
+`public/` contém a publicação. `.build/` contém o staging local e é ignorado pelo Git.
 O build renderiza e valida em staging antes de substituir `public/`; erros
 preservam a saída anterior. `make rundocker` testa a imagem estática com Nginx.
 
@@ -85,16 +85,25 @@ As quatro capas seguem a direção cartoon do Guigoes. Consulte
 O visual adapta o exemplo editorial [`examples/blog` do Margo](https://github.com/araihu/margo/tree/main/examples/blog),
 com licença preservada em `licenses/margo.txt`. A home mostra os quatro posts mais
 recentes, com destaque para o primeiro. `cover = "./assets/capa.webp"` e `cover_alt`
-definem a capa do artigo e das listagens. O cabeçalho próprio formata datas em
-`DD/MM/AAAA` e liga tags aos arquivos, mantendo os metadados semânticos do Margo.
+definem a capa do artigo e das listagens. O cabeçalho nativo formata datas em
+`DD/MM/AAAA` via `publication.date_format`. O frontmatter intermediário declara
+`publication_links` para perfis de autores e arquivos de tags, sem criar HTML próprio.
 
 O cabeçalho, a busca, o menu móvel e a alternância de tema são nativos do
-Margo. `site.yaml` declara os links e as duas versões do logo. `assets/blog.css`
+Margo. `site.yaml` declara os links, as duas versões do logo, os ícones e o webmanifest. `assets/blog.css`
 fornece a paleta e os estilos editoriais pelos tokens públicos do tema.
 
-O build habilita `--allow-unsafe-html` porque os posts existentes incluem demos
+O build habilita `margo.WithUnsafeHTML()` porque os posts existentes incluem demos
 HTML/JavaScript. Publique apenas conteúdo revisado. A demo Hyperscript preserva
 sua dependência externa fixa em `hyperscript.org@0.9.12`.
+
+Capas sociais são declaradas em `social_image` e renderizadas pelo Margo com
+URL absoluta, dimensões, MIME e texto alternativo. O blog valida o resultado
+contra `cover` e `cover_alt`. Não há reescrita do head após renderizar.
+
+RSS, redirects e arquivos estáticos continuam sendo gerados pelo blog. Depois
+de reuni-los aos artefatos do Margo, `site.MarshalManifest` descreve os bytes
+finais, preservando rotas e identidade do build sem copiar o algoritmo de hash.
 
 ## CI/CD
 

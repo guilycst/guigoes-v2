@@ -12,9 +12,24 @@ site:
   logo_dark: assets/brand/logo-light-v2.svg
   hide_name: true
   icon: assets/brand/icon-v2.svg
+  icons:
+    - {path: assets/brand/icon-v2.svg, sizes: any}
+    - {path: assets/brand/icon-16-v2.png, sizes: 16x16}
+    - {path: assets/brand/icon-32-v2.png, sizes: 32x32}
+    - {path: assets/brand/icon-48-v2.png, sizes: 48x48}
+    - {path: assets/brand/icon-96-v2.png, sizes: 96x96}
+    - {path: assets/brand/favicon-v2.ico, rel: shortcut icon}
+    - {path: assets/brand/apple-touch-icon-152-v2.png, rel: apple-touch-icon, sizes: 152x152}
+    - {path: assets/brand/apple-touch-icon-167-v2.png, rel: apple-touch-icon, sizes: 167x167}
+    - {path: assets/brand/apple-touch-icon-180-v2.png, rel: apple-touch-icon, sizes: 180x180}
+  webmanifest: site.webmanifest
+  application_name: Guigoes
+  theme_color: '#007d9c'
   social_image:
     path: assets/brand/social-v3.png
     alt: Guigoes, blog de Guilherme de Castro sobre Go, Kubernetes e engenharia de software.
+publication:
+  date_format: "02/01/2006"
 layout:
   kind: docs
   default:
