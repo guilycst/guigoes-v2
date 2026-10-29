@@ -1,8 +1,8 @@
 #!/bin/sh
 set -eu
 cd "$(dirname "$0")/.."
-# Stable release with native image zoom and pan.
-version=v0.0.27
+# Stable release with footnote navigation and mobile viewer fixes.
+version=v0.0.28
 mkdir -p .tools
 if test -x .tools/margo/margo && .tools/margo/margo version | head -1 | grep -qx "margo $version"; then
   exit 0
