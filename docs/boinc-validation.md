@@ -3,6 +3,10 @@
 Article revision: 2026-10-30, America/Sao_Paulo. Infrastructure observations below
 remain the 2026-10-29 snapshot; this revision did not change the cluster.
 
+The independent follow-up review, tutorial reproduction and live repairs are
+recorded in [boinc-review.md](boinc-review.md). Its live observations supersede
+the older snapshot below.
+
 ## Infrastructure
 
 - Home-lab PR 733 added stable v1 LimitRange and ResourceQuota admission budgets.
@@ -59,8 +63,9 @@ recreation, identity clone or increase in resource limits was performed.
   pulsars, links climateprediction.net, and removes internal node names. The
   thermal section now explains the actual sensor selection, independent CPU/GPU
   control scopes, hysteresis, suspended processes and failure behavior. Its
-  thresholds were checked against the existing supervisor source; no fresh
-  hardware observation or cluster change was performed for this revision.
+  thresholds were checked against the existing supervisor source. The later
+  independent review additionally checked live hardware and deployed the
+  startup-ordering repair documented in boinc-review.md.
 - make check passed, including final HTML, local links/fragments, legacy URLs,
   feeds, Go tests and vet. The page has one BlogPosting, the expected canonical,
   pt-BR, author profile and timestamp. JSON-LD, OG and Twitter image URLs match;
