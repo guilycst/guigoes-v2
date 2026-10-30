@@ -107,7 +107,7 @@ Já descrevi o hardware na [primeira parte da série Homelab K8s](/blogs/homelab
 
 O cliente com GPU anuncia menos CPU para deixar margem no pacote do N100, onde CPU e GPU compartilham recursos térmicos e elétricos. O limite de duas CPUs continua existindo para o container inteiro, incluindo o trabalho auxiliar da aplicação GPU.
 
-Os [manifestos e o runbook](https://github.com/guilycst/home-lab/tree/497c046c50aa3ed53e3f6d934e322bd609742a5b/k8s/boinc) registram essa configuração. São um exemplo concreto para estudar. Nomes de nós, StorageClass e a imagem Intel pertencem ao meu ambiente.
+A tabela resume a configuração do meu ambiente. Nomes de nós, StorageClass e a imagem Intel são escolhas dessa instalação; o tutorial abaixo oferece um exemplo independente para começar com CPU.
 
 ### O que cada limite controla
 
@@ -145,7 +145,7 @@ python3 seal-account.py \
 
 Os nomes do controlador dependem da sua instalação. O script usa escopo estrito para o Secret `boinc-science-united` no namespace `boinc-example`. Se mudar o namespace, use também `--namespace` e ajuste todos os manifestos. O hash exigido pelo protocolo do gerenciador de contas continua sendo uma credencial. Não o publique, nem publique o conteúdo do PVC.
 
-Não reutilize o SealedSecret do meu repositório. Ele pertence a outro cluster e a outra conta. Se usa outro gerenciador de segredos, produza o mesmo arquivo `acct_mgr_login.xml` dentro de um Secret pelo fluxo seguro da sua instalação.
+Gere o SealedSecret para seu próprio cluster e sua própria conta. Se usa outro gerenciador de segredos, produza o mesmo arquivo `acct_mgr_login.xml` dentro de um Secret pelo fluxo seguro da sua instalação.
 
 ### 3. Entregar a pasta ao Argo CD
 
@@ -210,7 +210,7 @@ O cliente roda sem root, sem token de ServiceAccount, sem capabilities e com rai
 
 Adicionar GPU não é apenas escrever um número no YAML. São necessárias uma GPU suportada pela aplicação científica, acesso ao dispositivo pelo runtime e as bibliotecas de execução corretas dentro do container.
 
-No meu Talos, o [Intel GPU device plugin](https://github.com/intel/intel-device-plugins-for-kubernetes/tree/v0.37.1/cmd/gpu_plugin) anuncia `gpu.intel.com/i915`. O cliente Intel usa uma imagem própria com OpenCL e o BOINC, ambos descritos no [Dockerfile e nos verificadores](https://github.com/guilycst/home-lab/tree/497c046c50aa3ed53e3f6d934e322bd609742a5b/k8s/boinc/image). O workload pede um acesso:
+No meu Talos, o [Intel GPU device plugin](https://github.com/intel/intel-device-plugins-for-kubernetes/tree/v0.37.1/cmd/gpu_plugin) anuncia `gpu.intel.com/i915`. O cliente Intel usa uma imagem própria com OpenCL e BOINC. O workload pede um acesso:
 
 ```yaml
 resources:
@@ -223,9 +223,9 @@ resources:
     gpu.intel.com/i915: "1"
 ```
 
-Esse trecho pertence ao cliente Intel completo. Não é um patch suficiente para habilitar GPU no exemplo CPU-only. Para reproduzir o caminho Intel, confira primeiro driver i915 no host e o device plugin; valide a enumeração OpenCL em uma tarefa de teste sem PVC científico. Depois adapte o [controlador GPU](https://github.com/guilycst/home-lab/blob/497c046c50aa3ed53e3f6d934e322bd609742a5b/k8s/boinc/workers.yaml), o ConfigMap, o supervisor e sua imagem em conjunto. Ajuste nomes de nó e pod também nas verificações do script. Preserve um único escritor do PVC durante a troca.
+Esse trecho pertence ao cliente Intel completo. Não é um patch suficiente para habilitar GPU no exemplo CPU-only. Para reproduzir o caminho Intel, confira primeiro driver i915 no host e o device plugin; valide a enumeração OpenCL em uma tarefa de teste sem PVC científico. Prepare em conjunto o workload, o ConfigMap de preferências, o supervisor térmico e a imagem compatível. Se o supervisor verificar a identidade do cliente, mantenha os nomes de nó e pod coerentes com o manifesto. Preserve um único escritor do PVC durante a troca.
 
-A imagem usada no meu teste está fixada em `ghcr.io/guilycst/home-lab/boinc-intel@sha256:5dba6f51a9c476f7e111a9be74ee82196b3ff0757c918b7d26e8560236207705`. Ela contém patches locais sobre BOINC 8.0.4. Não é a imagem oficial nem uma solução genérica para qualquer GPU. NVIDIA e AMD exigem outros drivers, bibliotecas e recursos; não precisam desse patch Intel por definição.
+A imagem Intel usada no meu teste contém patches locais sobre BOINC 8.0.4. Esse piloto é uma implementação específica do homelab; o exemplo disponível para download neste artigo usa o cliente oficial somente com CPU. Não é a imagem oficial nem uma solução genérica para qualquer GPU. NVIDIA e AMD exigem outros drivers, bibliotecas e recursos; não precisam desse patch Intel por definição.
 
 No meu plugin, os slots são compartilhados. Pedir uma unidade dá acesso ao dispositivo, não uma porcentagem de uso, memória dedicada ou potência reservada. Limitei o cliente a uma tarefa GPU por vez, inclusive entre projetos, com o patch versionado. Essa regra também não impede que outro pod com acesso à mesma GPU concorra com ele.
 
@@ -241,17 +241,17 @@ Algumas aplicações GPU demoram a produzir o primeiro checkpoint. Para evitar r
 
 ## CPU também precisa de controle térmico
 
-Ao conferir o cliente somente CPU, encontrei o worker-02 a 96 °C. O limite de duas CPUs estava funcionando, mas não limitava a temperatura do pacote. Adicionei um [supervisor CPU separado](https://github.com/guilycst/home-lab/blob/497c046c50aa3ed53e3f6d934e322bd609742a5b/k8s/boinc/cpu-guard.py), com os mesmos patamares de 85 °C para pausar e 80 °C para retomar.
+Ao conferir o cliente somente CPU, encontrei o worker-02 a 96 °C. O limite de duas CPUs estava funcionando, mas não limitava a temperatura do pacote. Adicionei um supervisor CPU separado, com os mesmos patamares de 85 °C para pausar e 80 °C para retomar.
 
 Ele mantém as aplicações na memória durante as pausas. Antes de permitir o início das tarefas, precisa conseguir impor o modo de execução por RPC. Sensor indisponível mantém a contribuição suspensa. Uma falha posterior de controle encerra o cliente para não deixar a carga sem supervisão.
 
 Na validação, observei pausa e retomada automáticas e redução do consumo de CPU do pod. Também houve picos até 90 °C após retomadas, o que mostra por que esses patamares não são um teto térmico. O pod GPU continuou com o mesmo processo; o cliente CPU passou por um rollout controlado e voltou com o mesmo volume e identidade científica. Trabalho ainda sem checkpoint pode precisar ser refeito nesse tipo de reinício.
 
-Esse supervisor usa sensores Intel `coretemp`. O exemplo CPU para download mantém o orçamento por recursos e requer acompanhamento da temperatura; para adotar a pausa automática, adapte o supervisor e a montagem do [controlador CPU](https://github.com/guilycst/home-lab/blob/497c046c50aa3ed53e3f6d934e322bd609742a5b/k8s/boinc/cpu-worker.yaml) aos sensores disponíveis. Se o nó continuar quente por causa de outros serviços, a contribuição pode permanecer pausada. Isso é preferível a disputar capacidade sem margem.
+Esse supervisor usa sensores Intel `coretemp`. O exemplo CPU para download mantém o orçamento por recursos e requer acompanhamento da temperatura; para adotar a pausa automática, prepare um supervisor para os sensores disponíveis no seu host e execute-o como processo principal do container, responsável por iniciar o BOINC, encaminhar SIGTERM e impor as pausas por RPC. Se o nó continuar quente por causa de outros serviços, a contribuição pode permanecer pausada. Isso é preferível a disputar capacidade sem margem.
 
 ## Barrar um deploy maior do que o combinado
 
-Limites no template protegem o pod configurado. Para impedir que uma edição futura crie mais clientes ou aumente silenciosamente o orçamento do namespace, adicionei [LimitRange e ResourceQuota](https://github.com/guilycst/home-lab/blob/497c046c50aa3ed53e3f6d934e322bd609742a5b/k8s/boinc/budget.yaml).
+Limites no template protegem o pod configurado. Para impedir que uma edição futura crie mais clientes ou aumente silenciosamente o orçamento do namespace, adicionei LimitRange e ResourceQuota.
 
 No meu deployment, a quota permite dois pods, soma de limites de quatro CPUs, 4 GiB de memória e uma alocação Intel GPU. O teto de armazenamento inclui três PVCs de 8 GiB porque uma cópia histórica de migração continua retida. Ela não roda outro cliente. O exemplo para download tem orçamento próprio para apenas um cliente.
 
