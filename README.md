@@ -1,157 +1,97 @@
 # Guigoes
 
-Blog de Guilherme de Castro, publicado em https://guigoes.com com
-[Gazeta v0.0.2](https://github.com/araihu/gazeta/releases/tag/v0.0.2) sobre
-[Margo commit c08c6ee](https://github.com/araihu/margo/commit/c08c6ee234223ec4efdb06a2eabe2055f3b7ad63).
+Guilherme de Castro's blog at [guigoes.com](https://guigoes.com), built with the published [Gazeta](https://github.com/araihu/gazeta) engine on [Margo](https://github.com/araihu/margo). `go.mod` pins both versions. The navigation integration uses merged [Margo c08c6ee](https://github.com/araihu/margo/commit/c08c6ee234223ec4efdb06a2eabe2055f3b7ad63) and [App Shells cbb346e](https://github.com/araihu/goshtoso-app-shells/commit/cbb346ef3bca4116c628a78c1f963bea8f7170a3). This repository owns content, branding, configuration and deployment, while `cmd/blog` is a thin CLI adapter.
 
-## Desenvolvimento
+## Development
 
-Requisitos: Go 1.27.3+ e Make. `make install` baixa as dependências fixadas em
-`go.mod`. O comando local delega à biblioteca Gazeta, que renderiza pelo Margo.
-Não há engine editorial copiada neste repositório nem instalação de outro binário.
-Não é necessário instalar Node ou Hugo para gerar o site.
+Use Go 1.27.3+ and Make. Node.js 24+ is needed only for deployment packaging.
 
 ```sh
-make check  # Build, testes e verificação de URLs, imagens, links, fragmentos e RSS
-make run    # Preview em http://127.0.0.1:1313; refaça make build após editar
+npm ci
+make check dry-run  # Build, validate schema, test and package without publishing
+make run            # Preview at http://127.0.0.1:1313
 ```
 
-`public/` contém a publicação. `.build/` contém o staging local e é ignorado pelo Git.
-O build renderiza e valida em staging antes de substituir `public/`; erros
-preservam a saída anterior. `make rundocker` testa a imagem estática com Nginx.
+`make install` downloads pinned Go dependencies. `public/` contains the generated publication; `.build/` contains temporary build files. Both are ignored by Git. Rebuild after editing. A failed build preserves the previous publication. `make rundocker` tests the static site through Nginx.
 
-## Publicar um post
+`make check` runs the Gazeta publication validator, Go tests without cached results, formatting checks and `go vet`. It also requires the sitemap to contain every indexable canonical page exactly once, excluding aliases and the error document. The independent `internal/schema` contract builds successive domains and author identities and reads their final JSON-LD. It covers article/profile identity, canonical URLs, covers, dates, collections and deliberate metadata corruption.
 
-Crie `content/blogs/meu-post/index.md` com metadados TOML entre `+++`:
+## Content and identity
 
-```markdown
+Create `content/blogs/my-article/index.md` with TOML frontmatter:
+
+```toml
 +++
-title = "Título do post"
-description = "Resumo do artigo."
+title = "Article title"
+description = "Article summary."
 language = "pt-BR"
 authors = ["Guilherme de Castro"]
-publishedAt = "2026-10-27T09:00:00-03:00"
+publishedAt = "2026-10-30T09:00:00-03:00"
 tags = ["go", "kubernetes"]
-draft = false
+draft = true
 +++
-Texto do artigo em Markdown.
 ```
 
-Imagens ficam em `content/blogs/meu-post/assets/` e usam links `./assets/imagem.png`.
-A pasta define a URL `/blogs/meu-post/`. `draft = true` e datas futuras excluem
-o post de páginas, assets, listagens, sitemap e feeds. Datas futuras passam a
-aparecer no próximo build após o horário informado, sem agendamento automático.
+The directory defines `/blogs/my-article/`. Keep article images under its `assets/` directory and use relative links. Review the article, provide the real publication time and set `draft` to `false` to publish. Drafts and future posts, including their assets, stay out of the publication and feeds. A future post needs another build after its publication time; there is no implicit schedule.
 
-Gazeta, chamada por `go run ./cmd/blog build`, converte TOML para o frontmatter YAML aceito pelo Margo e gera
-índices, tags, RSS e redirects. Margo renderiza Markdown, metadados semânticos,
-canonicals, sitemap, imagens e código. `site.yaml` define domínio, identidade visual e tema.
-`blog.yaml` configura perfis de autores, textos editoriais em português, tipos
-de página e arquivos/URLs legados. Novos blogs usam a mesma Gazeta com seus próprios
-arquivos de configuração, conteúdo e assets.
-Os arquivos em `content/` são a única fonte dos posts e da ordenação das listas.
-Posts de uma série usam `series = "Homelab K8s"` e `seriesPart = 1`, com número
-positivo e único dentro da série. O build gera o índice com a parte atual e os
-links anterior/próximo apenas para artigos visíveis. Home e arquivo oferecem uma
-entrada pela parte 1 quando o post mais recente pertence à série e essa primeira
-parte está disponível. A listagem continua ordenada por data, sem alterar datas
-para representar a ordem de leitura.
-`go run ./cmd/blog check` valida uma saída existente; `serve` inicia o preview local.
+`site.yaml` controls domain, visual identity, icons, navigation, theme and the `DD/MM/YYYY` publication date format. `blog.yaml` declares author profiles, localized editorial labels, page types and legacy files/URLs. `content/` is the only source for posts and list ordering. Preserve `publishedAt` during revisions; use `modifiedAt` for relevant editorial changes.
 
-Cada post publicado recebe um único JSON-LD `BlogPosting`, gerado no build:
+Series use `series` and a positive, unique `seriesPart`. Gazeta generates the index and previous/next links from visible articles. Home and archives link to part 1 when appropriate, while publication dates retain their original meaning.
 
-- `title` e `description` geram `headline` e `description`.
-- Cada entrada de `authors` gera uma entidade `Person`. Guilherme de Castro usa
-  `https://guigoes.com/about/` como perfil, também ligado no cabeçalho do artigo.
-- `publishedAt` e, quando presente, `modifiedAt` preservam o timestamp e o fuso.
-- `cover` gera uma URL absoluta em `image`. Sem capa, o campo é omitido.
-- URL, identificador e `mainEntityOfPage` usam o endereço canônico do post.
+The editorial `.blog-*` classes belong to Gazeta. Guigoes supplies its palette, fonts and branding in `assets/blog.css`. Header, search, mobile navigation, theme controls, table of contents and viewers are native Margo components. The Homelab series enables `margo = { imageViewer = true }`; a standalone Markdown image with a title receives native zoom/pan controls. Covers and linked thumbnails remain static.
 
-Gazeta declara `structured_data` no frontmatter intermediário. O Margo emite um
-único script JSON-LD no head, com escape seguro e rejeição de scripts duplicados.
-Não há mais injeção local de scripts no corpo do artigo.
+The branding adapts Margo's [editorial example](https://github.com/araihu/margo/tree/main/examples/blog), with its license preserved in `licenses/margo.txt`. The [media guide](docs/media-style.md) describes Guigoes artwork. `blog.yaml` explicitly enables reviewed HTML/JavaScript because existing articles contain demos, including the pinned `hyperscript.org@0.9.12` dependency. Publish only reviewed source.
 
-- Home: `WebSite` e `WebPage`, com a lista dos quatro posts exibidos.
-- Arquivo e tags: `CollectionPage`; as listagens de posts incluem `ItemList` na mesma ordem visível.
-- Projetos: `CollectionPage`, sem inventar preços, avaliações ou versões de software.
-- Sobre: `ProfilePage` com `Person`, usando a mesma identidade dos autores dos posts.
-- Contato: `ContactPage`. Categorias, que apenas aponta para tags: `WebPage`.
-- Aliases e 404: sem JSON-LD. Rascunhos e posts futuros ficam fora do build público.
+## Structured data
 
-O validador confere o HTML final de cada tipo de página, canonical, autoria,
-datas, capas, idioma e itens das listas. `SearchAction` e breadcrumbs não são
-anunciados porque o blog não oferece esses contratos de navegação.
+Gazeta declares metadata through Margo's native configuration. Margo emits one safely serialized JSON-LD script in the document head. There is no generated-head rewriting or local schema renderer.
 
-Referências: [Google Article](https://developers.google.com/search/docs/appearance/structured-data/article)
-e [Schema.org BlogPosting](https://schema.org/BlogPosting).
+- Articles use `BlogPosting`, with source title, description, authors, dates and canonical identity.
+- Guilherme de Castro's author URL is `/about/`, also linked visibly in article headers. Guests retain their own configured identities.
+- A real `cover` becomes the article image and social preview, with decoded dimensions/MIME and `cover_alt`. Articles without covers omit JSON-LD `image`; the site-wide social preview remains a separate fallback.
+- Home uses `WebSite` and `WebPage`; article lists use `ItemList` in visible order.
+- Blog/tag archives and projects use `CollectionPage`; about uses `ProfilePage` with `Person`; contact uses `ContactPage`. The categories landing page uses `WebPage`.
+- Alias HTML and 404 pages omit JSON-LD. The generated 404 document declares native `noindex, follow` metadata and stays out of the sitemap and `llms.txt`. No unsupported search action or breadcrumb contract is advertised.
 
-As quatro capas seguem a direção cartoon do Guigoes. Consulte
-[o guia de mídia](docs/media-style.md) para paleta, composição e prompts utilizados.
-
-Os seletores editoriais `.blog-*` pertencem à Gazeta; paleta, fontes e marca
-continuam em `assets/blog.css`.
-
-O visual adapta o exemplo editorial [`examples/blog` do Margo](https://github.com/araihu/margo/tree/main/examples/blog),
-com licença preservada em `licenses/margo.txt`. A home mostra os quatro posts mais
-recentes, com destaque para o primeiro. `cover = "./assets/capa.webp"` e `cover_alt`
-definem a capa do artigo e das listagens. O cabeçalho nativo formata datas em
-`DD/MM/AAAA` via `publication.date_format`. O frontmatter intermediário declara
-`publication_links` para perfis de autores e arquivos de tags, sem criar HTML próprio.
-
-O cabeçalho, a busca, o menu móvel e a alternância de tema são nativos do
-Margo. `site.yaml` declara os links, as duas versões do logo, os ícones e o webmanifest. `assets/blog.css`
-fornece a paleta e os estilos editoriais pelos tokens públicos do tema.
-
-`blog.yaml` habilita `unsafe_html: true` porque os posts existentes incluem demos
-HTML/JavaScript. Publique apenas conteúdo revisado. A demo Hyperscript preserva
-sua dependência externa fixa em `hyperscript.org@0.9.12`.
-
-Capas sociais são declaradas em `social_image` e renderizadas pelo Margo com
-URL absoluta, dimensões, MIME e texto alternativo. Gazeta valida o resultado
-contra `cover` e `cover_alt`. Não há reescrita do head após renderizar.
-
-Gazeta gera RSS e redirects, e reúne os arquivos estáticos do blog. Depois
-de reuni-los aos artefatos do Margo, `site.MarshalManifest` descreve os bytes
-finais, preservando rotas e identidade do build sem copiar o algoritmo de hash.
+Gazeta validates final HTML, links, fragments, feeds, authorship, dates, images and list contents before replacing `public/`. Margo's manifest describes the final artifact bytes. Use `go run ./cmd/blog check` to validate an existing artifact without rebuilding.
 
 ## CI/CD
 
-GitHub Actions executa `make check` em pull requests e pushes em `main`, e guarda
-`public/` como artifact. Cloudflare Workers Builds usa a conexão GitHub existente
-para executar os mesmos checks antes de publicar o Worker `guigoes-v2`.
+GitHub Actions is the production publication pipeline. Pull requests run content/schema checks and a Wrangler dry-run, then validate the downloaded artifact in a separate job. No deployment secret is available during those steps.
 
-Configuração de Workers Builds em Settings > Builds:
+On `main`, the deployment workflow builds and validates a publication, uploads `public/` and `wrangler.toml`, then downloads that exact artifact in a separate job. It validates the downloaded output without rebuilding, checks that the commit is still current `main`, and publishes Worker `guigoes-v2`. Production runs are serialized; an older commit cannot replace a newer publication.
 
-- Repositório: `guilycst/guigoes-v2`, branch de produção `main`.
-- Build command: `make check`.
-- Deploy command: `npx --yes wrangler@4.153.0 deploy`.
-- Version command: `npx --yes wrangler@4.153.0 versions upload`.
-- Root directory: `/`.
-- Go: usa o runtime da imagem do Cloudflare; `go.mod` define a versão mínima.
+The existing `wrangler.toml` retains the `guigoes.com` Custom Domain, Workers.dev access, preview URLs, directory URL handling and custom 404 behavior. Wrangler is pinned in `package-lock.json`. Only the real deploy step receives Cloudflare credentials.
 
-Branches de trabalho geram versões de preview; apenas `main` publica produção.
-`wrangler.toml` mantém assets em `public/`, URLs com barra final e página 404.
-O domínio e a credencial de deploy continuam na integração existente do Cloudflare.
-Não é necessário copiar tokens para o GitHub.
+Configure these repository settings:
 
-`tests/legacy-urls.txt` registra URLs e feeds da versão anterior para impedir
-regressões. `/posts/.../` redireciona para `/blogs/.../` com HTTP 301 no Cloudflare.
+| Type | Name | Purpose |
+| --- | --- | --- |
+| Variable | `CLOUDFLARE_ACCOUNT_ID` | Cloudflare account hosting `guigoes-v2` |
+| Variable | `CLOUDFLARE_DEPLOY_ENABLED` | `true` only after Workers Builds stops publishing production |
+| Secret | `CLOUDFLARE_API_TOKEN` | Workers deployment token restricted to the hosting account |
 
-Para rollback, restaure a versão anterior em Workers Deployments. Reverter o
-código para antes da migração também exige restaurar o antigo build command
-`hugo --minify` no Cloudflare.
+Before enabling Actions production deployment, replace the Workers Builds **Deploy default branch** deploy command with `npx --yes wrangler@4.156.0 versions upload`. This follows the [Cloudflare procedure for disabling automatic deployments](https://developers.cloudflare.com/workers/ci-cd/builds/#disconnecting-builds): builds may still save versions, but only Actions promotes production. Keep **Deploy non-production branches** for native branch previews. Two production publishers must not run concurrently. A migration can leave Actions publication disabled while PR checks and manual dry-runs are reviewed.
 
-Todas as páginas usam o layout `docs` do Margo com `sidebar: false` e
-`pagination: false`. Apenas os posts habilitam `toc: true`. O sumário lateral
-nativo respeita o cabeçalho e acompanha a seção em leitura em telas largas.
-A navegação da série continua definida pelo blog; não há outra navegação,
-controle de tema ou rodapé injetado no corpo do artigo.
+For a manual check, run **Deploy blog** with `dry_run = true` on `main`. This exercises build, artifact transfer and packaging without publishing. A real manual deployment also requires current `main`, configured credentials and the enable variable.
 
-Os artigos da série Homelab habilitam o visualizador nativo com
-`margo = { imageViewer = true }` no frontmatter TOML. Imagens Markdown
-isoladas com título recebem zoom, deslocamento, tamanho original e expansão.
-Capas sem título e miniaturas com links permanecem estáticas. Para habilitar
-o controle em uma imagem, use `![Descrição](./assets/imagem.png "Legenda")`.
+## Production verification
 
-The Margo dependency is pinned to an upstream commit for native aggregate asset
-budgets and authored Mermaid accessible titles. `site.yaml` sets a 64 MiB source
-asset budget while individual input limits remain unchanged.
+After a successful deployment, the workflow calls the published Gazeta verifier against `site.base_url`, using the downloaded artifact. It never rebuilds the expected site. Verification checks:
+
+- matching local/public Margo manifest before and after the complete pass;
+- publication content, canonical, locale, JSON-LD and social metadata;
+- exact public asset bytes and suitable HTML/image/CSS/JavaScript MIME types;
+- legacy HTTP redirects and a missing route returning the correct 404 page/status.
+
+The check retries propagation failures within a three-minute deadline and fails the job if production does not match. `production-verification-<commit>` stores a JSON receipt with origin, manifest digest, counts and attempts. Known Cloudflare protection injection is ignored only in comparison trees; publication HTML is never rewritten.
+
+Run `make verify` against an already-built local artifact to repeat this check. The [Rich Results Test](https://search.google.com/test/rich-results) remains an external validation tool; the CI verifier checks the publication contract rather than calling Google during every deployment.
+
+## Rollback and repository language
+
+Revert the source commit and push the revert to `main` to create another validated publication. For an emergency rollback, restore a previous Worker deployment through Cloudflare, then align Git before the next automatic deployment. Do not restore the retired Hugo build command.
+
+`tests/legacy-urls.txt` protects existing public URLs and feeds. Legacy `/posts/.../` routes redirect to `/blogs/.../` with HTTP 301. Preserve those paths when editing content.
+
+Write repository documentation, GoDoc, source identifiers, code comments and developer-facing messages in English. Published content, author identities, UI labels and intentional localization/Unicode fixtures keep their configured language, Brazilian Portuguese for Guigoes.
