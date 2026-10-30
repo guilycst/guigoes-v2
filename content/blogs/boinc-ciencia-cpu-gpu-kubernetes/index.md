@@ -306,7 +306,9 @@ Alterar o ConfigMap sozinho não reinicia o pod.
 
 Rollback segue a mesma regra. Reverter uma quota não exige trocar imagem nem dados. Reverter uma imagem usa o PVC atual, com o cliente anterior já parado. Uma cópia antiga de volume não deve voltar a rodar em paralelo. Se desabilitar GPU, tarefas que precisam dela podem ficar sem avançar até recuperar suporte ou vencer o prazo.
 
-Para encerrar participação de vez, deixe o trabalho pendente terminar antes de remover o cliente. Depois de calcular, o BOINC envia os arquivos de resultado e comunica a conclusão ao servidor do projeto, etapa chamada de reporte. O projeto então valida o resultado. Confira essas etapas e o histórico do projeto ou do gerenciador; desaparecer da lista local não comprova validação.
+Para encerrar participação de vez, deixe o trabalho pendente terminar, ser enviado e reportado antes de remover o cliente. Acompanhe a lista de tarefas do cliente com o comando `boinccmd --get_tasks` executado no pod e os envios pelos logs do pod, como no [passo 4 do tutorial](#4-confirmar-trabalho-de-verdade).
+
+Depois de calcular, o BOINC envia os arquivos de resultado e comunica a conclusão ao servidor do projeto, etapa chamada de reporte. A validação dos resultados acontece no servidor do projeto científico.
 
 ## Uma contribuição que caiba no laboratório
 
