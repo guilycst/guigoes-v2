@@ -49,3 +49,22 @@ original Guigoes cover remains unchanged.
 - Changes: the source-provided reduced rendition, without further modifications.
 - Caption identifies the rectorate rather than suggesting that it depicts the
   OpenZika laboratory or team.
+
+## Live BOINC Grafana dashboard
+
+- Asset: `content/blogs/boinc-ciencia-cpu-gpu-kubernetes/assets/grafana-boinc-recursos.jpg`.
+- Captured on 2026-10-30, America/Sao_Paulo, from the existing Grafana
+  `Kubernetes / Compute Resources / Namespace (Pods)` dashboard.
+- Dashboard UID: `85a562078cdf77779eaa1add43ccec1e`; namespace filter: `boinc`;
+  time range: last one hour; data source: `default`.
+- The table shows live CPU usage, requests and limits for the two clients.
+  The chart shows memory working set per pod and namespace quota reference lines.
+- Native browser JPEG capture, 1280 × 650 pixels, taken from the top-left of the
+  viewport to retain the dashboard title, namespace/time filters, CPU table and
+  memory chart. Navigation was collapsed through Grafana's own UI.
+- No generated pixels, redaction, stitched panels or altered measurements.
+  No dashboard, query, workload or cluster configuration was changed.
+- The caption explains the client identities and the CPU request denominator.
+  This snapshot illustrates resource monitoring, not GPU utilization or a
+  temperature trace.
+- Bytes: 66410; SHA-256: `22dbf8ed8a7a3461bf6ba434e00c5cf02f9e41b6dc7003cb25a6700995c3b631`.

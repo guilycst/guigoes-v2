@@ -277,6 +277,10 @@ sum by (pod) (
 
 As métricas dependem da coleta do seu cluster. No exemplo de download, troque o namespace por `boinc-example`. Uso essas séries junto dos logs e de `boinccmd --get_tasks`, e não como substitutas da observação dos serviços. Para GPU, confira também contadores do dispositivo quando disponíveis. RAM do host importa porque uso de memória pelo driver pode não aparecer da mesma forma no working set do container.
 
+![Dashboard do Grafana filtrado para boinc, com tabela de CPU dos dois pods e gráfico de memória, incluindo requests e limits.](./assets/grafana-boinc-recursos.jpg "CPU e memória do BOINC")
+
+Na captura de 30/10/2026, `boinc-0` é o cliente com GPU, e o pod com prefixo `boinc-cpu-1` é o cliente somente CPU. A tabela mostra CPU em núcleos e o gráfico acompanha memória. A coluna `CPU Requests %` compara o uso com a reserva de 25m por pod, explicando os percentuais altos.
+
 Para suspender os cálculos e manter o cliente e as aplicações na memória, use a interface local do BOINC:
 
 ```sh
