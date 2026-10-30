@@ -30,16 +30,15 @@ Na configuração da conta, é possível marcar as sete áreas oferecidas e deix
 ```mermaid
 flowchart TB
     accTitle: Como a contribuição chega à pesquisa
-    accDescr: Você escolhe áreas no Science United, que indica projetos ao BOINC. O cliente baixa programas e tarefas diretamente desses projetos. Seu computador executa os cálculos e o BOINC devolve os resultados aos projetos, que os conferem para a análise das equipes de pesquisa.
-    areas["Você escolhe as áreas<br/>Science United indica<br/>projetos ao BOINC"]
-    download["BOINC baixa tarefas<br/>dos projetos"]
-    calculo["Seu computador<br/>executa os cálculos"]
-    envio["BOINC envia resultados<br/>aos projetos"]
-    pesquisa["Projetos conferem<br/>Pesquisadores analisam"]
-    areas --> download --> calculo --> envio --> pesquisa
+    accDescr: Você informa suas áreas de interesse ao Science United, que indica projetos ao BOINC. No seu computador, o BOINC executa os programas científicos na CPU ou GPU. O cliente pede tarefas e devolve resultados diretamente aos projetos, que enviam os programas e dados para os cálculos. Essa troca se repete. Os projetos validam os resultados para a análise dos pesquisadores. O Science United coordena a escolha dos projetos, sem intermediar a transferência das tarefas e dos resultados.
+    pessoa["Você escolhe áreas"] --> su["Science United"]
+    su -. "Seleciona projetos" .-> cliente["Seu computador<br/>BOINC gerencia cálculos<br/>na CPU ou GPU"]
+    cliente -->|"Pede tarefas<br/>Envia resultados"| projetos["Projetos científicos"]
+    projetos -->|"Programas<br/>e tarefas"| cliente
+    projetos -->|"Resultados<br/>validados"| pesquisa["Pesquisadores<br/>reúnem e analisam"]
 ```
 
-Cada computador participa de uma parte desse trabalho; o conjunto permite explorar perguntas que exigem muito processamento.
+Essa troca de tarefas e resultados se repete com cada projeto associado ao cliente. Os projetos conferem os resultados e as equipes de pesquisa reúnem contribuições de muitos computadores para analisá-las. Cada computador participa de uma parte desse trabalho; o conjunto permite explorar perguntas que exigem muito processamento.
 
 ## O que já saiu desse trabalho coletivo
 
