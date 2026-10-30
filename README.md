@@ -2,7 +2,7 @@
 
 Blog de Guilherme de Castro, publicado em https://guigoes.com com
 [Gazeta v0.0.2](https://github.com/araihu/gazeta/releases/tag/v0.0.2) sobre
-[Margo v0.0.29](https://github.com/araihu/margo/releases/tag/v0.0.29).
+[Margo commit 882c1cc](https://github.com/araihu/margo/commit/882c1cc46e9651e419c7836606ac3716efe5dedf).
 
 ## Desenvolvimento
 
@@ -151,3 +151,7 @@ Os artigos da série Homelab habilitam o visualizador nativo com
 isoladas com título recebem zoom, deslocamento, tamanho original e expansão.
 Capas sem título e miniaturas com links permanecem estáticas. Para habilitar
 o controle em uma imagem, use `![Descrição](./assets/imagem.png "Legenda")`.
+
+The Margo dependency is pinned to an upstream commit for native aggregate asset
+budgets and authored Mermaid accessible titles. `site.yaml` sets a 64 MiB source
+asset budget while individual input limits remain unchanged.

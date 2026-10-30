@@ -1,0 +1,177 @@
+# CPU-only starting point. Replace node and storage class before committing.
+# Supply a separately sealed boinc-science-united Secret in boinc-example.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: boinc-example
+  labels:
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/warn: restricted
+---
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: boinc-example-background
+value: -1000
+globalDefault: false
+preemptionPolicy: Never
+description: Low scheduling priority for volunteer science.
+---
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: worker
+  namespace: boinc-example
+spec:
+  limits:
+  - type: Container
+    max: {cpu: '1', memory: 1Gi}
+    default: {cpu: '1', memory: 1Gi}
+    defaultRequest: {cpu: 25m, memory: 1Gi}
+  - type: Pod
+    max: {cpu: '1', memory: 1Gi}
+  - type: PersistentVolumeClaim
+    max: {storage: 8Gi}
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: total
+  namespace: boinc-example
+spec:
+  hard:
+    pods: '1'
+    limits.cpu: '1'
+    limits.memory: 1Gi
+    requests.memory: 1Gi
+    requests.cpu: 25m
+    persistentvolumeclaims: '1'
+    requests.storage: 8Gi
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: boinc-config
+  namespace: boinc-example
+data:
+  cc_config.xml: |
+    <cc_config><options><ncpus>1</ncpus><no_gpus>1</no_gpus><max_file_xfers>2</max_file_xfers><max_file_xfers_per_project>1</max_file_xfers_per_project></options></cc_config>
+  global_prefs_override.xml: |
+    <global_preferences>
+      <run_if_user_active>1</run_if_user_active>
+      <max_ncpus_pct>100</max_ncpus_pct><cpu_usage_limit>100</cpu_usage_limit>
+      <suspend_cpu_usage>0</suspend_cpu_usage><leave_apps_in_memory>0</leave_apps_in_memory>
+      <work_buf_min_days>0.05</work_buf_min_days><work_buf_additional_days>0</work_buf_additional_days>
+      <disk_max_used_gb>4</disk_max_used_gb><disk_min_free_gb>0.5</disk_min_free_gb>
+      <disk_max_used_pct>90</disk_max_used_pct>
+      <ram_max_used_busy_pct>10</ram_max_used_busy_pct><ram_max_used_idle_pct>10</ram_max_used_idle_pct>
+    </global_preferences>
+  start.py: |
+    import os
+    from pathlib import Path
+    import shutil
+    import xml.etree.ElementTree as ET
+
+    data = Path('/var/lib/boinc')
+    os.umask(0o077)
+    for name in ('cc_config.xml', 'global_prefs_override.xml'):
+        shutil.copyfile(Path('/config') / name, data / name)
+    if not (data / 'acct_mgr_url.xml').exists():
+        (data / 'acct_mgr_url.xml').write_text('<acct_mgr><name>Science United</name><url>https://scienceunited.org/</url></acct_mgr>')
+    shutil.copyfile('/credentials/acct_mgr_login.xml', data / 'acct_mgr_login.xml')
+    host_memory = next(int(line.split()[1]) * 1024 for line in Path('/proc/meminfo').read_text().splitlines() if line.startswith('MemTotal:'))
+    budget = int(os.environ['BOINC_MEMORY_LIMIT_BYTES']) - 256 * 1024**2
+    if budget <= 0:
+        raise SystemExit('Container memory limit must exceed 256 MiB')
+    prefs = ET.parse(data / 'global_prefs_override.xml')
+    for name in ('ram_max_used_busy_pct', 'ram_max_used_idle_pct'):
+        prefs.getroot().find(name).text = str(min(100, 100 * budget / host_memory))
+    prefs.write(data / 'global_prefs_override.xml')
+    os.chdir(data)
+    os.execv('/usr/bin/boinc', ['/usr/bin/boinc', '--dir', str(data), '--no_gpus'])
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: boinc
+  namespace: boinc-example
+spec:
+  clusterIP: None
+  selector: {app: boinc-example}
+  ports:
+  - {name: rpc, port: 31416, targetPort: 31416}
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: boinc
+  namespace: boinc-example
+spec:
+  serviceName: boinc
+  replicas: 1
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: Retain
+    whenScaled: Retain
+  selector:
+    matchLabels: {app: boinc-example}
+  template:
+    metadata:
+      labels: {app: boinc-example}
+    spec:
+      priorityClassName: boinc-example-background
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      terminationGracePeriodSeconds: 120
+      nodeSelector:
+        kubernetes.io/arch: amd64
+        kubernetes.io/hostname: REPLACE_WITH_NODE
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+      - name: boinc
+        image: boinc/client@sha256:a9629c767fcaab695401a2a4a6a34befe087f6cc59a41c51539531eff645e6e2
+        command: [/usr/bin/python3, /config/start.py]
+        workingDir: /var/lib/boinc
+        env:
+        - name: BOINC_MEMORY_LIMIT_BYTES
+          valueFrom:
+            resourceFieldRef: {resource: limits.memory}
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities: {drop: [ALL]}
+        resources:
+          requests: {cpu: 25m, memory: 1Gi}
+          limits: {cpu: '1', memory: 1Gi}
+        readinessProbe:
+          exec:
+            command: [/usr/bin/boinccmd, --get_cc_status]
+          initialDelaySeconds: 10
+          periodSeconds: 30
+          timeoutSeconds: 5
+        volumeMounts:
+        - {name: data, mountPath: /var/lib/boinc}
+        - {name: config, mountPath: /config, readOnly: true}
+        - {name: account, mountPath: /credentials, readOnly: true}
+        - {name: tmp, mountPath: /tmp}
+      volumes:
+      - name: config
+        configMap: {name: boinc-config}
+      - name: account
+        secret: {secretName: boinc-science-united, defaultMode: 288}
+      - name: tmp
+        emptyDir: {sizeLimit: 64Mi}
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      storageClassName: REPLACE_WITH_STORAGE_CLASS
+      accessModes: [ReadWriteOnce]
+      resources:
+        requests: {storage: 8Gi}
