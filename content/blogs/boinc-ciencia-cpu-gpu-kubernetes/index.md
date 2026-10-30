@@ -1,6 +1,6 @@
 +++
 title = "BOINC: doando CPU e GPU para a ciência, com limites no Kubernetes"
-description = "Como contribuir com ciência usando BOINC e Science United, resultados publicados e um tutorial com CPU, GPU, persistência e controle de recursos no Kubernetes."
+description = "Como contribuir com ciência usando BOINC e Science United, resultados publicados, um tutorial de CPU no Kubernetes e a experiência de um piloto com GPU."
 language = "pt-BR"
 authors = ["Guilherme de Castro"]
 publishedAt = "2026-10-29T23:00:00-03:00"
@@ -25,7 +25,7 @@ BOINC é a plataforma de computação voluntária. O cliente baixa os programas 
 
 Escolhi o [Science United](https://scienceunited.org/), um gerenciador de contas operado pelo projeto BOINC na Universidade da Califórnia em Berkeley. Em vez de selecionar cada projeto, escolho as áreas científicas que quero apoiar. O gerenciador associa o cliente aos projetos conforme essas preferências e a demanda. Essa seleção pode mudar com o tempo, como explica a [introdução do Science United](https://scienceunited.org/intro.php).
 
-Marquei as sete áreas oferecidas e deixei a localização das pesquisas sem restrição. Preferi contribuir onde houver trabalho compatível. Isso não significa executar sete projetos simultaneamente, nem receber tarefas de todos eles.
+Na configuração da conta, é possível marcar as sete áreas oferecidas e deixar a localização das pesquisas sem restrição, para contribuir onde houver trabalho compatível. Isso não significa executar sete projetos simultaneamente, nem receber tarefas de todos eles.
 
 ```mermaid
 flowchart TB
@@ -66,14 +66,14 @@ Este [mapa do Fermi](https://svs.gsfc.nasa.gov/11342/) reúne cinco anos de obse
 
 O OpenZika foi um projeto de pesquisa do [World Community Grid](https://www.worldcommunitygrid.org/), que distribui cálculos científicos entre computadores voluntários. Sua equipe inclui pesquisadores da [Universidade Federal de Goiás](https://ufg.br/). Os computadores voluntários fizeram cálculos de encaixe molecular para selecionar compostos que mereciam investigação experimental.
 
-![Fachada do prédio da reitoria da Universidade Federal de Goiás, com palmeiras e uma escultura no pátio.](./assets/ufg-reitoria.jpg "Reitoria da Universidade Federal de Goiás em 2018. Foto: Laczkowski, CC BY-SA 4.0.")
-
-Foto de [Laczkowski, via Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Reitoria_da_Universidade_Federal_de_Goi%C3%A1s.jpg), sob licença [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). Versão reduzida disponibilizada pelo acervo.
-
 
 O trabalho culminou em um [artigo de 2022 no Journal of Chemical Information and Modeling](https://doi.org/10.1021/acs.jcim.2c00596). Na [atualização publicada pelo projeto em fevereiro de 2023](https://worldcommunitygrid.org/about_us/article.s?articleId=779), a equipe relata quase 404 milhões de resultados computacionais e 61 compostos priorizados para testes, seguidos por ensaios enzimáticos e celulares.
 
-Esse é um avanço na seleção de candidatos e no estudo de proteínas virais. O relato não demonstra um medicamento aprovado ou benefício clínico em pacientes. Entre uma molécula promissora e um tratamento há muita pesquisa adicional.
+Nos ensaios, oito compostos protegeram células contra a morte induzida pela infecção por Zika, mas nenhum mostrou efeito antiviral direto contra o vírus. O [resumo do artigo](https://pubmed.ncbi.nlm.nih.gov/36239304/) apresenta esses compostos como pontos de partida para otimização. O resultado ajuda a estudar as proteínas virais e selecionar candidatos; não demonstra um medicamento aprovado nem benefício clínico em pacientes.
+
+![Fachada do prédio da reitoria da Universidade Federal de Goiás, com palmeiras e uma escultura no pátio.](./assets/ufg-reitoria.jpg "Reitoria da Universidade Federal de Goiás em 2018. Foto: Laczkowski, CC BY-SA 4.0.")
+
+Foto de [Laczkowski, via Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Reitoria_da_Universidade_Federal_de_Goi%C3%A1s.jpg), sob licença [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). Versão reduzida disponibilizada pelo acervo.
 
 ### Investigar mudanças no risco de enchentes
 
@@ -83,7 +83,7 @@ Os participantes do projeto cederam processamento para criar grandes conjuntos d
 
 O estudo encontrou aumento no risco de chuvas intensas e mudanças no risco de inundação, com incertezas relevantes. A contribuição foi permitir essa comparação estatística. Ela não transforma uma enchente específica em um evento com causa única, nem funciona como previsão meteorológica de uma cidade.
 
-Esses projetos ilustram astronomia, biomedicina e clima. Participar hoje depende dos projetos ativos e das tarefas disponíveis. Folding@home, Foldit e AlphaFold têm suas próprias histórias e mecanismos; não atribuo seus resultados ao BOINC.
+Esses projetos ilustram astronomia, biomedicina e clima. Participar hoje depende dos projetos ativos e das tarefas disponíveis.
 
 ## O que estou doando de verdade
 
@@ -139,13 +139,15 @@ Também não uso a detecção de atividade do desktop para decidir se um nó Kub
 
 Preparei um [manifesto completo de exemplo](./assets/boinc-cpu.yaml) para um cliente CPU-only no namespace `boinc-example`. Ele começa menor que meu deployment: uma CPU, 1 GiB de RAM e um PVC de 8 GiB. A memória pode ser insuficiente para alguns projetos; nesses casos, escolha trabalho compatível ou revise o orçamento antes de aumentar.
 
-O exemplo usa o cliente oficial BOINC 8.0.4 fixado por digest, testado aqui em Linux AMD64. Ele não depende do runtime OpenCL Intel. Reavalie versão, arquitetura e atualizações de segurança ao adotar a configuração.
+O exemplo usa o cliente oficial BOINC 8.0.4 fixado por digest e exige um nó Linux AMD64. Ele não depende do runtime OpenCL Intel. Reavalie versão, arquitetura e atualizações de segurança ao adotar a configuração.
+
+Para seguir o tutorial, você precisa de um contexto `kubectl` acessível, Kubernetes 1.32 ou posterior, permissão para criar Namespace e PriorityClass, uma StorageClass capaz de provisionar o volume e acesso à internet para o Science United e os projetos. O comando `kubectl top` é opcional e depende do Metrics Server.
 
 ### 1. Ajustar nó, armazenamento e memória
 
 Baixe `boinc-cpu.yaml`. Substitua `REPLACE_WITH_NODE` pelo nó que pode receber a carga e `REPLACE_WITH_STORAGE_CLASS` por uma StorageClass adequada. Confira capacidade livre e permissões do volume para UID 1000.
 
-O cliente guarda identidade, programas, downloads e checkpoints em `/var/lib/boinc`. Cada cliente precisa de um diretório persistente exclusivo. Não copie o PVC de um cliente para iniciar outro em paralelo, nem aumente réplicas para compartilhar essa identidade.
+O cliente guarda identidade, programas, downloads e checkpoints, os pontos de progresso salvos pelas aplicações, em `/var/lib/boinc`. Cada cliente precisa de um diretório persistente exclusivo. Não copie o PVC de um cliente para iniciar outro em paralelo, nem aumente réplicas para compartilhar essa identidade.
 
 O exemplo usa um StatefulSet com uma réplica e volume próprio. A [política de retenção de PVCs](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#persistentvolumeclaim-retention) usa `Retain` para conservar o claim ao reduzir réplicas ou excluir o StatefulSet. Isso não protege contra uma exclusão manual do PVC.
 
@@ -196,6 +198,7 @@ Após associar a conta, confira logs, tarefas e consumo:
 kubectl --context SEU_CONTEXTO -n boinc-example get pods,pvc
 kubectl --context SEU_CONTEXTO -n boinc-example logs boinc-0
 kubectl --context SEU_CONTEXTO -n boinc-example exec boinc-0 -- boinccmd --get_tasks
+# Opcional, requer Metrics Server:
 kubectl --context SEU_CONTEXTO -n boinc-example top pods
 ```
 
@@ -228,6 +231,8 @@ No meu plugin, os slots são compartilhados. Pedir uma unidade dá acesso ao dis
 
 ## Como a contribuição pausa quando o computador esquenta
 
+O manifesto CPU deste tutorial inclui limites de CPU e memória, mas não inclui o supervisor térmico descrito nesta seção. Aplicar o YAML não habilita pausa por temperatura. Esse controle automático é uma camada adicional da minha instalação, específica para sensores Intel.
+
 Limitar o container a duas CPUs não limita a temperatura do processador. No cliente somente CPU, cheguei a observar 96 °C mesmo com essa cota funcionando. Por isso acrescentei uma pausa automática por temperatura à minha instalação.
 
 Esse controle é um programa supervisor que inicia o BOINC e acompanha sua execução. A cada dois segundos, ele consulta os sensores Intel `coretemp` do computador e usa a maior leitura válida entre o pacote do processador e seus núcleos. No N100, CPU e GPU integrada compartilham o mesmo chip. A leitura serve para acompanhar o aquecimento desse conjunto, não para medir apenas o uso da GPU.
@@ -245,11 +250,11 @@ Por exemplo, uma tarefa em execução continua aos 83 °C. Ao atingir 85 °C, pa
 
 Pausar não significa apagar o pod, abortar a tarefa ou remover seu volume. Configurei os clientes para manter as aplicações suspensas na memória, de modo que possam continuar do ponto em que pararam. Isso ocupa RAM durante a pausa. Na implementação Intel, o patch do cliente também respeita essa preferência para tarefas GPU, evitando relançar o cálculo a cada ciclo de aquecimento. Um reinício do pod é outra situação: nesse caso, o progresso recuperável depende do último checkpoint salvo pela aplicação científica.
 
-Se o supervisor perder a capacidade de enviar o comando de controle, ele encerra o cliente. A intenção é não manter computação ativa sem conseguir pausá-la. Uma leitura inválida, por sua vez, conserva a pausa até haver uma leitura válida que permita a retomada.
+Se uma tentativa de aplicar a pausa ou a retomada falhar por erro ou timeout do RPC, o supervisor encerra o cliente. A intenção é não manter computação ativa sem conseguir pausá-la. Uma leitura inválida, por sua vez, conserva a pausa até haver uma leitura válida que permita a retomada.
 
 O mecanismo reduz a contribuição quando o computador esquenta, mas não impõe um teto físico de 85 °C. Há intervalo entre medir e pausar, o chip demora a esfriar e outros serviços continuam produzindo calor. Nos testes, observei pausa e retomada automáticas, com queda do uso de CPU, mas também picos de 90 °C após retomadas. Esse resultado é o motivo para acompanhar a temperatura do computador e manter margem, mesmo com a pausa automática.
 
-O manifesto CPU deste tutorial inclui limites de CPU e memória, mas não inclui esse supervisor. Aplicar o YAML não habilita pausa por temperatura. Para começar com ele, acompanhe os sensores do host e pause a contribuição se o equipamento aquecer demais. O controle automático descrito aqui é uma camada adicional da minha instalação, específica para os sensores Intel disponíveis nesses computadores.
+Ao usar o exemplo do tutorial, acompanhe os sensores do host e suspenda a contribuição pelo BOINC se o equipamento aquecer demais.
 
 ## Barrar um deploy maior do que o combinado
 
@@ -279,11 +284,19 @@ sum by (pod) (
 
 As métricas dependem da coleta do seu cluster. No exemplo de download, troque o namespace por `boinc-example`. Uso essas séries junto dos logs e de `boinccmd --get_tasks`, e não como substitutas da observação dos serviços. Para GPU, confira também contadores do dispositivo quando disponíveis. RAM do host importa porque uso de memória pelo driver pode não aparecer da mesma forma no working set do container.
 
-Para pausar o cliente do tutorial e depois retomá-lo, ajuste apenas as réplicas:
+Para suspender os cálculos e manter o cliente e as aplicações na memória, use a interface local do BOINC:
+
+```sh
+kubectl --context SEU_CONTEXTO -n boinc-example exec boinc-0 -- boinccmd --set_run_mode never 0
+# Execute quando quiser liberar a retomada:
+kubectl --context SEU_CONTEXTO -n boinc-example exec boinc-0 -- boinccmd --set_run_mode auto 0
+```
+
+O exemplo CPU define `leave_apps_in_memory` como `1` para conservar as aplicações suspensas. Essa suspensão é diferente de parar o pod. Para desligar o cliente e depois iniciá-lo novamente, ajuste as réplicas. Isso encerra os processos; a recuperação do cálculo depende dos checkpoints gravados no volume:
 
 ```sh
 kubectl --context SEU_CONTEXTO -n boinc-example scale statefulset/boinc --replicas=0
-# Execute quando quiser retomar:
+# Execute quando quiser iniciar novamente:
 kubectl --context SEU_CONTEXTO -n boinc-example scale statefulset/boinc --replicas=1
 ```
 
@@ -300,7 +313,7 @@ Alterar o ConfigMap sozinho não reinicia o pod.
 
 Rollback segue a mesma regra. Reverter uma quota não exige trocar imagem nem dados. Reverter uma imagem usa o PVC atual, com o cliente anterior já parado. Uma cópia antiga de volume não deve voltar a rodar em paralelo. Se desabilitar GPU, tarefas que precisam dela podem ficar sem avançar até recuperar suporte ou vencer o prazo.
 
-Para encerrar participação de vez, prefira deixar o trabalho pendente terminar e ser reportado antes de remover o cliente. Não confunda desaparecer da lista local com validação: confira término sem erro, envio, reporte e o histórico do projeto ou do gerenciador.
+Para encerrar participação de vez, deixe o trabalho pendente terminar antes de remover o cliente. Depois de calcular, o BOINC envia os arquivos de resultado e comunica a conclusão ao servidor do projeto, etapa chamada de reporte. O projeto então valida o resultado. Confira essas etapas e o histórico do projeto ou do gerenciador; desaparecer da lista local não comprova validação.
 
 ## Uma contribuição que caiba no laboratório
 
