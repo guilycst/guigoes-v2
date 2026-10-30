@@ -201,7 +201,7 @@ O cliente roda sem root, sem token de ServiceAccount, sem capabilities e com rai
 
 Adicionar GPU não é apenas escrever um número no YAML. São necessárias uma GPU suportada pela aplicação científica, acesso ao dispositivo pelo runtime e as bibliotecas de execução corretas dentro do container.
 
-No meu Talos, o [Intel GPU device plugin](https://github.com/intel/intel-device-plugins-for-kubernetes/tree/v0.37.1/cmd/gpu_plugin) anuncia `gpu.intel.com/i915`. O cliente Intel usa uma imagem própria com OpenCL e BOINC. O workload pede um acesso:
+No meu cluster Kubernetes, os nós do BOINC usam o [Talos Linux](https://www.talos.dev/), um sistema operacional feito para executar Kubernetes. Nesses nós, o [Intel GPU device plugin](https://github.com/intel/intel-device-plugins-for-kubernetes/tree/v0.37.1/cmd/gpu_plugin) anuncia `gpu.intel.com/i915`. O cliente Intel usa uma imagem própria com OpenCL e BOINC. O workload pede um acesso:
 
 ```yaml
 resources:
