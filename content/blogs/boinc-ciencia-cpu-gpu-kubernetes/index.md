@@ -46,13 +46,15 @@ Há resultados publicados que permitem ir além da promessa de "ajudar a ciênci
 
 ### Encontrar pulsares em dados de telescópios
 
-Um pulsar é uma estrela de nêutrons em rotação cujo sinal chega até nós em pulsos regulares. A ilustração ajuda a visualizar esse efeito de farol.
+Um pulsar é uma estrela de nêutrons, um núcleo muito compacto que pode restar após a explosão de uma estrela. Ele gira e emite feixes de radiação. Quando um desses feixes aponta para a Terra a cada volta, detectamos pulsos regulares, como a luz de um farol.
 
 ![Representação artística de um pulsar, com linhas de campo magnético azuis e feixes de raios gama em roxo.](./assets/pulsar-nasa.jpg "Ilustração de um pulsar. Crédito: NASA.")
 
 Fonte: [NASA](https://www.nasa.gov/universe/nasas-fermi-telescope-discovers-first-gamma-ray-only-pulsar/). A imagem é uma representação artística do fenômeno, sem retratar um dos objetos descobertos no estudo abaixo.
 
-O Einstein@Home procura sinais de estrelas de nêutrons, entre outras buscas. Em um [artigo publicado na Science Advances em 2018](https://doi.org/10.1126/sciadv.aao7228), os pesquisadores descrevem a descoberta de dois pulsares de milissegundos isolados em dados de raios gama do telescópio Fermi. Um deles continuava sem detecção em rádio nas observações relatadas no estudo.
+O [Einstein@Home](https://einsteinathome.org/) é um projeto de astronomia que usa o BOINC para procurar sinais de estrelas de nêutrons em dados de observatórios. Os voluntários cedem o processamento de seus computadores para essa busca.
+
+Em um [artigo publicado na Science Advances em 2018](https://doi.org/10.1126/sciadv.aao7228), a equipe descreve a descoberta de dois pulsares que giram centenas de vezes por segundo, completando cada volta em poucos milissegundos. Por isso são chamados de pulsares de milissegundos. Os dois são isolados, ou seja, não têm uma estrela companheira em órbita. Foram encontrados em dados de raios gama do telescópio Fermi; um deles continuava sem detecção em rádio nas observações relatadas no estudo.
 
 A busca usou os computadores de dezenas de milhares de voluntários para testar padrões de pulsação nos dados. A contribuição distribuída foi o processamento necessário para encontrar sinais que depois receberam análise científica. O [manuscrito dos autores](https://arxiv.org/abs/1803.06855) descreve essa relação de forma direta.
 
@@ -60,10 +62,14 @@ A busca usou os computadores de dezenas de milhares de voluntários para testar 
 
 Este [mapa do Fermi](https://svs.gsfc.nasa.gov/11342/) reúne cinco anos de observações acima de 1 GeV, com cores que representam a intensidade da emissão. Ele mostra o tipo de céu investigado nessas buscas. É uma visualização de dados observados, sem marcar especificamente os dois pulsares do artigo.
 
-
 ### Priorizar moléculas para investigar o vírus Zika
 
-O OpenZika, do World Community Grid, contou com uma equipe que inclui pesquisadores da Universidade Federal de Goiás. Os computadores voluntários fizeram cálculos de encaixe molecular para selecionar compostos que mereciam investigação experimental.
+O OpenZika foi um projeto de pesquisa do [World Community Grid](https://www.worldcommunitygrid.org/), que distribui cálculos científicos entre computadores voluntários. Sua equipe inclui pesquisadores da [Universidade Federal de Goiás](https://ufg.br/). Os computadores voluntários fizeram cálculos de encaixe molecular para selecionar compostos que mereciam investigação experimental.
+
+![Fachada do prédio da reitoria da Universidade Federal de Goiás, com palmeiras e uma escultura no pátio.](./assets/ufg-reitoria.jpg "Reitoria da Universidade Federal de Goiás em 2018. Foto: Laczkowski, CC BY-SA 4.0.")
+
+Foto de [Laczkowski, via Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Reitoria_da_Universidade_Federal_de_Goi%C3%A1s.jpg), sob licença [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). Versão reduzida disponibilizada pelo acervo.
+
 
 O trabalho culminou em um [artigo de 2022 no Journal of Chemical Information and Modeling](https://doi.org/10.1021/acs.jcim.2c00596). Na [atualização publicada pelo projeto em fevereiro de 2023](https://worldcommunitygrid.org/about_us/article.s?articleId=779), a equipe relata quase 404 milhões de resultados computacionais e 61 compostos priorizados para testes, seguidos por ensaios enzimáticos e celulares.
 
@@ -71,7 +77,7 @@ Esse é um avanço na seleção de candidatos e no estudo de proteínas virais. 
 
 ### Investigar mudanças no risco de enchentes
 
-O climateprediction.net usa computação distribuída para executar conjuntos de simulações climáticas. Em um [artigo de 2016 na Nature Climate Change](https://doi.org/10.1038/nclimate2927), pesquisadores investigaram a influência humana no clima das enchentes do inverno de 2013/2014 no sul da Inglaterra e seus impactos.
+O [climateprediction.net](https://climateprediction.net/) é um projeto de computação voluntária para executar conjuntos de simulações climáticas. Em um [artigo de 2016 na Nature Climate Change](https://doi.org/10.1038/nclimate2927), pesquisadores investigaram a influência humana no clima das enchentes do inverno de 2013/2014 no sul da Inglaterra e seus impactos.
 
 Os participantes do projeto cederam processamento para criar grandes conjuntos de modelos. A [Universidade de Oxford descreve o experimento](https://eng.ox.ac.uk/climateprediction/conduct-a-study/projects/2014-uk-winter-floods): comparar simulações do mundo observado com um cenário sem a alteração humana da composição atmosférica permite estimar mudanças na probabilidade de um inverno muito chuvoso.
 
@@ -108,7 +114,6 @@ Já descrevi o hardware na [primeira parte da série Homelab K8s](/blogs/homelab
 | Controle | Cliente com GPU | Cliente somente CPU |
 | --- | --- | --- |
 | Controlador | StatefulSet com uma réplica | Deployment com uma réplica e Recreate |
-| Nó escolhido | worker-01, Intel N100 | worker-02, Intel N100 |
 | Limite do container | 2 CPUs e 2 GiB | 2 CPUs e 2 GiB |
 | Request de CPU | 25m | 25m |
 | Request de memória | 2 GiB | 2 GiB |
@@ -116,9 +121,9 @@ Já descrevi o hardware na [primeira parte da série Homelab K8s](/blogs/homelab
 | GPU | Um acesso Intel i915 | Desabilitada |
 | Volume próprio | 8 GiB | 8 GiB |
 
-O cliente com GPU anuncia menos CPU para deixar margem no pacote do N100, onde CPU e GPU compartilham recursos térmicos e elétricos. O limite de duas CPUs continua existindo para o container inteiro, incluindo o trabalho auxiliar da aplicação GPU.
+Os dois clientes ficam em máquinas distintas, ambas com Intel N100. O cliente com GPU anuncia menos CPU para deixar margem no chip, onde CPU e GPU compartilham recursos térmicos e elétricos. O limite de duas CPUs continua existindo para o container inteiro, incluindo o trabalho auxiliar da aplicação GPU.
 
-A tabela resume a configuração do meu ambiente. Nomes de nós, StorageClass e a imagem Intel são escolhas dessa instalação; o tutorial abaixo oferece um exemplo independente para começar com CPU.
+A tabela resume a configuração do meu ambiente. O armazenamento e a imagem Intel são escolhas dessa instalação; o tutorial abaixo oferece um exemplo independente para começar com CPU.
 
 ### O que cada limite controla
 
@@ -126,7 +131,7 @@ A tabela resume a configuração do meu ambiente. Nomes de nós, StorageClass e 
 
 Memória funciona de outra maneira. O request de 2 GiB entra no orçamento do scheduler, enquanto ultrapassar o limite de 2 GiB pode provocar encerramento por falta de memória no container. Também ajusto o orçamento interno do BOINC, deixando 256 MiB para o próprio cliente. Essa versão do BOINC enxerga a RAM do host. No exemplo abaixo, ajusto a porcentagem nas preferências para que o cliente trabalhe dentro do orçamento do container.
 
-Os pods são Burstable. Uma PriorityClass com valor `-1000` e `preemptionPolicy: Never` reduz a prioridade de agendamento e impede que o BOINC expulse outros pods para conseguir lugar. Ela não retira CPU de um cliente já em execução nem detecta que outro serviço ficou lento. A [prioridade de pods chegou a GA no Kubernetes 1.14, e a política sem preempção, no 1.24](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/).
+Os pods são Burstable. Uma PriorityClass com valor `-1000` e `preemptionPolicy: Never` reduz a prioridade de agendamento e impede que o BOINC expulse outros pods para conseguir lugar. Ela não retira CPU de um cliente já em execução nem detecta que outro serviço ficou lento.
 
 Também não uso a detecção de atividade do desktop para decidir se um nó Kubernetes está ocioso. Dentro de um container, essa leitura não representa bem o conjunto dos serviços. Aqui a contribuição tem orçamento fixo e exige observação do host.
 
@@ -142,7 +147,7 @@ Baixe `boinc-cpu.yaml`. Substitua `REPLACE_WITH_NODE` pelo nó que pode receber 
 
 O cliente guarda identidade, programas, downloads e checkpoints em `/var/lib/boinc`. Cada cliente precisa de um diretório persistente exclusivo. Não copie o PVC de um cliente para iniciar outro em paralelo, nem aumente réplicas para compartilhar essa identidade.
 
-O exemplo usa um StatefulSet com uma réplica e volume próprio. O [StatefulSet chegou a GA no Kubernetes 1.9](https://kubernetes.io/blog/2017/12/kubernetes-19-workloads-expanded-ecosystem/). A [política explícita de retenção de PVCs chegou a GA no 1.32](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#persistentvolumeclaim-retention); no manifesto, `Retain` conserva o claim ao reduzir réplicas ou excluir o StatefulSet. Isso não protege contra uma exclusão manual do PVC.
+O exemplo usa um StatefulSet com uma réplica e volume próprio. A [política de retenção de PVCs](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#persistentvolumeclaim-retention) usa `Retain` para conservar o claim ao reduzir réplicas ou excluir o StatefulSet. Isso não protege contra uma exclusão manual do PVC.
 
 No ConfigMap, os campos `ram_max_used_busy_pct` e `ram_max_used_idle_pct` usam a RAM do host como referência. O valor `4.6875` do exemplo corresponde a 768 MiB para tarefas em um host de 16 GiB, deixando 256 MiB do limite de 1 GiB para o cliente. Ajuste ambos os campos para seu nó:
 
@@ -196,7 +201,7 @@ kubectl --context SEU_CONTEXTO -n boinc-example top pods
 
 Procure associação ao Science United, projetos recebidos e avanço do tempo de CPU. A porcentagem de algumas tarefas avança em saltos. Um pod Ready só confirma a resposta local do cliente; não prova conclusão, envio ou validação de trabalho científico.
 
-O cliente roda sem root, sem token de ServiceAccount, sem capabilities e com raiz somente leitura. O namespace usa [Pod Security Admission em modo restricted, GA no Kubernetes 1.25](https://kubernetes.io/blog/2022/08/25/pod-security-admission-stable/), e o pod define [seccomp RuntimeDefault pela API estável desde o 1.19](https://kubernetes.io/blog/2020/08/26/kubernetes-release-1.19-accentuate-the-paw-sitive/#graduated-to-stable). Os diretórios de dados e temporários continuam graváveis. Não há Ingress, NodePort ou acesso remoto configurado ao RPC. Projetos que exigem VirtualBox ou containers aninhados não fazem parte desse exemplo restrito.
+O cliente roda sem root, sem token de ServiceAccount, sem capabilities e com raiz somente leitura. O namespace usa [Pod Security Admission em modo restricted](https://kubernetes.io/docs/concepts/security/pod-security-admission/), e o pod define [seccomp RuntimeDefault](https://kubernetes.io/docs/reference/node/seccomp/). Os diretórios de dados e temporários continuam graváveis. Não há Ingress, NodePort ou acesso remoto configurado ao RPC. Projetos que exigem VirtualBox ou containers aninhados não fazem parte desse exemplo restrito.
 
 ## GPU exige outro cuidado
 
@@ -215,31 +220,36 @@ resources:
     gpu.intel.com/i915: "1"
 ```
 
-Esse trecho pertence ao cliente Intel completo. Não é um patch suficiente para habilitar GPU no exemplo CPU-only. Para reproduzir o caminho Intel, confira primeiro driver i915 no host e o device plugin; valide a enumeração OpenCL em uma tarefa de teste sem PVC científico. Prepare em conjunto o workload, o ConfigMap de preferências, o supervisor térmico e a imagem compatível. Se o supervisor verificar a identidade do cliente, mantenha os nomes de nó e pod coerentes com o manifesto. Preserve um único escritor do PVC durante a troca.
+Esse trecho pertence ao cliente Intel completo. Não é um patch suficiente para habilitar GPU no exemplo CPU-only. Para usar uma GPU Intel, confira o driver i915 no host, o device plugin e as bibliotecas OpenCL dentro da imagem. A aplicação científica também precisa oferecer uma versão compatível com essa GPU.
 
 A imagem Intel usada no meu teste contém patches locais sobre BOINC 8.0.4. Esse piloto é uma implementação específica do homelab; o exemplo disponível para download neste artigo usa o cliente oficial somente com CPU. Não é a imagem oficial nem uma solução genérica para qualquer GPU. NVIDIA e AMD exigem outros drivers, bibliotecas e recursos; não precisam desse patch Intel por definição.
 
 No meu plugin, os slots são compartilhados. Pedir uma unidade dá acesso ao dispositivo, não uma porcentagem de uso, memória dedicada ou potência reservada. Limitei o cliente a uma tarefa GPU por vez, inclusive entre projetos, com o patch versionado. Essa regra também não impede que outro pod com acesso à mesma GPU concorra com ele.
 
-### Pausar por temperatura sem perder o contexto da GPU
+## Como a contribuição pausa quando o computador esquenta
 
-O supervisor consulta sensores `coretemp` a cada dois segundos. Pausa computação GPU a partir de 85 °C e permite retomada até 80 °C. Essa diferença evita alternância a cada pequena oscilação. Sensor ausente ou inválido mantém GPU pausada; falha ao impor o modo por RPC encerra o cliente.
+Limitar o container a duas CPUs não limita a temperatura do processador. No cliente somente CPU, cheguei a observar 96 °C mesmo com essa cota funcionando. Por isso acrescentei uma pausa automática por temperatura à minha instalação.
 
-São controles cooperativos. Não limitam frequência ou potência do chip e não garantem que a temperatura nunca ultrapasse 85 °C. CPU e GPU compartilham o pacote, e há atraso entre leitura, comando e efeito.
+Esse controle é um programa supervisor que inicia o BOINC e acompanha sua execução. A cada dois segundos, ele consulta os sensores Intel `coretemp` do computador e usa a maior leitura válida entre o pacote do processador e seus núcleos. No N100, CPU e GPU integrada compartilham o mesmo chip. A leitura serve para acompanhar o aquecimento desse conjunto, não para medir apenas o uso da GPU.
 
-No piloto de quatro horas em 26 de outubro, houve pico observado de 90 °C. A tarefa continuou avançando, mas não terminou naquele intervalo. Isso não prova ausência de impacto nos outros serviços. Na conferência de 29 de outubro, o cliente também tinha um reinício anterior causado por timeout do RPC térmico. É um motivo para manter a margem e observar o sistema inteiro.
+Cada cliente tem seu próprio supervisor. Ele envia comandos locais ao BOINC pela interface RPC, a mesma interface de controle usada pelo `boinccmd`. No cliente somente CPU, manda suspender a computação. No cliente com GPU, manda suspender apenas o trabalho da GPU; as tarefas de CPU desse cliente continuam sujeitas ao orçamento configurado.
 
-Algumas aplicações GPU demoram a produzir o primeiro checkpoint. Para evitar relançar o processo a cada pausa térmica, o cliente GPU mantém aplicações suspensas na memória, e o patch respeita essa preferência. Essa escolha custa RAM. O cliente CPU-only tem seu próprio supervisor e também conserva aplicações suspensas na memória.
+| Leitura dos sensores | O que o supervisor faz |
+| --- | --- |
+| 85 °C ou mais | Pausa o trabalho que controla. |
+| Acima de 80 °C e abaixo de 85 °C | Mantém o estado anterior, em execução ou pausado. |
+| 80 °C ou menos | Libera a retomada, respeitando as demais preferências do BOINC. |
+| Sensor ausente ou leitura inválida | Mantém o trabalho pausado. |
 
-## CPU também precisa de controle térmico
+Por exemplo, uma tarefa em execução continua aos 83 °C. Ao atingir 85 °C, pausa. Se a leitura cair para 83 °C, ela ainda espera; só recebe autorização para retomar aos 80 °C ou menos. Essa diferença entre os dois patamares, chamada histerese, evita ligar e desligar o trabalho a cada pequena oscilação. Na primeira leitura, a decisão também é conservadora: acima de 80 °C, o supervisor manda manter o trabalho pausado até o computador esfriar.
 
-Ao conferir o cliente somente CPU, encontrei o worker-02 a 96 °C. O limite de duas CPUs estava funcionando, mas não limitava a temperatura do pacote. Adicionei um supervisor CPU separado, com os mesmos patamares de 85 °C para pausar e 80 °C para retomar.
+Pausar não significa apagar o pod, abortar a tarefa ou remover seu volume. Configurei os clientes para manter as aplicações suspensas na memória, de modo que possam continuar do ponto em que pararam. Isso ocupa RAM durante a pausa. Na implementação Intel, o patch do cliente também respeita essa preferência para tarefas GPU, evitando relançar o cálculo a cada ciclo de aquecimento. Um reinício do pod é outra situação: nesse caso, o progresso recuperável depende do último checkpoint salvo pela aplicação científica.
 
-Ele mantém as aplicações na memória durante as pausas. Antes de permitir o início das tarefas, precisa conseguir impor o modo de execução por RPC. Sensor indisponível mantém a contribuição suspensa. Uma falha posterior de controle encerra o cliente para não deixar a carga sem supervisão.
+Se o supervisor perder a capacidade de enviar o comando de controle, ele encerra o cliente. A intenção é não manter computação ativa sem conseguir pausá-la. Uma leitura inválida, por sua vez, conserva a pausa até haver uma leitura válida que permita a retomada.
 
-Na validação, observei pausa e retomada automáticas e redução do consumo de CPU do pod. Também houve picos até 90 °C após retomadas, o que mostra por que esses patamares não são um teto térmico. O pod GPU continuou com o mesmo processo; o cliente CPU passou por um rollout controlado e voltou com o mesmo volume e identidade científica. Trabalho ainda sem checkpoint pode precisar ser refeito nesse tipo de reinício.
+O mecanismo reduz a contribuição quando o computador esquenta, mas não impõe um teto físico de 85 °C. Há intervalo entre medir e pausar, o chip demora a esfriar e outros serviços continuam produzindo calor. Nos testes, observei pausa e retomada automáticas, com queda do uso de CPU, mas também picos de 90 °C após retomadas. Esse resultado é o motivo para acompanhar a temperatura do computador e manter margem, mesmo com a pausa automática.
 
-Esse supervisor usa sensores Intel `coretemp`. O exemplo CPU para download mantém o orçamento por recursos e requer acompanhamento da temperatura; para adotar a pausa automática, prepare um supervisor para os sensores disponíveis no seu host e execute-o como processo principal do container, responsável por iniciar o BOINC, encaminhar SIGTERM e impor as pausas por RPC. Se o nó continuar quente por causa de outros serviços, a contribuição pode permanecer pausada. Isso é preferível a disputar capacidade sem margem.
+O manifesto CPU deste tutorial inclui limites de CPU e memória, mas não inclui esse supervisor. Aplicar o YAML não habilita pausa por temperatura. Para começar com ele, acompanhe os sensores do host e pause a contribuição se o equipamento aquecer demais. O controle automático descrito aqui é uma camada adicional da minha instalação, específica para os sensores Intel disponíveis nesses computadores.
 
 ## Barrar um deploy maior do que o combinado
 

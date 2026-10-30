@@ -52,8 +52,15 @@ recreation, identity clone or increase in resource limits was performed.
   were not exercised on a second cluster.
 - NASA pulsar illustration and Fermi observational map were inspected at source
   resolution. Captions, alt text, provenance, credits and hashes are recorded
-  in docs/boinc-media-sources.md. The cluster-version disclaimer and unused
-  feature comparison were replaced with GA dates for features actually used.
+  in docs/boinc-media-sources.md. The UFG photograph has explicit photographer,
+  source and CC BY-SA 4.0 attribution. Historical GA dates were removed on
+  review, while links to the resource contracts remain.
+- Editorial review introduces Einstein@Home, explains millisecond and isolated
+  pulsars, links climateprediction.net, and removes internal node names. The
+  thermal section now explains the actual sensor selection, independent CPU/GPU
+  control scopes, hysteresis, suspended processes and failure behavior. Its
+  thresholds were checked against the existing supervisor source; no fresh
+  hardware observation or cluster change was performed for this revision.
 - make check passed, including final HTML, local links/fragments, legacy URLs,
   feeds, Go tests and vet. The page has one BlogPosting, the expected canonical,
   pt-BR, author profile and timestamp. JSON-LD, OG and Twitter image URLs match;

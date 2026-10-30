@@ -1,8 +1,9 @@
 # BOINC article media sources
 
-Retrieved and inspected on 2026-10-30. Both JPEGs are unmodified source files.
+Retrieved and inspected on 2026-10-30. The NASA JPEGs are unmodified source files. The UFG photo uses the reduced
+1280-pixel rendition provided by Wikimedia, without further edits.
 Captions distinguish an artist's illustration from observational data and link
-readers to the original pages. Neither image identifies the two pulsars in the
+readers to the original pages. Neither NASA image identifies the two pulsars in the
 2018 Einstein@Home paper.
 
 ## Pulsar illustration
@@ -33,3 +34,18 @@ with source acknowledgement and without implied endorsement. Neither selected
 source labels these images as third-party copyright-protected material. Retain
 all stated credits. This is an editorial use inside the article; the existing
 original Guigoes cover remains unchanged.
+
+
+## UFG rectorate photograph
+
+- Asset: `content/blogs/boinc-ciencia-cpu-gpu-kubernetes/assets/ufg-reitoria.jpg`
+- Source: https://commons.wikimedia.org/wiki/File:Reitoria_da_Universidade_Federal_de_Goi%C3%A1s.jpg
+- Downloaded rendition: https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1f/Reitoria_da_Universidade_Federal_de_Goi%C3%A1s.jpg/1280px-Reitoria_da_Universidade_Federal_de_Goi%C3%A1s.jpg
+- Photographer: Laczkowski. Taken on 2018-11-14.
+- License: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/),
+  applying to the photograph. Retain attribution, source and license links.
+- Dimensions: 1280 × 960, 534753 bytes.
+- SHA-256: `fb298e02581cda28b611149b643eeeb8f922ada4aba35f8966a49a2292b7f711`
+- Changes: the source-provided reduced rendition, without further modifications.
+- Caption identifies the rectorate rather than suggesting that it depicts the
+  OpenZika laboratory or team.
