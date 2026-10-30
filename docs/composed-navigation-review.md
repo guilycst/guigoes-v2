@@ -13,6 +13,8 @@ CSS, consumer JavaScript or generated-HTML rewrite implements this behavior.
   1440 px, Escape, focus return/trapping, JavaScript-disabled native links,
   HTMX route changes and Back/Forward. Margo site tests also exercise local and
   inline assets, publication metadata and pages that toggle contextual navigation.
+  History restoration covers body swaps and ignores late metadata for a route
+  that is no longer visible.
 
 Upstream work:
 

@@ -2,7 +2,7 @@
 
 Blog de Guilherme de Castro, publicado em https://guigoes.com com
 [Gazeta v0.0.2](https://github.com/araihu/gazeta/releases/tag/v0.0.2) sobre
-[Margo commit ec69ff3](https://github.com/araihu/margo/commit/ec69ff3d4795e2cd4ace0233cc5c80375801ea79).
+[Margo commit 8b7bc8e](https://github.com/araihu/margo/commit/8b7bc8eac0d35d5a84d08459c1dbf500adf17cd7).
 
 ## Desenvolvimento
 

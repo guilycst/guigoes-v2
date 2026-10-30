@@ -4,7 +4,7 @@ go 1.27.3
 
 require (
 	github.com/araihu/gazeta v0.0.2
-	github.com/araihu/margo v0.0.34-0.20261030172048-ec69ff3d4795
+	github.com/araihu/margo v0.0.34-0.20261030173304-8b7bc8eac0d3
 )
 
 require (
