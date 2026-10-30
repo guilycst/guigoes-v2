@@ -46,44 +46,37 @@ Há resultados publicados que permitem ir além da promessa de "ajudar a ciênci
 
 ### Encontrar pulsares em dados de telescópios
 
-Um pulsar é uma estrela de nêutrons, um núcleo muito compacto que pode restar após a explosão de uma estrela. Ele gira e emite feixes de radiação. Quando um desses feixes aponta para a Terra a cada volta, detectamos pulsos regulares, como a luz de um farol.
+O [Einstein@Home](https://einsteinathome.org/) usa o BOINC para procurar estrelas em dados de observatórios. Um dos resultados foi a descoberta de dois pulsares, estrelas muito compactas que funcionam como faróis no espaço. A descoberta, feita em dados do telescópio Fermi, foi [publicada em 2018](https://doi.org/10.1126/sciadv.aao7228).
 
-![Representação artística de um pulsar, com linhas de campo magnético azuis e feixes de raios gama em roxo.](./assets/pulsar-nasa.jpg "Ilustração de um pulsar. Crédito: NASA.")
+Computadores de dezenas de milhares de voluntários participaram da busca. Eles fizeram os cálculos que permitiram aos pesquisadores encontrar os sinais dessas estrelas, como relata o [estudo](https://arxiv.org/abs/1803.06855).
 
-Fonte: [NASA](https://www.nasa.gov/universe/nasas-fermi-telescope-discovers-first-gamma-ray-only-pulsar/). A imagem é uma representação artística do fenômeno, sem retratar um dos objetos descobertos no estudo abaixo.
+![Representação artística de um pulsar, com linhas azuis e feixes de luz em roxo.](./assets/pulsar-nasa.jpg "Ilustração de um pulsar. Crédito: NASA.")
 
-O [Einstein@Home](https://einsteinathome.org/) é um projeto de astronomia que usa o BOINC para procurar sinais de estrelas de nêutrons em dados de observatórios. Os voluntários cedem o processamento de seus computadores para essa busca.
+Fonte: [NASA](https://www.nasa.gov/universe/nasas-fermi-telescope-discovers-first-gamma-ray-only-pulsar/). É uma ilustração artística, não uma imagem dos dois pulsares descobertos.
 
-Em um [artigo publicado na Science Advances em 2018](https://doi.org/10.1126/sciadv.aao7228), a equipe descreve a descoberta de dois pulsares que giram centenas de vezes por segundo, completando cada volta em poucos milissegundos. Por isso são chamados de pulsares de milissegundos. Os dois são isolados, ou seja, não têm uma estrela companheira em órbita. Foram encontrados em dados de raios gama do telescópio Fermi.
+![Mapa do céu observado pelo telescópio Fermi, com uma faixa brilhante e pontos coloridos.](./assets/fermi-gamma-sky.jpg "Mapa do céu observado pelo Fermi. Crédito: NASA/DOE/Fermi LAT Collaboration.")
 
-A busca usou os computadores de dezenas de milhares de voluntários para testar padrões de pulsação nos dados. A contribuição distribuída foi o processamento necessário para encontrar sinais que depois receberam análise científica. O [manuscrito dos autores](https://arxiv.org/abs/1803.06855) descreve essa relação de forma direta.
+Fonte: [NASA/Fermi](https://svs.gsfc.nasa.gov/11342/). O mapa ilustra os dados do telescópio usados nesse tipo de busca; não identifica os dois pulsares.
 
-![Mapa do céu em raios gama, com uma faixa brilhante no plano da Via Láctea e fontes pontuais espalhadas pelo céu.](./assets/fermi-gamma-sky.jpg "Céu em raios gama observado pelo Fermi em cinco anos. Crédito: NASA/DOE/Fermi LAT Collaboration.")
+### Selecionar substâncias para pesquisar o vírus Zika
 
-Este [mapa do Fermi](https://svs.gsfc.nasa.gov/11342/) reúne cinco anos de observações acima de 1 GeV, com cores que representam a intensidade da emissão. Ele mostra o tipo de céu investigado nessas buscas. É uma visualização de dados observados, sem marcar especificamente os dois pulsares do artigo.
+O OpenZika usou computadores voluntários do [World Community Grid](https://www.worldcommunitygrid.org/), uma iniciativa que utiliza o BOINC, para ajudar na pesquisa de possíveis tratamentos contra o Zika. A equipe contou com pesquisadores da [Universidade Federal de Goiás](https://ufg.br/).
 
-### Priorizar moléculas para investigar o vírus Zika
+Os computadores analisaram milhões de substâncias para ajudar a escolher quais testar no laboratório. A equipe selecionou 61 para essa etapa, a partir de quase 404 milhões de resultados de cálculos, segundo o [balanço do projeto](https://worldcommunitygrid.org/about_us/article.s?articleId=779).
 
-O OpenZika foi um projeto de pesquisa do [World Community Grid](https://www.worldcommunitygrid.org/), que distribui cálculos científicos entre computadores voluntários. Sua equipe inclui pesquisadores da [Universidade Federal de Goiás](https://ufg.br/). Os computadores voluntários fizeram cálculos de encaixe molecular para selecionar compostos que mereciam investigação experimental.
-
-
-O trabalho culminou em um [artigo de 2022 no Journal of Chemical Information and Modeling](https://doi.org/10.1021/acs.jcim.2c00596). Na [atualização publicada pelo projeto em fevereiro de 2023](https://worldcommunitygrid.org/about_us/article.s?articleId=779), a equipe relata quase 404 milhões de resultados computacionais e 61 compostos priorizados para testes, seguidos por ensaios enzimáticos e celulares.
-
-Nos ensaios, oito compostos protegeram células contra a morte induzida pela infecção por Zika, mas nenhum mostrou efeito antiviral direto contra o vírus. O [resumo do artigo](https://pubmed.ncbi.nlm.nih.gov/36239304/) apresenta esses compostos como pontos de partida para otimização. O resultado ajuda a estudar as proteínas virais e selecionar candidatos; não demonstra um medicamento aprovado nem benefício clínico em pacientes.
+No [estudo publicado em 2022](https://pubmed.ncbi.nlm.nih.gov/36239304/), oito substâncias ajudaram a proteger células infectadas, mas nenhuma apresentou efeito direto contra o vírus nos testes. Foi um ponto de partida para continuar a pesquisa. O estudo não demonstrou um tratamento eficaz em pessoas.
 
 ![Fachada do prédio da reitoria da Universidade Federal de Goiás, com palmeiras e uma escultura no pátio.](./assets/ufg-reitoria.jpg "Reitoria da Universidade Federal de Goiás em 2018. Foto: Laczkowski, CC BY-SA 4.0.")
 
 Foto de [Laczkowski, via Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Reitoria_da_Universidade_Federal_de_Goi%C3%A1s.jpg), sob licença [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). Versão reduzida disponibilizada pelo acervo.
 
-### Investigar mudanças no risco de enchentes
+### Entender o risco de chuvas e enchentes
 
-O [climateprediction.net](https://climateprediction.net/) é um projeto de computação voluntária para executar conjuntos de simulações climáticas. Em um [artigo de 2016 na Nature Climate Change](https://doi.org/10.1038/nclimate2927), pesquisadores investigaram a influência humana no clima das enchentes do inverno de 2013/2014 no sul da Inglaterra e seus impactos.
+O [climateprediction.net](https://climateprediction.net/) usa o BOINC para executar simulações do clima em computadores voluntários. Esse trabalho ajudou a estudar as chuvas e enchentes do inverno de 2013/2014 no sul da Inglaterra.
 
-Os participantes do projeto cederam processamento para criar grandes conjuntos de modelos. A [Universidade de Oxford descreve o experimento](https://eng.ox.ac.uk/climateprediction/conduct-a-study/projects/2014-uk-winter-floods): comparar simulações do mundo observado com um cenário sem a alteração humana da composição atmosférica permite estimar mudanças na probabilidade de um inverno muito chuvoso.
+O [estudo publicado em 2016](https://doi.org/10.1038/nclimate2927) indicou que a influência humana no clima aumentou a chance de chuvas intensas naquela região e período. A contribuição dos voluntários permitiu repetir as simulações muitas vezes para estimar esse risco, como explica a [Universidade de Oxford](https://eng.ox.ac.uk/climateprediction/conduct-a-study/projects/2014-uk-winter-floods). Isso ajuda a entender como o risco muda, sem atribuir uma enchente inteira a uma única causa.
 
-O estudo encontrou aumento no risco de chuvas intensas e mudanças no risco de inundação, com incertezas relevantes. A contribuição foi permitir essa comparação estatística. Ela não transforma uma enchente específica em um evento com causa única, nem funciona como previsão meteorológica de uma cidade.
-
-Esses projetos ilustram astronomia, biomedicina e clima. Participar hoje depende dos projetos ativos e das tarefas disponíveis.
+Esses são resultados publicados de projetos apoiados por computação voluntária. Para contribuir hoje, é preciso encontrar projetos ativos com tarefas compatíveis com o seu computador.
 
 ## O que estou doando de verdade
 
