@@ -251,6 +251,12 @@ O mecanismo reduz a contribuição quando o computador esquenta, mas não impõe
 
 Ao usar o exemplo do tutorial, acompanhe os sensores do host e suspenda a contribuição pelo BOINC se o equipamento aquecer demais.
 
+### Uma tarefa científica rodando na GPU
+
+Em 30 de outubro de 2026, acompanhei uma tarefa do [NumberFields@home](https://numberfields.asu.edu/NumberFields/), projeto de pesquisa em matemática, na GPU integrada do N100. Com a imagem pública do piloto, a própria aplicação acumulou cerca de 16 segundos de cálculo na GPU em uma medição de quase dois minutos. O percentual da tarefa avançou e ela salvou um novo checkpoint, o ponto a partir do qual pode retomar após um reinício. Os [registros da validação no repositório público](https://github.com/guilycst/boinc-k8s-intel-n100/blob/d02e0e3f35f747bc24141954409da621a97e85bc/VALIDATION.md#scientific-gpu-task-follow-up) mostram essas medições. A tarefa continuava em andamento ao final da verificação.
+
+Em uma janela separada de dez minutos dessa validação, o supervisor permitiu trabalho na GPU por cerca de 80 segundos. No restante, a tarefa esperava o chip esfriar. Por isso, dez minutos com o computador ligado podem render pouco mais de um minuto com a GPU liberada para trabalhar. As pausas preservam o trabalho na memória, mas aumentam o tempo necessário para terminar a tarefa.
+
 ## Barrar um deploy maior do que o combinado
 
 Limites no template protegem o pod configurado. Para impedir que uma edição futura crie mais clientes ou aumente silenciosamente o orçamento do namespace, adicionei `LimitRange` e `ResourceQuota`.

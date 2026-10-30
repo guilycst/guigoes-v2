@@ -112,3 +112,19 @@ The article's two PromQL queries returned data from the live monitoring system.
 - No new task was completed merely for this test, and no new scientific discovery
   or validation is inferred from task execution. Temperature sampling does not
   prove service-latency neutrality or a hard maximum temperature.
+
+## Public-image scientific GPU follow-up
+
+The article now incorporates the physical-N100 observation recorded in
+[the public verification receipt](https://github.com/guilycst/boinc-k8s-intel-n100/blob/d02e0e3f35f747bc24141954409da621a97e85bc/VALIDATION.md#scientific-gpu-task-follow-up).
+The scientific application's own i915 engine counter advanced by 16.159 seconds
+over 113.774 seconds, with increasing task fraction and a later saved checkpoint.
+This is stronger execution evidence than OpenCL enumeration or the separate
+standalone-kernel smoke test. The task remained in progress.
+
+A separate ten-minute thermal-policy window authorized GPU work for 80.210
+seconds. The prose distinguishes permission to run from measured GPU execution
+and explains the effect on elapsed completion time. The follow-up kept both pod
+identities, volume bindings, resource limits and thermal protection unchanged.
+The new paragraphs do not claim task completion or server-side validation.
+Earlier independent reviews above retain their original acceptance identity.
