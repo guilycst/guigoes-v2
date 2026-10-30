@@ -79,13 +79,14 @@ recreation, identity clone or increase in resource limits was performed.
   consumer and passed CI before integration. Guigoes uses a pinned upstream
   commit, not a local replace or generated-HTML workaround.
 
-## Remaining publication gate
+## Science United certificate follow-up
 
 The requested real Science United certificate has not been exported. Browser
-origin permission denied access even though the user opened its tab. Do not
-invent a certificate or its numbers. Attach the real export, inspect personal
-data, add a faithful public asset and caption, then repeat the final build and
-browser check before publishing. The article PR remains a draft until then.
+origin permission denied access even though the user opened its tab. No
+certificate or contribution numbers were invented. After the final independent
+reviews, the author authorized publication on October 30, 2026 with this
+follow-up still pending. A later certificate export requires inspecting personal
+data and validating its public asset and caption before inclusion.
 
 ## Diagnostic handling
 
