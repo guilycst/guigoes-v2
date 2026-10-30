@@ -1,5 +1,5 @@
-# CPU-only starting point. Replace node and storage class before committing.
-# Supply a separately sealed boinc-science-united Secret in boinc-example.
+# CPU-only example. Replace node, storage class and BOINC RAM percentages.
+# Associate Science United interactively with boinccmd after the Pod starts.
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -65,31 +65,8 @@ data:
       <work_buf_min_days>0.05</work_buf_min_days><work_buf_additional_days>0</work_buf_additional_days>
       <disk_max_used_gb>4</disk_max_used_gb><disk_min_free_gb>0.5</disk_min_free_gb>
       <disk_max_used_pct>90</disk_max_used_pct>
-      <ram_max_used_busy_pct>10</ram_max_used_busy_pct><ram_max_used_idle_pct>10</ram_max_used_idle_pct>
+      <ram_max_used_busy_pct>4.6875</ram_max_used_busy_pct><ram_max_used_idle_pct>4.6875</ram_max_used_idle_pct>
     </global_preferences>
-  start.py: |
-    import os
-    from pathlib import Path
-    import shutil
-    import xml.etree.ElementTree as ET
-
-    data = Path('/var/lib/boinc')
-    os.umask(0o077)
-    for name in ('cc_config.xml', 'global_prefs_override.xml'):
-        shutil.copyfile(Path('/config') / name, data / name)
-    if not (data / 'acct_mgr_url.xml').exists():
-        (data / 'acct_mgr_url.xml').write_text('<acct_mgr><name>Science United</name><url>https://scienceunited.org/</url></acct_mgr>')
-    shutil.copyfile('/credentials/acct_mgr_login.xml', data / 'acct_mgr_login.xml')
-    host_memory = next(int(line.split()[1]) * 1024 for line in Path('/proc/meminfo').read_text().splitlines() if line.startswith('MemTotal:'))
-    budget = int(os.environ['BOINC_MEMORY_LIMIT_BYTES']) - 256 * 1024**2
-    if budget <= 0:
-        raise SystemExit('Container memory limit must exceed 256 MiB')
-    prefs = ET.parse(data / 'global_prefs_override.xml')
-    for name in ('ram_max_used_busy_pct', 'ram_max_used_idle_pct'):
-        prefs.getroot().find(name).text = str(min(100, 100 * budget / host_memory))
-    prefs.write(data / 'global_prefs_override.xml')
-    os.chdir(data)
-    os.execv('/usr/bin/boinc', ['/usr/bin/boinc', '--dir', str(data), '--no_gpus'])
 ---
 apiVersion: v1
 kind: Service
@@ -131,17 +108,28 @@ spec:
         runAsUser: 1000
         runAsGroup: 1000
         fsGroup: 1000
-        fsGroupChangePolicy: OnRootMismatch
         seccompProfile: {type: RuntimeDefault}
+      initContainers:
+      - name: copy-config
+        image: boinc/client@sha256:a9629c767fcaab695401a2a4a6a34befe087f6cc59a41c51539531eff645e6e2
+        command: [/bin/cp]
+        args: [/config/cc_config.xml, /config/global_prefs_override.xml, /var/lib/boinc/]
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities: {drop: [ALL]}
+        resources:
+          requests: {cpu: 5m, memory: 16Mi}
+          limits: {cpu: 100m, memory: 64Mi}
+        volumeMounts:
+        - {name: data, mountPath: /var/lib/boinc}
+        - {name: config, mountPath: /config, readOnly: true}
       containers:
       - name: boinc
         image: boinc/client@sha256:a9629c767fcaab695401a2a4a6a34befe087f6cc59a41c51539531eff645e6e2
-        command: [/usr/bin/python3, /config/start.py]
+        command: [/usr/bin/boinc]
+        args: [--dir, /var/lib/boinc, --no_gpus]
         workingDir: /var/lib/boinc
-        env:
-        - name: BOINC_MEMORY_LIMIT_BYTES
-          valueFrom:
-            resourceFieldRef: {resource: limits.memory}
         securityContext:
           allowPrivilegeEscalation: false
           readOnlyRootFilesystem: true
@@ -157,14 +145,10 @@ spec:
           timeoutSeconds: 5
         volumeMounts:
         - {name: data, mountPath: /var/lib/boinc}
-        - {name: config, mountPath: /config, readOnly: true}
-        - {name: account, mountPath: /credentials, readOnly: true}
         - {name: tmp, mountPath: /tmp}
       volumes:
       - name: config
         configMap: {name: boinc-config}
-      - name: account
-        secret: {secretName: boinc-science-united, defaultMode: 288}
       - name: tmp
         emptyDir: {sizeLimit: 64Mi}
   volumeClaimTemplates:

@@ -46,9 +46,20 @@ Há resultados publicados que permitem ir além da promessa de "ajudar a ciênci
 
 ### Encontrar pulsares em dados de telescópios
 
+Um pulsar é uma estrela de nêutrons em rotação cujo sinal chega até nós em pulsos regulares. A ilustração ajuda a visualizar esse efeito de farol.
+
+![Representação artística de um pulsar, com linhas de campo magnético azuis e feixes de raios gama em roxo.](./assets/pulsar-nasa.jpg "Ilustração de um pulsar. Crédito: NASA.")
+
+Fonte: [NASA](https://www.nasa.gov/universe/nasas-fermi-telescope-discovers-first-gamma-ray-only-pulsar/). A imagem é uma representação artística do fenômeno, sem retratar um dos objetos descobertos no estudo abaixo.
+
 O Einstein@Home procura sinais de estrelas de nêutrons, entre outras buscas. Em um [artigo publicado na Science Advances em 2018](https://doi.org/10.1126/sciadv.aao7228), os pesquisadores descrevem a descoberta de dois pulsares de milissegundos isolados em dados de raios gama do telescópio Fermi. Um deles continuava sem detecção em rádio nas observações relatadas no estudo.
 
 A busca usou os computadores de dezenas de milhares de voluntários para testar padrões de pulsação nos dados. A contribuição distribuída foi o processamento necessário para encontrar sinais que depois receberam análise científica. O [manuscrito dos autores](https://arxiv.org/abs/1803.06855) descreve essa relação de forma direta.
+
+![Mapa do céu em raios gama, com uma faixa brilhante no plano da Via Láctea e fontes pontuais espalhadas pelo céu.](./assets/fermi-gamma-sky.jpg "Céu em raios gama observado pelo Fermi em cinco anos. Crédito: NASA/DOE/Fermi LAT Collaboration.")
+
+Este [mapa do Fermi](https://svs.gsfc.nasa.gov/11342/) reúne cinco anos de observações acima de 1 GeV, com cores que representam a intensidade da emissão. Ele mostra o tipo de céu investigado nessas buscas. É uma visualização de dados observados, sem marcar especificamente os dois pulsares do artigo.
+
 
 ### Priorizar moléculas para investigar o vírus Zika
 
@@ -113,9 +124,9 @@ A tabela resume a configuração do meu ambiente. Nomes de nós, StorageClass e 
 
 `requests.cpu: 25m` participa da reserva para agendamento e do peso relativo de CPU quando há disputa. Não limita o cliente a 2,5% de um núcleo. `limits.cpu: "2"` impõe uma cota de tempo de CPU pelo mecanismo de controle do runtime.
 
-Memória funciona de outra maneira. O request de 2 GiB entra no orçamento do scheduler, enquanto ultrapassar o limite de 2 GiB pode provocar encerramento por falta de memória no container. Também ajusto o orçamento interno do BOINC, deixando 256 MiB para o próprio cliente. Essa versão do BOINC enxerga a RAM do host, por isso o script de inicialização converte o orçamento do container para a porcentagem esperada pelo programa.
+Memória funciona de outra maneira. O request de 2 GiB entra no orçamento do scheduler, enquanto ultrapassar o limite de 2 GiB pode provocar encerramento por falta de memória no container. Também ajusto o orçamento interno do BOINC, deixando 256 MiB para o próprio cliente. Essa versão do BOINC enxerga a RAM do host. No exemplo abaixo, ajusto a porcentagem nas preferências para que o cliente trabalhe dentro do orçamento do container.
 
-Os pods são Burstable. Uma PriorityClass com valor `-1000` e `preemptionPolicy: Never` reduz a prioridade de agendamento e impede que o BOINC expulse outros pods para conseguir lugar. Ela não retira CPU de um cliente já em execução nem detecta que outro serviço ficou lento.
+Os pods são Burstable. Uma PriorityClass com valor `-1000` e `preemptionPolicy: Never` reduz a prioridade de agendamento e impede que o BOINC expulse outros pods para conseguir lugar. Ela não retira CPU de um cliente já em execução nem detecta que outro serviço ficou lento. A [prioridade de pods chegou a GA no Kubernetes 1.14, e a política sem preempção, no 1.24](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/).
 
 Também não uso a detecção de atividade do desktop para decidir se um nó Kubernetes está ocioso. Dentro de um container, essa leitura não representa bem o conjunto dos serviços. Aqui a contribuição tem orçamento fixo e exige observação do host.
 
@@ -125,75 +136,56 @@ Preparei um [manifesto completo de exemplo](./assets/boinc-cpu.yaml) para um cli
 
 O exemplo usa o cliente oficial BOINC 8.0.4 fixado por digest, testado aqui em Linux AMD64. Ele não depende do runtime OpenCL Intel. Reavalie versão, arquitetura e atualizações de segurança ao adotar a configuração.
 
-### 1. Escolher nó e armazenamento
+### 1. Ajustar nó, armazenamento e memória
 
-Salve o manifesto em uma pasta do seu repositório GitOps, por exemplo `k8s/boinc-example/`. Substitua `REPLACE_WITH_NODE` pelo nó que pode receber a carga e `REPLACE_WITH_STORAGE_CLASS` por uma StorageClass adequada. Confira capacidade livre, permissões do volume para UID 1000 e comportamento de retenção do armazenamento.
+Baixe `boinc-cpu.yaml`. Substitua `REPLACE_WITH_NODE` pelo nó que pode receber a carga e `REPLACE_WITH_STORAGE_CLASS` por uma StorageClass adequada. Confira capacidade livre e permissões do volume para UID 1000.
 
 O cliente guarda identidade, programas, downloads e checkpoints em `/var/lib/boinc`. Cada cliente precisa de um diretório persistente exclusivo. Não copie o PVC de um cliente para iniciar outro em paralelo, nem aumente réplicas para compartilhar essa identidade.
 
-### 2. Selar a conta para o seu cluster
+O exemplo usa um StatefulSet com uma réplica e volume próprio. O [StatefulSet chegou a GA no Kubernetes 1.9](https://kubernetes.io/blog/2017/12/kubernetes-19-workloads-expanded-ecosystem/). A [política explícita de retenção de PVCs chegou a GA no 1.32](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#persistentvolumeclaim-retention); no manifesto, `Retain` conserva o claim ao reduzir réplicas ou excluir o StatefulSet. Isso não protege contra uma exclusão manual do PVC.
 
-Se você já usa [Sealed Secrets](https://github.com/bitnami-labs/sealed-secrets), o [script de exemplo](./assets/seal-account.py) solicita email e senha no terminal local e passa o Secret ao `kubeseal` pela entrada padrão. Ele não grava o XML em texto aberto. Revise o script antes de executar.
+No ConfigMap, os campos `ram_max_used_busy_pct` e `ram_max_used_idle_pct` usam a RAM do host como referência. O valor `4.6875` do exemplo corresponde a 768 MiB para tarefas em um host de 16 GiB, deixando 256 MiB do limite de 1 GiB para o cliente. Ajuste ambos os campos para seu nó:
+
+```text
+porcentagem = 100 × (limite do container em GiB - 0,25) / RAM do host em GiB
+```
+
+Essa preferência orienta o BOINC; o limite de memória do container continua sendo a barreira imposta pelo runtime.
+
+### 2. Aplicar o manifesto
 
 ```sh
-python3 seal-account.py \
-  --context SEU_CONTEXTO \
-  --controller-name sealed-secrets-controller \
-  --controller-namespace sealed-secrets \
-  --output k8s/boinc-example/account.sealed.yaml
+kubectl --context SEU_CONTEXTO apply -f boinc-cpu.yaml
+kubectl --context SEU_CONTEXTO -n boinc-example rollout status statefulset/boinc
+kubectl --context SEU_CONTEXTO -n boinc-example get pods,pvc
 ```
 
-Os nomes do controlador dependem da sua instalação. O script usa escopo estrito para o Secret `boinc-science-united` no namespace `boinc-example`. Se mudar o namespace, use também `--namespace` e ajuste todos os manifestos. O hash exigido pelo protocolo do gerenciador de contas continua sendo uma credencial. Não o publique, nem publique o conteúdo do PVC.
+Um init container copia os dois arquivos XML do ConfigMap para o volume antes de o cliente iniciar. O processo principal executa diretamente o BOINC. Namespace, ConfigMap, Service, StatefulSet, PVC, PriorityClass, LimitRange e ResourceQuota são recursos nativos do Kubernetes.
 
-Gere o SealedSecret para seu próprio cluster e sua própria conta. Se usa outro gerenciador de segredos, produza o mesmo arquivo `acct_mgr_login.xml` dentro de um Secret pelo fluxo seguro da sua instalação.
+### 3. Associar sua conta ao Science United
 
-### 3. Entregar a pasta ao Argo CD
-
-Crie um `kustomization.yaml` junto dos arquivos:
-
-```yaml
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-resources:
-  - boinc-cpu.yaml
-  - account.sealed.yaml
-```
-
-Renderize e revise antes de ativar:
+Abra um terminal no cliente:
 
 ```sh
-kubectl kustomize k8s/boinc-example > /tmp/boinc-example-rendered.yaml
+kubectl --context SEU_CONTEXTO -n boinc-example exec -it boinc-0 -- /bin/bash
 ```
 
-Registre uma Application do Argo apontando para essa pasta no seu repositório. Substitua a URL abaixo e use o nome real do namespace onde seu Argo está instalado. Este exemplo começa com sincronização manual:
+Dentro dele, informe as credenciais sem gravá-las no manifesto ou no histórico do shell:
 
-```yaml
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: boinc-example
-  namespace: argocd
-spec:
-  project: default
-  source:
-    repoURL: https://github.com/SEU_USUARIO/SEU_REPOSITORIO
-    targetRevision: main
-    path: k8s/boinc-example
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: boinc-example
-  syncPolicy:
-    syncOptions:
-      - CreateNamespace=true
+```sh
+read -r -p "Email do Science United: " BOINC_EMAIL
+read -r -s -p "Senha: " BOINC_PASSWORD
+printf '\n'
+boinccmd --join_acct_mgr https://scienceunited.org/ "$BOINC_EMAIL" "$BOINC_PASSWORD"
+unset BOINC_EMAIL BOINC_PASSWORD
+exit
 ```
 
-Confira o diff no Argo antes de sincronizar. Depois escolha a política de reconciliação. Namespace, políticas e Secret precisam estar disponíveis antes de o cliente conseguir iniciar.
-
-Comite apenas o manifesto, o arquivo Kustomize e o segredo selado. Um `kubectl apply` paralelo ao Argo cria duas fontes de configuração; faça ajustes duráveis no Git.
+A associação fica salva no PVC e sobrevive aos reinícios do pod. Trate o conteúdo desse volume como privado, pois ele inclui as credenciais usadas pelo cliente.
 
 ### 4. Confirmar trabalho de verdade
 
-Após a sincronização, confira PVC, prontidão e tarefas:
+Após associar a conta, confira logs, tarefas e consumo:
 
 ```sh
 kubectl --context SEU_CONTEXTO -n boinc-example get pods,pvc
@@ -204,7 +196,7 @@ kubectl --context SEU_CONTEXTO -n boinc-example top pods
 
 Procure associação ao Science United, projetos recebidos e avanço do tempo de CPU. A porcentagem de algumas tarefas avança em saltos. Um pod Ready só confirma a resposta local do cliente; não prova conclusão, envio ou validação de trabalho científico.
 
-O cliente roda sem root, sem token de ServiceAccount, sem capabilities e com raiz somente leitura. Os diretórios de dados e temporários continuam graváveis. Não há Ingress, NodePort ou acesso remoto configurado ao RPC. Projetos que exigem VirtualBox ou containers aninhados não fazem parte desse exemplo restrito.
+O cliente roda sem root, sem token de ServiceAccount, sem capabilities e com raiz somente leitura. O namespace usa [Pod Security Admission em modo restricted, GA no Kubernetes 1.25](https://kubernetes.io/blog/2022/08/25/pod-security-admission-stable/), e o pod define [seccomp RuntimeDefault pela API estável desde o 1.19](https://kubernetes.io/blog/2020/08/26/kubernetes-release-1.19-accentuate-the-paw-sitive/#graduated-to-stable). Os diretórios de dados e temporários continuam graváveis. Não há Ingress, NodePort ou acesso remoto configurado ao RPC. Projetos que exigem VirtualBox ou containers aninhados não fazem parte desse exemplo restrito.
 
 ## GPU exige outro cuidado
 
@@ -259,21 +251,6 @@ LimitRange define os máximos por container e por pod, além do tamanho dos clai
 
 A quota também bloqueia réplicas temporárias de um rollout com surge. Por isso mantenho o cliente CPU em `Recreate` e o StatefulSet GPU com uma réplica. Durante manutenção, pode ser necessário esperar um pod em encerramento sair da contagem. A solução não é apagar o PVC.
 
-## O que mudou no Kubernetes e o que faz sentido aqui
-
-Conferi o cluster em 29 de outubro de 2026. Os nós BOINC usavam Kubernetes 1.35.2, Talos 1.13.9 e containerd 2.2.7; o plugin Intel era 0.37.1. A escolha de recursos considera essa versão, não apenas o que existe na documentação mais recente.
-
-| Recurso | Situação relevante | Decisão neste deployment |
-| --- | --- | --- |
-| Resize de CPU e memória no container em execução | GA no Kubernetes 1.35 | Útil para reduzir interrupções, mas o fluxo atual do Argo não conduz o subrecurso de resize. Alterar template ainda pode recriar pods. |
-| Dynamic Resource Allocation | API principal estável desde 1.34 | Exige driver e claims compatíveis. Não converte automaticamente o plugin Intel instalado nem fornece limite percentual de GPU. |
-| Recursos no nível do pod | Beta em 1.35 | Mantive limites nos containers e máximos estáveis via LimitRange. |
-| HPA e VPA | Automação precisa respeitar dados e identidade | Não adicionei escala automática. Mais réplicas não são uma forma segura de ampliar este cliente persistente. |
-
-As referências oficiais de [resize em 1.35](https://kubernetes.io/blog/2025/12/19/kubernetes-v1-35-in-place-pod-resize-ga/), [DRA nessa versão](https://v1-35.docs.kubernetes.io/docs/concepts/scheduling-eviction/dynamic-resource-allocation/) e [gerenciamento de recursos](https://v1-35.docs.kubernetes.io/docs/concepts/configuration/manage-resources-containers/) detalham os contratos e limites. Reduzir memória pode causar OOM mesmo sem reinício planejado. Não faria isso no meio de uma tarefa residente apenas porque a API permite.
-
-Não adicionei um PDB que impeça parar o único cliente. Essas tarefas toleram interrupções conforme seus checkpoints e prazos; bloquear manutenção não as torna altamente disponíveis. Também evitei liveness agressiva. Uma resposta lenta ao RPC não deveria provocar reinícios em série e recomputação desnecessária.
-
 ## Monitorar, pausar e retomar
 
 Observo CPU e memória dos pods, memória total do nó, pressão de CPU, temperatura e latência dos serviços que já estavam ali. No Prometheus, duas consultas ajudam a ver o orçamento real:
@@ -292,9 +269,24 @@ sum by (pod) (
 
 As métricas dependem da coleta do seu cluster. No exemplo de download, troque o namespace por `boinc-example`. Uso essas séries junto dos logs e de `boinccmd --get_tasks`, e não como substitutas da observação dos serviços. Para GPU, confira também contadores do dispositivo quando disponíveis. RAM do host importa porque uso de memória pelo driver pode não aparecer da mesma forma no working set do container.
 
-Para interromper toda a contribuição, altere `replicas: 0` no Git e deixe o Argo reconciliar. No meu caso, isso vale para os dois controladores. Para retomar, volte a uma réplica em cada um. Conserve PVCs e identidades. Os 120 segundos de encerramento permitem ao cliente receber SIGTERM e salvar estado, mas a aplicação científica define seus checkpoints; parte do cálculo desde o último checkpoint pode ser refeita.
+Para pausar o cliente do tutorial e depois retomá-lo, ajuste apenas as réplicas:
 
-Para mudar o orçamento, revise conjuntamente o limite do container, os requests, as preferências internas e as políticas do namespace. No exemplo, a configuração é copiada durante a inicialização. Uma mudança no ConfigMap exige rollout deliberado, por exemplo com uma anotação de revisão no template, depois de conferir checkpoints e prazos. O Argo não reinicia automaticamente um pod só porque esse ConfigMap mudou.
+```sh
+kubectl --context SEU_CONTEXTO -n boinc-example scale statefulset/boinc --replicas=0
+# Execute quando quiser retomar:
+kubectl --context SEU_CONTEXTO -n boinc-example scale statefulset/boinc --replicas=1
+```
+
+No meu homelab, gerenciado pelo Argo CD, faço a mesma alteração no Git e deixo o controlador reconciliar. Conserve PVCs e identidades. Os 120 segundos de encerramento permitem ao cliente receber SIGTERM e salvar estado, mas a aplicação científica define seus checkpoints; parte do cálculo desde o último checkpoint pode ser refeita.
+
+Para mudar o orçamento, revise conjuntamente o limite do container, os requests, as preferências internas e as políticas do namespace. No exemplo, a configuração é copiada durante a inicialização. Depois de editar o manifesto, aplique-o novamente. Para carregar mudanças no ConfigMap, confira checkpoints e prazos antes de reiniciar o cliente:
+
+```sh
+kubectl --context SEU_CONTEXTO apply -f boinc-cpu.yaml
+kubectl --context SEU_CONTEXTO -n boinc-example rollout restart statefulset/boinc
+```
+
+Alterar o ConfigMap sozinho não reinicia o pod.
 
 Rollback segue a mesma regra. Reverter uma quota não exige trocar imagem nem dados. Reverter uma imagem usa o PVC atual, com o cliente anterior já parado. Uma cópia antiga de volume não deve voltar a rodar em paralelo. Se desabilitar GPU, tarefas que precisam dela podem ficar sem avançar até recuperar suporte ou vencer o prazo.
 

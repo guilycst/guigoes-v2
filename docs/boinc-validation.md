@@ -1,6 +1,7 @@
 # BOINC article validation
 
-Review date: 2026-10-29, America/Sao_Paulo.
+Article revision: 2026-10-30, America/Sao_Paulo. Infrastructure observations below
+remain the 2026-10-29 snapshot; this revision did not change the cluster.
 
 ## Infrastructure
 
@@ -34,10 +35,25 @@ recreation, identity clone or increase in resource limits was performed.
   work and climateprediction.net flood-risk attribution. Historical results are
   not attributed to the author's installation. No personal discovery or newly
   validated scientific result is claimed.
-- CPU example YAML passed Kubernetes client dry-run and YAML parsing. Embedded
-  startup Python and XML parsed successfully. The sealer was exercised with
-  fake credentials and a mocked kubeseal process, without reading a real account.
-  The example was not launched as another live scientific client.
+- The revised CPU example uses native Kubernetes resources, a cp init container
+  and a direct BOINC process. Sealed-account tooling and embedded startup Python
+  were removed. The tutorial associates an account interactively with boinccmd;
+  no real credentials were entered during validation.
+- Kubernetes client dry-run passed for all seven resource documents. XML parsed
+  with the standard library. An isolated, network-disabled Docker run of the
+  exact pinned AMD64 image tested the init copy, UID 1000, read-only root,
+  dropped capabilities, one-CPU/1-GiB limits and the readiness RPC command.
+  BOINC reported one CPU, no GPU and loaded the memory preferences, reporting
+  0.55 GB for the test VM's 11.73-GB host memory at 4.6875 percent. A graceful
+  stop retained client_state.xml and gui_rpc_auth.cfg on the temporary data
+  volume. No projects or live scientific work were attached to that test.
+- The example requires node, StorageClass and RAM-percentage adjustment.
+  Pod scheduling, the chosen CSI driver's permissions and account attachment
+  were not exercised on a second cluster.
+- NASA pulsar illustration and Fermi observational map were inspected at source
+  resolution. Captions, alt text, provenance, credits and hashes are recorded
+  in docs/boinc-media-sources.md. The cluster-version disclaimer and unused
+  feature comparison were replaced with GA dates for features actually used.
 - make check passed, including final HTML, local links/fragments, legacy URLs,
   feeds, Go tests and vet. The page has one BlogPosting, the expected canonical,
   pt-BR, author profile and timestamp. JSON-LD, OG and Twitter image URLs match;
