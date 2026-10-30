@@ -11,3 +11,4 @@ tmp/
 .env
 .env.*
 .prod.env
+node_modules/

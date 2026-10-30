@@ -1,28 +1,30 @@
-name: Margo CI
-
+name: Blog CI
 on:
   push:
-    branches: ["main"]
+    branches: [main]
   pull_request:
-
 permissions:
   contents: read
-
 jobs:
   build:
-    name: Build and check blog
+    name: Build, validate schema and package
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup Go
-        uses: actions/setup-go@v6
+      - uses: actions/checkout@v4
         with:
-          go-version-file: "go.mod"
-      - name: Build and validate
-        run: make check
-      - name: Upload static site
-        uses: actions/upload-artifact@v4
+          persist-credentials: false
+      - uses: actions/setup-go@v6
         with:
-          name: guigoes-site
+          go-version-file: go.mod
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - name: Validate content and structured data before packaging
+        run: make check dry-run
+      - uses: actions/upload-artifact@v4
+        with:
+          name: guigoes-site-${{ github.sha }}
           path: public/
+          if-no-files-found: error
