@@ -16,10 +16,14 @@ CSS, consumer JavaScript or generated-HTML rewrite implements this behavior.
   History restoration covers body swaps and ignores late metadata for a route
   that is no longer visible.
 
-Upstream work:
+Both modules are pinned to immutable main commits after their PR checks passed.
 
-- [App Shells PR 61](https://github.com/araihu/goshtoso-app-shells/pull/61)
-- [Margo PR 115](https://github.com/araihu/margo/pull/115)
+Merged upstream work:
+
+- [App Shells PR 61](https://github.com/araihu/goshtoso-app-shells/pull/61),
+  merged as [cbb346e](https://github.com/araihu/goshtoso-app-shells/commit/cbb346ef3bca4116c628a78c1f963bea8f7170a3).
+- [Margo PR 115](https://github.com/araihu/margo/pull/115),
+  merged as [c08c6ee](https://github.com/araihu/margo/commit/c08c6ee234223ec4efdb06a2eabe2055f3b7ad63).
 
 The local blog build, URL/JSON-LD validation, tests and vet pass with GOWORK=off.
 Physical touch devices and assistive-technology certification are outside this

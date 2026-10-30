@@ -4,14 +4,14 @@ go 1.27.3
 
 require (
 	github.com/araihu/gazeta v0.0.2
-	github.com/araihu/margo v0.0.34-0.20261030173946-e8909a4ffb90
+	github.com/araihu/margo v0.0.34-0.20261030181436-c08c6ee23422
 )
 
 require (
 	github.com/a-h/templ v0.3.1070 // indirect
 	github.com/alecthomas/chroma/v2 v2.27.0 // indirect
 	github.com/araihu/goshtoso v0.4.0 // indirect
-	github.com/araihu/goshtoso-app-shells v0.1.9-0.20261030171936-39eb35341dd1 // indirect
+	github.com/araihu/goshtoso-app-shells v0.1.9-0.20261030180739-cbb346ef3bca // indirect
 	github.com/araihu/goshtoso-charts v0.0.2 // indirect
 	github.com/chromedp/cdproto v0.0.0-20250724212937-08a3db8b4327 // indirect
 	github.com/chromedp/chromedp v0.14.2 // indirect
