@@ -13,7 +13,7 @@ margo = { imageViewer = true }
 
 Meu homelab passa o dia guardando fotos, servindo mídia e executando os programas que uso e desenvolvo. Entre essas atividades, sobra capacidade de processamento. Resolvi ceder uma parte dela a pesquisas científicas usando [BOINC](https://boinc.berkeley.edu/).
 
-A ideia é simples. Uma equipe de pesquisa divide um cálculo em tarefas, computadores voluntários processam essas partes e devolvem os resultados. Posso ajudar sem escolher uma pergunta de pesquisa nem escrever uma simulação. Minha contribuição é manter um cliente funcionando, com recursos e tempo suficientes para entregar o trabalho recebido.
+A ideia é simples. Uma equipe de pesquisa divide um cálculo em tarefas, e computadores voluntários processam essas partes e devolvem os resultados. Posso ajudar sem escolher uma pergunta de pesquisa nem escrever uma simulação. Minha contribuição é manter um cliente funcionando, com recursos e tempo suficientes para entregar o trabalho recebido.
 
 No meu caso, isso virou também um exercício de operação no Kubernetes. Quero contribuir, mas os serviços que já uso continuam tendo prioridade. Aqui vou explicar o que essa computação já ajudou a produzir, como começar no computador de casa e como montei uma contribuição limitada de CPU e GPU no cluster.
 
@@ -21,7 +21,7 @@ No meu caso, isso virou também um exercício de operação no Kubernetes. Quero
 
 BOINC é a plataforma de computação voluntária. O cliente baixa os programas e os dados dos projetos, executa as tarefas e envia os resultados. O BOINC Manager é a interface para acompanhar esse cliente e configurar quando ele pode trabalhar. O código-fonte está no [repositório oficial do BOINC no GitHub](https://github.com/boinc/boinc).
 
-É possível escolher projetos diretamente na [lista oficial](https://www.boinc.org/projects.php). Eles têm objetivos e requisitos diferentes. Um programa pode precisar apenas de CPU; outro, de determinada GPU, sistema operacional ou quantidade de memória. A oferta de tarefas varia conforme a demanda de cada projeto.
+É possível escolher projetos diretamente na [lista oficial](https://boinc.berkeley.edu/projects.php). Eles têm objetivos e requisitos diferentes. Um programa pode precisar apenas de CPU; outro, de determinada GPU, sistema operacional ou quantidade de memória. A oferta de tarefas varia conforme a demanda de cada projeto.
 
 Escolhi o [Science United](https://scienceunited.org/), um gerenciador de contas operado pelo projeto BOINC na Universidade da Califórnia em Berkeley. Em vez de selecionar cada projeto, escolho as áreas científicas que quero apoiar. O gerenciador associa o cliente aos projetos conforme essas preferências e a demanda. Essa seleção pode mudar com o tempo, como explica a [introdução do Science United](https://scienceunited.org/intro.php).
 
@@ -89,7 +89,7 @@ Meu ponto de partida é uma parcela pequena de uma máquina que já está ligada
 Para contribuir, basta um computador compatível. GPU e cluster são opcionais.
 
 1. Crie sua conta no Science United e escolha as áreas de interesse. Se quiser escolher projetos individualmente, use a lista do BOINC e siga o cadastro de cada projeto.
-2. Baixe o cliente na [página oficial de instalação](https://www.boinc.org/download.php). Instale a versão oferecida para seu sistema.
+2. Baixe o cliente na [página oficial de instalação](https://boinc.berkeley.edu/download.php). Instale a versão oferecida para seu sistema.
 3. Abra o BOINC Manager. Para uma instalação já existente, use a opção de gerenciador de contas e informe Science United, conforme a [ajuda oficial](https://scienceunited.org/su_help.php).
 4. Nas preferências de computação, comece com uma fração dos processadores, suspenda durante o uso do computador e mantenha GPU suspensa enquanto estiver trabalhando. Em notebook, confira também a opção de funcionamento com bateria.
 5. Observe uma tarefa real, consumo e temperatura. Ajuste os horários e a parcela de CPU depois desse primeiro teste.
@@ -136,13 +136,17 @@ O exemplo usa o cliente oficial BOINC 8.0.4 fixado por digest e exige um nó Lin
 
 Para seguir o tutorial, você precisa de um contexto `kubectl` acessível, Kubernetes 1.32 ou posterior, permissão para criar `Namespace` e `PriorityClass`, uma `StorageClass` capaz de provisionar o volume e acesso à internet para o Science United e os projetos. O comando `kubectl top` é opcional e depende do Metrics Server.
 
+O exemplo pressupõe um cluster pessoal e confiança nos projetos indicados pelo Science United. O pod executa os programas desses projetos e pode alcançar serviços internos do cluster: o manifesto não define `NetworkPolicy`. O modo `restricted` limita privilégios do processo; [isolamento de rede](https://kubernetes.io/docs/concepts/services-networking/network-policies/) exige políticas e um plugin de rede que as aplique.
+
 ### 1. Ajustar nó, armazenamento e memória
 
 Baixe `boinc-cpu.yaml`. Substitua `REPLACE_WITH_NODE` pelo nó que pode receber a carga e `REPLACE_WITH_STORAGE_CLASS` por uma `StorageClass` adequada. Confira capacidade livre e permissões do volume para UID `1000`.
 
 O cliente guarda identidade, programas, downloads e checkpoints, os pontos de progresso salvos pelas aplicações, em `/var/lib/boinc`. Cada cliente precisa de um diretório persistente exclusivo. Não copie o PVC de um cliente para iniciar outro em paralelo, nem aumente réplicas para compartilhar essa identidade.
 
-O exemplo usa um `StatefulSet` com uma réplica e volume próprio. A [política de retenção de PVCs](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#persistentvolumeclaim-retention) usa `Retain` para conservar o claim ao reduzir réplicas ou excluir o `StatefulSet`. Isso não protege contra uma exclusão manual do PVC.
+O exemplo usa um `StatefulSet` com uma réplica para criar o PVC do cliente a partir do próprio manifesto. No homelab, o cliente CPU usa um `Deployment` com `Recreate` e um PVC criado separadamente. Nos dois arranjos, mantenho uma réplica e um volume exclusivo por cliente.
+
+A [política de retenção de PVCs](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#persistentvolumeclaim-retention) do exemplo usa `Retain` para conservar o claim ao reduzir réplicas ou excluir o `StatefulSet`. Isso não protege contra uma exclusão manual do PVC.
 
 No `ConfigMap`, os campos `ram_max_used_busy_pct` e `ram_max_used_idle_pct` usam a RAM do host como referência. O valor `4.6875` do exemplo corresponde a 768 MiB para tarefas em um host de 16 GiB, deixando 256 MiB do limite de 1 GiB para o cliente. Ajuste ambos os campos para seu nó:
 
@@ -218,27 +222,27 @@ resources:
 
 Esse trecho pertence ao cliente Intel completo. Não é um patch suficiente para habilitar GPU no exemplo CPU-only. Para usar uma GPU Intel, confira o driver `i915` no host, o device plugin e as bibliotecas OpenCL dentro da imagem. A aplicação científica também precisa oferecer uma versão compatível com essa GPU.
 
-A imagem Intel usada no meu teste contém patches sobre BOINC 8.0.4. O [Dockerfile](https://github.com/guilycst/boinc-k8s-intel-n100/blob/main/image/Dockerfile) e o [patch do cliente](https://github.com/guilycst/boinc-k8s-intel-n100/blob/main/image/single-gpu-task.patch) estão disponíveis no repositório público, junto de uma [imagem de container para download](https://github.com/users/guilycst/packages/container/package/boinc-k8s-intel-n100). Esse piloto é uma implementação específica do homelab; o exemplo disponível para download neste artigo usa o cliente oficial somente com CPU. Não é a imagem oficial nem uma solução genérica para qualquer GPU. NVIDIA e AMD exigem outros drivers, bibliotecas e recursos; não precisam desse patch Intel por definição.
+A imagem usada no piloto combina o runtime OpenCL Intel com alterações no cliente BOINC 8.0.4. O [Dockerfile](https://github.com/guilycst/boinc-k8s-intel-n100/blob/d02e0e3f35f747bc24141954409da621a97e85bc/image/Dockerfile) e o [patch do cliente](https://github.com/guilycst/boinc-k8s-intel-n100/blob/d02e0e3f35f747bc24141954409da621a97e85bc/image/single-gpu-task.patch) estão disponíveis no repositório público, junto de uma [imagem de container para download](https://github.com/users/guilycst/packages/container/package/boinc-k8s-intel-n100). Esse piloto é uma implementação específica do homelab; o exemplo disponível para download neste artigo usa o cliente oficial somente com CPU. Não é a imagem oficial nem uma solução genérica para qualquer GPU. NVIDIA e AMD exigem outros drivers, bibliotecas e recursos. Os patches de concorrência e de pausa alteram o cliente BOINC e precisam de avaliação ao adaptar o piloto para outra GPU.
 
-No meu plugin, os slots são compartilhados. Pedir uma unidade dá acesso ao dispositivo, não uma porcentagem de uso, memória dedicada ou potência reservada. Limitei o cliente a uma tarefa GPU por vez, inclusive entre projetos, com o [patch versionado](https://github.com/guilycst/boinc-k8s-intel-n100/blob/main/image/single-gpu-task.patch). Essa regra também não impede que outro pod com acesso à mesma GPU concorra com ele.
+No meu plugin, os slots são compartilhados. Pedir uma unidade dá acesso ao dispositivo, não uma porcentagem de uso, memória dedicada ou potência reservada. Limitei o cliente a uma tarefa GPU por vez, inclusive entre projetos, com o [patch versionado](https://github.com/guilycst/boinc-k8s-intel-n100/blob/d02e0e3f35f747bc24141954409da621a97e85bc/image/single-gpu-task.patch). Essa regra também não impede que outro pod com acesso à mesma GPU concorra com ele.
 
 ## Como a contribuição pausa quando o computador esquenta
 
 O manifesto CPU deste tutorial inclui limites de CPU e memória, mas não inclui o supervisor térmico descrito nesta seção. Aplicar o YAML não habilita pausa por temperatura. Esse controle automático é uma camada adicional da minha instalação, específica para sensores Intel.
 
-Limitar o container a duas CPUs não limita a temperatura do processador. No cliente somente CPU, cheguei a observar 96 °C mesmo com essa cota funcionando. Por isso acrescentei uma pausa automática por temperatura à minha instalação.
+Limitar o container a duas CPUs não limita a temperatura do processador. Por isso acrescentei uma pausa automática por temperatura à minha instalação.
 
 Esse controle é um programa supervisor que inicia o BOINC e acompanha sua execução. A cada dois segundos, ele consulta os sensores Intel `coretemp` do computador e usa a maior leitura válida entre o pacote do processador e seus núcleos. No N100, CPU e GPU integrada compartilham o mesmo chip. A leitura serve para acompanhar o aquecimento desse conjunto, não para medir apenas o uso da GPU.
 
-Cada cliente tem seu próprio supervisor, com código disponível para [CPU](https://github.com/guilycst/boinc-k8s-intel-n100/blob/main/runtime/cpu-guard.py) e [GPU](https://github.com/guilycst/boinc-k8s-intel-n100/blob/main/runtime/gpu-guard.py). Ele envia comandos locais ao BOINC pela interface RPC, a mesma interface de controle usada pelo `boinccmd`. No cliente somente CPU, manda suspender a computação. No cliente com GPU, manda suspender apenas o trabalho da GPU; as tarefas de CPU desse cliente continuam sujeitas ao orçamento configurado.
+Cada cliente tem seu próprio supervisor, com código disponível para [CPU](https://github.com/guilycst/boinc-k8s-intel-n100/blob/d02e0e3f35f747bc24141954409da621a97e85bc/runtime/cpu-guard.py) e [GPU](https://github.com/guilycst/boinc-k8s-intel-n100/blob/d02e0e3f35f747bc24141954409da621a97e85bc/runtime/gpu-guard.py). Ele envia comandos locais ao BOINC pela interface RPC, a mesma interface de controle usada pelo `boinccmd`. No cliente somente CPU, manda suspender a computação. No cliente com GPU, manda suspender apenas o trabalho da GPU; as tarefas de CPU desse cliente continuam sujeitas ao orçamento configurado.
 
 ```mermaid
 flowchart TB
     accTitle: Ciclo de pausa e retomada por temperatura
     accDescr: O trabalho começa pausado. Uma leitura válida de 80 graus Celsius ou menos libera a execução. Ao atingir 85 graus ou mais, o trabalho volta a pausar. Entre 80 e 85 graus, mantém o estado anterior. Sensor ausente ou leitura inválida provoca pausa.
     inicio["Início"] --> pausado["Trabalho pausado"]
-    pausado -->|"80 °C ou menos"| liberado["Liberado para executar"]
-    liberado -->|"85 °C ou mais"| pausado
+    pausado -->|"Leitura válida<br/>80 °C ou menos"| liberado["Liberado para executar"]
+    liberado -->|"85 °C ou mais<br/>ou sem leitura válida"| pausado
 ```
 
 Acima de 80 °C e abaixo de 85 °C, o supervisor mantém o estado anterior. Aos 83 °C, um trabalho que já estava em execução continua; um que estava pausado ainda espera esfriar até 80 °C. Essa diferença entre os patamares, chamada histerese, evita alternar entre execução e pausa a cada pequena oscilação. A retomada também respeita as demais preferências do BOINC.
@@ -247,7 +251,7 @@ Pausar não significa apagar o pod, abortar a tarefa ou remover seu volume. Conf
 
 Se uma tentativa de aplicar a pausa ou a retomada falhar por erro ou timeout do RPC, o supervisor encerra o cliente. A intenção é não manter computação ativa sem conseguir pausá-la. Sensor ausente ou leitura inválida faz o supervisor pausar o trabalho até voltar uma leitura segura.
 
-O mecanismo reduz a contribuição quando o computador esquenta, mas não impõe um teto físico de 85 °C. Há intervalo entre medir e pausar, o chip demora a esfriar e outros serviços continuam produzindo calor. Nos testes, observei pausa e retomada automáticas, com queda do uso de CPU, mas também picos de 90 °C após retomadas. Esse resultado é o motivo para acompanhar a temperatura do computador e manter margem, mesmo com a pausa automática.
+O mecanismo reduz a contribuição quando o computador esquenta, mas não impõe um teto físico de 85 °C. Há intervalo entre medir e pausar, o chip demora a esfriar e outros serviços continuam produzindo calor. Nos testes, observei pausa e retomada automáticas, com queda do uso de CPU. Acompanho a temperatura do computador e mantenho margem, mesmo com a pausa automática.
 
 Ao usar o exemplo do tutorial, acompanhe os sensores do host e suspenda a contribuição pelo BOINC se o equipamento aquecer demais.
 
