@@ -54,7 +54,7 @@ Fonte: [NASA](https://www.nasa.gov/universe/nasas-fermi-telescope-discovers-firs
 
 O [Einstein@Home](https://einsteinathome.org/) é um projeto de astronomia que usa o BOINC para procurar sinais de estrelas de nêutrons em dados de observatórios. Os voluntários cedem o processamento de seus computadores para essa busca.
 
-Em um [artigo publicado na Science Advances em 2018](https://doi.org/10.1126/sciadv.aao7228), a equipe descreve a descoberta de dois pulsares que giram centenas de vezes por segundo, completando cada volta em poucos milissegundos. Por isso são chamados de pulsares de milissegundos. Os dois são isolados, ou seja, não têm uma estrela companheira em órbita. Foram encontrados em dados de raios gama do telescópio Fermi; um deles continuava sem detecção em rádio nas observações relatadas no estudo.
+Em um [artigo publicado na Science Advances em 2018](https://doi.org/10.1126/sciadv.aao7228), a equipe descreve a descoberta de dois pulsares que giram centenas de vezes por segundo, completando cada volta em poucos milissegundos. Por isso são chamados de pulsares de milissegundos. Os dois são isolados, ou seja, não têm uma estrela companheira em órbita. Foram encontrados em dados de raios gama do telescópio Fermi.
 
 A busca usou os computadores de dezenas de milhares de voluntários para testar padrões de pulsação nos dados. A contribuição distribuída foi o processamento necessário para encontrar sinais que depois receberam análise científica. O [manuscrito dos autores](https://arxiv.org/abs/1803.06855) descreve essa relação de forma direta.
 
