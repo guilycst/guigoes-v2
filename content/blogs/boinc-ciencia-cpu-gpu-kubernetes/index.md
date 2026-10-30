@@ -25,20 +25,21 @@ BOINC é a plataforma de computação voluntária. O cliente baixa os programas 
 
 Escolhi o [Science United](https://scienceunited.org/), um gerenciador de contas operado pelo projeto BOINC na Universidade da Califórnia em Berkeley. Em vez de selecionar cada projeto, escolho as áreas científicas que quero apoiar. O gerenciador associa o cliente aos projetos conforme essas preferências e a demanda. Essa seleção pode mudar com o tempo, como explica a [introdução do Science United](https://scienceunited.org/intro.php).
 
-Na configuração da conta, é possível marcar as sete áreas oferecidas e deixar a localização das pesquisas sem restrição, para contribuir onde houver trabalho compatível. O gerenciador distribui o trabalho entre os projetos conforme essas preferências e as tarefas disponíveis.
+Na configuração da conta, é possível marcar as sete áreas oferecidas e deixar a localização das pesquisas sem restrição, para contribuir onde houver trabalho compatível. O Science United indica ao BOINC quais projetos seguir. O cliente baixa as tarefas e devolve os resultados diretamente aos projetos.
 
 ```mermaid
 flowchart TB
     accTitle: Como a contribuição chega à pesquisa
-    accDescr: O voluntário escolhe áreas no Science United. O gerenciador associa o cliente BOINC aos projetos. Os projetos enviam tarefas ao cliente e recebem os resultados para validação e análise científica.
-    pessoa["Você escolhe áreas"] --> su["Science United"]
-    su -->|"Associa projetos"| cliente["Cliente BOINC"]
-    projetos["Projetos científicos"] -->|"Programas e tarefas"| cliente
-    cliente -->|"Resultados calculados"| projetos
-    projetos --> validacao["Validação e análise científica"]
+    accDescr: Você escolhe áreas no Science United, que indica projetos ao BOINC. O cliente baixa programas e tarefas diretamente desses projetos. Seu computador executa os cálculos e o BOINC devolve os resultados aos projetos, que os conferem para a análise das equipes de pesquisa.
+    areas["Você escolhe as áreas<br/>Science United indica<br/>projetos ao BOINC"]
+    download["BOINC baixa tarefas<br/>dos projetos"]
+    calculo["Seu computador<br/>executa os cálculos"]
+    envio["BOINC envia resultados<br/>aos projetos"]
+    pesquisa["Projetos conferem<br/>Pesquisadores analisam"]
+    areas --> download --> calculo --> envio --> pesquisa
 ```
 
-Os projetos conferem os resultados recebidos e os reúnem para análise científica. Cada computador participa de uma parte desse trabalho; o conjunto permite explorar perguntas que exigem muito processamento.
+Cada computador participa de uma parte desse trabalho; o conjunto permite explorar perguntas que exigem muito processamento.
 
 ## O que já saiu desse trabalho coletivo
 
