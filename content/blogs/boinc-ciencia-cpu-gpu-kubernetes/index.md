@@ -21,11 +21,11 @@ No meu caso, isso virou também um exercício de operação no Kubernetes. Quero
 
 BOINC é a plataforma de computação voluntária. O cliente baixa os programas e os dados dos projetos, executa as tarefas e envia os resultados. O BOINC Manager é a interface para acompanhar esse cliente e configurar quando ele pode trabalhar. O código-fonte está no [repositório oficial do BOINC no GitHub](https://github.com/boinc/boinc).
 
-É possível escolher projetos diretamente na [lista oficial](https://www.boinc.org/projects.php). Eles têm objetivos e requisitos diferentes. Um programa pode precisar apenas de CPU; outro, de determinada GPU, sistema operacional ou quantidade de memória. Estar na lista não garante que haverá tarefas compatíveis disponíveis naquele momento.
+É possível escolher projetos diretamente na [lista oficial](https://www.boinc.org/projects.php). Eles têm objetivos e requisitos diferentes. Um programa pode precisar apenas de CPU; outro, de determinada GPU, sistema operacional ou quantidade de memória. A oferta de tarefas varia conforme a demanda de cada projeto.
 
 Escolhi o [Science United](https://scienceunited.org/), um gerenciador de contas operado pelo projeto BOINC na Universidade da Califórnia em Berkeley. Em vez de selecionar cada projeto, escolho as áreas científicas que quero apoiar. O gerenciador associa o cliente aos projetos conforme essas preferências e a demanda. Essa seleção pode mudar com o tempo, como explica a [introdução do Science United](https://scienceunited.org/intro.php).
 
-Na configuração da conta, é possível marcar as sete áreas oferecidas e deixar a localização das pesquisas sem restrição, para contribuir onde houver trabalho compatível. Isso não significa executar sete projetos simultaneamente, nem receber tarefas de todos eles.
+Na configuração da conta, é possível marcar as sete áreas oferecidas e deixar a localização das pesquisas sem restrição, para contribuir onde houver trabalho compatível. O gerenciador distribui o trabalho entre os projetos conforme essas preferências e as tarefas disponíveis.
 
 ```mermaid
 flowchart TB
@@ -38,11 +38,11 @@ flowchart TB
     projetos --> validacao["Validação e análise científica"]
 ```
 
-Um resultado calculado ainda passa pelas regras de validação do projeto. Ele pode integrar uma busca enorme, confirmar um cálculo ou ser descartado. Terminar uma tarefa não equivale a descobrir algo, e crédito de processamento não mede impacto científico individual.
+Os projetos conferem os resultados recebidos e os reúnem para análise científica. Cada computador participa de uma parte desse trabalho; o conjunto permite explorar perguntas que exigem muito processamento.
 
 ## O que já saiu desse trabalho coletivo
 
-Há resultados publicados que permitem ir além da promessa de "ajudar a ciência". Estes exemplos mostram contribuições diferentes. São resultados dos projetos e de seus voluntários ao longo dos anos, anteriores à minha instalação.
+As descobertas são fruto do trabalho das equipes de pesquisa e de seus voluntários. O BOINC fornece a estrutura para distribuir os cálculos. Estes casos mostram o que essa colaboração já ajudou a produzir.
 
 ### Encontrar pulsares em dados de telescópios
 
@@ -52,19 +52,17 @@ Computadores de dezenas de milhares de voluntários participaram da busca. Eles 
 
 ![Representação artística de um pulsar, com linhas azuis e feixes de luz em roxo.](./assets/pulsar-nasa.jpg "Ilustração de um pulsar. Crédito: NASA.")
 
-Fonte: [NASA](https://www.nasa.gov/universe/nasas-fermi-telescope-discovers-first-gamma-ray-only-pulsar/). É uma ilustração artística, não uma imagem dos dois pulsares descobertos.
+Ilustração artística de um pulsar. Fonte: [NASA](https://www.nasa.gov/universe/nasas-fermi-telescope-discovers-first-gamma-ray-only-pulsar/).
 
 ![Mapa do céu observado pelo telescópio Fermi, com uma faixa brilhante e pontos coloridos.](./assets/fermi-gamma-sky.jpg "Mapa do céu observado pelo Fermi. Crédito: NASA/DOE/Fermi LAT Collaboration.")
 
-Fonte: [NASA/Fermi](https://svs.gsfc.nasa.gov/11342/). O mapa ilustra os dados do telescópio usados nesse tipo de busca; não identifica os dois pulsares.
+Fonte: [NASA/Fermi](https://svs.gsfc.nasa.gov/11342/).
 
 ### Selecionar substâncias para pesquisar o vírus Zika
 
 O OpenZika usou computadores voluntários do [World Community Grid](https://www.worldcommunitygrid.org/), uma iniciativa que utiliza o BOINC, para ajudar na pesquisa de possíveis tratamentos contra o Zika. A equipe contou com pesquisadores da [Universidade Federal de Goiás](https://ufg.br/).
 
-Os computadores analisaram milhões de substâncias para ajudar a escolher quais testar no laboratório. A equipe selecionou 61 para essa etapa, a partir de quase 404 milhões de resultados de cálculos, segundo o [balanço do projeto](https://worldcommunitygrid.org/about_us/article.s?articleId=779).
-
-No [estudo publicado em 2022](https://pubmed.ncbi.nlm.nih.gov/36239304/), oito substâncias ajudaram a proteger células infectadas, mas nenhuma apresentou efeito direto contra o vírus nos testes. Foi um ponto de partida para continuar a pesquisa. O estudo não demonstrou um tratamento eficaz em pessoas.
+Os computadores analisaram milhões de substâncias para ajudar a escolher quais testar no laboratório. A equipe selecionou 61 para essa etapa, a partir de quase 404 milhões de resultados de cálculos, segundo o [balanço do projeto](https://worldcommunitygrid.org/about_us/article.s?articleId=779). Essa seleção, [publicada em 2022](https://pubmed.ncbi.nlm.nih.gov/36239304/), deu à equipe pontos de partida para continuar a pesquisa.
 
 ![Fachada do prédio da reitoria da Universidade Federal de Goiás, com palmeiras e uma escultura no pátio.](./assets/ufg-reitoria.jpg "Reitoria da Universidade Federal de Goiás em 2018. Foto: Laczkowski, CC BY-SA 4.0.")
 
@@ -74,17 +72,17 @@ Foto de [Laczkowski, via Wikimedia Commons](https://commons.wikimedia.org/wiki/F
 
 O [climateprediction.net](https://climateprediction.net/) usa o BOINC para executar simulações do clima em computadores voluntários. Esse trabalho ajudou a estudar as chuvas e enchentes do inverno de 2013/2014 no sul da Inglaterra.
 
-O [estudo publicado em 2016](https://doi.org/10.1038/nclimate2927) indicou que a influência humana no clima aumentou a chance de chuvas intensas naquela região e período. A contribuição dos voluntários permitiu repetir as simulações muitas vezes para estimar esse risco, como explica a [Universidade de Oxford](https://eng.ox.ac.uk/climateprediction/conduct-a-study/projects/2014-uk-winter-floods). Isso ajuda a entender como o risco muda, sem atribuir uma enchente inteira a uma única causa.
+O [estudo publicado em 2016](https://doi.org/10.1038/nclimate2927) indicou que a influência humana no clima aumentou a chance de chuvas intensas naquela região e período. A contribuição dos voluntários permitiu repetir as simulações muitas vezes para estimar esse risco, como explica a [Universidade de Oxford](https://eng.ox.ac.uk/climateprediction/conduct-a-study/projects/2014-uk-winter-floods).
 
-Esses são resultados publicados de projetos apoiados por computação voluntária. Para contribuir hoje, é preciso encontrar projetos ativos com tarefas compatíveis com o seu computador.
+Esses casos mostram como o processamento cedido por muitas pessoas pode virar uma ferramenta de pesquisa. É uma forma de participar da ciência com um recurso que já temos em casa.
 
 ## O que estou doando de verdade
 
-Capacidade ociosa não é energia gratuita. Quando uma CPU ou GPU sai do repouso e começa a calcular, aumenta o consumo, o calor e, conforme o equipamento, o ruído. Também há uso de memória, disco e rede.
+Ao ceder processamento, também reservo energia, memória, disco e rede para a pesquisa. O aumento de atividade produz mais calor e, conforme o equipamento, mais ruído.
 
-Uma conta ilustrativa ajuda a dimensionar. Se a contribuição acrescentasse 20 W medidos na tomada durante oito horas por dia, seriam `0,020 kW × 8 h × 30 dias = 4,8 kWh` no mês. Esse número é uma hipótese, não uma medição do meu cluster. O custo depende da tarifa local e do aumento real de potência. Um medidor na tomada, comparando períodos equivalentes com e sem BOINC, dá uma resposta melhor que o TDP do processador.
+Uma conta ilustrativa ajuda a dimensionar. Um acréscimo de 20 W na tomada durante oito horas por dia representaria `0,020 kW × 8 h × 30 dias = 4,8 kWh` no mês. O custo depende da tarifa local e do aumento real de potência. Um medidor na tomada, comparando períodos equivalentes com e sem BOINC, dá uma resposta melhor que o TDP do processador.
 
-Meu ponto de partida é uma parcela pequena de uma máquina que já está ligada. Observo temperatura e uso normal antes de ampliar qualquer coisa. Não vale acumular tarefas com prazo se o computador só vai ficar disponível por alguns minutos por semana.
+Meu ponto de partida é uma parcela pequena de uma máquina que já está ligada. Observo temperatura e uso normal antes de ampliar qualquer coisa. Ajuste o volume de trabalho ao tempo que o computador pode dedicar às tarefas e aos prazos de entrega.
 
 ## Começar sem Kubernetes
 
