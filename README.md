@@ -14,7 +14,7 @@ make run            # Preview at http://127.0.0.1:1313
 
 `make install` downloads pinned Go dependencies. `public/` contains the generated publication; `.build/` contains temporary build files. Both are ignored by Git. Rebuild after editing. A failed build preserves the previous publication. `make rundocker` tests the static site through Nginx.
 
-`make check` runs the Gazeta publication validator, Go tests without cached results, formatting checks and `go vet`. The independent `internal/schema` contract builds successive domains and author identities and reads their final JSON-LD. It covers article/profile identity, canonical URLs, covers, dates, collections and deliberate metadata corruption.
+`make check` runs the Gazeta publication validator, Go tests without cached results, formatting checks and `go vet`. It also requires the sitemap to contain every indexable canonical page exactly once, excluding aliases and the error document. The independent `internal/schema` contract builds successive domains and author identities and reads their final JSON-LD. It covers article/profile identity, canonical URLs, covers, dates, collections and deliberate metadata corruption.
 
 ## Content and identity
 
@@ -51,7 +51,7 @@ Gazeta declares metadata through Margo's native configuration. Margo emits one s
 - A real `cover` becomes the article image and social preview, with decoded dimensions/MIME and `cover_alt`. Articles without covers omit JSON-LD `image`; the site-wide social preview remains a separate fallback.
 - Home uses `WebSite` and `WebPage`; article lists use `ItemList` in visible order.
 - Blog/tag archives and projects use `CollectionPage`; about uses `ProfilePage` with `Person`; contact uses `ContactPage`. The categories landing page uses `WebPage`.
-- Alias HTML and 404 pages omit JSON-LD. No unsupported search action or breadcrumb contract is advertised.
+- Alias HTML and 404 pages omit JSON-LD. The generated 404 document declares native `noindex, follow` metadata and stays out of the sitemap and `llms.txt`. No unsupported search action or breadcrumb contract is advertised.
 
 Gazeta validates final HTML, links, fragments, feeds, authorship, dates, images and list contents before replacing `public/`. Margo's manifest describes the final artifact bytes. Use `go run ./cmd/blog check` to validate an existing artifact without rebuilding.
 
