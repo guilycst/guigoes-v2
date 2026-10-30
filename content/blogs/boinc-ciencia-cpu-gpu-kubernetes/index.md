@@ -104,12 +104,12 @@ Já descrevi o hardware na [primeira parte da série Homelab K8s](/blogs/homelab
 
 | Controle | Cliente com GPU | Cliente somente CPU |
 | --- | --- | --- |
-| Controlador | StatefulSet com uma réplica | Deployment com uma réplica e Recreate |
+| Controlador | `StatefulSet` com uma réplica | `Deployment` com uma réplica e `Recreate` |
 | Limite do container | 2 CPUs e 2 GiB | 2 CPUs e 2 GiB |
 | Request de CPU | 25m | 25m |
 | Request de memória | 2 GiB | 2 GiB |
 | CPUs anunciadas ao BOINC | 1 | 2 |
-| GPU | Um acesso Intel i915 | Desabilitada |
+| GPU | Um acesso Intel `i915` | Desabilitada |
 | Volume próprio | 8 GiB | 8 GiB |
 
 Os dois clientes ficam em máquinas distintas, ambas com Intel N100. O cliente com GPU anuncia menos CPU para deixar margem no chip, onde CPU e GPU compartilham recursos térmicos e elétricos. O limite de duas CPUs continua existindo para o container inteiro, incluindo o trabalho auxiliar da aplicação GPU.
@@ -122,7 +122,7 @@ A tabela resume a configuração do meu ambiente. O armazenamento e a imagem Int
 
 Memória funciona de outra maneira. O request de 2 GiB entra no orçamento do scheduler, enquanto ultrapassar o limite de 2 GiB pode provocar encerramento por falta de memória no container. Também ajusto o orçamento interno do BOINC, deixando 256 MiB para o próprio cliente. Essa versão do BOINC enxerga a RAM do host. No exemplo abaixo, ajusto a porcentagem nas preferências para que o cliente trabalhe dentro do orçamento do container.
 
-Os pods são Burstable. Uma PriorityClass com valor `-1000` e `preemptionPolicy: Never` reduz a prioridade de agendamento e impede que o BOINC expulse outros pods para conseguir lugar. Ela não retira CPU de um cliente já em execução nem detecta que outro serviço ficou lento.
+Os pods são `Burstable`. Uma `PriorityClass` com valor `-1000` e `preemptionPolicy: Never` reduz a prioridade de agendamento e impede que o BOINC expulse outros pods para conseguir lugar. Ela não retira CPU de um cliente já em execução nem detecta que outro serviço ficou lento.
 
 Também não uso a detecção de atividade do desktop para decidir se um nó Kubernetes está ocioso. Dentro de um container, essa leitura não representa bem o conjunto dos serviços. Aqui a contribuição tem orçamento fixo e exige observação do host.
 
@@ -132,17 +132,17 @@ Preparei um [manifesto completo de exemplo](./assets/boinc-cpu.yaml) para um cli
 
 O exemplo usa o cliente oficial BOINC 8.0.4 fixado por digest e exige um nó Linux AMD64. Ele não depende do runtime OpenCL Intel. Reavalie versão, arquitetura e atualizações de segurança ao adotar a configuração.
 
-Para seguir o tutorial, você precisa de um contexto `kubectl` acessível, Kubernetes 1.32 ou posterior, permissão para criar Namespace e PriorityClass, uma StorageClass capaz de provisionar o volume e acesso à internet para o Science United e os projetos. O comando `kubectl top` é opcional e depende do Metrics Server.
+Para seguir o tutorial, você precisa de um contexto `kubectl` acessível, Kubernetes 1.32 ou posterior, permissão para criar `Namespace` e `PriorityClass`, uma `StorageClass` capaz de provisionar o volume e acesso à internet para o Science United e os projetos. O comando `kubectl top` é opcional e depende do Metrics Server.
 
 ### 1. Ajustar nó, armazenamento e memória
 
-Baixe `boinc-cpu.yaml`. Substitua `REPLACE_WITH_NODE` pelo nó que pode receber a carga e `REPLACE_WITH_STORAGE_CLASS` por uma StorageClass adequada. Confira capacidade livre e permissões do volume para UID 1000.
+Baixe `boinc-cpu.yaml`. Substitua `REPLACE_WITH_NODE` pelo nó que pode receber a carga e `REPLACE_WITH_STORAGE_CLASS` por uma `StorageClass` adequada. Confira capacidade livre e permissões do volume para UID `1000`.
 
 O cliente guarda identidade, programas, downloads e checkpoints, os pontos de progresso salvos pelas aplicações, em `/var/lib/boinc`. Cada cliente precisa de um diretório persistente exclusivo. Não copie o PVC de um cliente para iniciar outro em paralelo, nem aumente réplicas para compartilhar essa identidade.
 
-O exemplo usa um StatefulSet com uma réplica e volume próprio. A [política de retenção de PVCs](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#persistentvolumeclaim-retention) usa `Retain` para conservar o claim ao reduzir réplicas ou excluir o StatefulSet. Isso não protege contra uma exclusão manual do PVC.
+O exemplo usa um `StatefulSet` com uma réplica e volume próprio. A [política de retenção de PVCs](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#persistentvolumeclaim-retention) usa `Retain` para conservar o claim ao reduzir réplicas ou excluir o `StatefulSet`. Isso não protege contra uma exclusão manual do PVC.
 
-No ConfigMap, os campos `ram_max_used_busy_pct` e `ram_max_used_idle_pct` usam a RAM do host como referência. O valor `4.6875` do exemplo corresponde a 768 MiB para tarefas em um host de 16 GiB, deixando 256 MiB do limite de 1 GiB para o cliente. Ajuste ambos os campos para seu nó:
+No `ConfigMap`, os campos `ram_max_used_busy_pct` e `ram_max_used_idle_pct` usam a RAM do host como referência. O valor `4.6875` do exemplo corresponde a 768 MiB para tarefas em um host de 16 GiB, deixando 256 MiB do limite de 1 GiB para o cliente. Ajuste ambos os campos para seu nó:
 
 ```text
 porcentagem = 100 × (limite do container em GiB - 0,25) / RAM do host em GiB
@@ -158,7 +158,7 @@ kubectl --context SEU_CONTEXTO -n boinc-example rollout status statefulset/boinc
 kubectl --context SEU_CONTEXTO -n boinc-example get pods,pvc
 ```
 
-Um init container copia os dois arquivos XML do ConfigMap para o volume antes de o cliente iniciar. O processo principal executa diretamente o BOINC. Namespace, ConfigMap, Service, StatefulSet, PVC, PriorityClass, LimitRange e ResourceQuota são recursos nativos do Kubernetes.
+Um init container copia os dois arquivos XML do `ConfigMap` para o volume antes de o cliente iniciar. O processo principal executa diretamente o BOINC. `Namespace`, `ConfigMap`, `Service`, `StatefulSet`, `PersistentVolumeClaim`, `PriorityClass`, `LimitRange` e `ResourceQuota` são recursos nativos do Kubernetes.
 
 ### 3. Associar sua conta ao Science United
 
@@ -193,9 +193,9 @@ kubectl --context SEU_CONTEXTO -n boinc-example exec boinc-0 -- boinccmd --get_t
 kubectl --context SEU_CONTEXTO -n boinc-example top pods
 ```
 
-Procure associação ao Science United, projetos recebidos e avanço do tempo de CPU. A porcentagem de algumas tarefas avança em saltos. Um pod Ready só confirma a resposta local do cliente; não prova conclusão, envio ou validação de trabalho científico.
+Procure associação ao Science United, projetos recebidos e avanço do tempo de CPU. A porcentagem de algumas tarefas avança em saltos. Um pod `Ready` só confirma a resposta local do cliente; não prova conclusão, envio ou validação de trabalho científico.
 
-O cliente roda sem root, sem token de ServiceAccount, sem capabilities e com raiz somente leitura. O namespace usa [Pod Security Admission em modo restricted](https://kubernetes.io/docs/concepts/security/pod-security-admission/), e o pod define [seccomp RuntimeDefault](https://kubernetes.io/docs/reference/node/seccomp/). Os diretórios de dados e temporários continuam graváveis. Não há Ingress, NodePort ou acesso remoto configurado ao RPC. Projetos que exigem VirtualBox ou containers aninhados não fazem parte desse exemplo restrito.
+O cliente roda sem root, sem token de `ServiceAccount`, sem capabilities e com raiz somente leitura. O namespace usa [Pod Security Admission em modo `restricted`](https://kubernetes.io/docs/concepts/security/pod-security-admission/), e o pod define [seccomp `RuntimeDefault`](https://kubernetes.io/docs/reference/node/seccomp/). Os diretórios de dados e temporários continuam graváveis. Não há `Ingress`, `NodePort` ou acesso remoto configurado ao RPC. Projetos que exigem VirtualBox ou containers aninhados não fazem parte desse exemplo restrito.
 
 ## GPU exige outro cuidado
 
@@ -214,7 +214,7 @@ resources:
     gpu.intel.com/i915: "1"
 ```
 
-Esse trecho pertence ao cliente Intel completo. Não é um patch suficiente para habilitar GPU no exemplo CPU-only. Para usar uma GPU Intel, confira o driver i915 no host, o device plugin e as bibliotecas OpenCL dentro da imagem. A aplicação científica também precisa oferecer uma versão compatível com essa GPU.
+Esse trecho pertence ao cliente Intel completo. Não é um patch suficiente para habilitar GPU no exemplo CPU-only. Para usar uma GPU Intel, confira o driver `i915` no host, o device plugin e as bibliotecas OpenCL dentro da imagem. A aplicação científica também precisa oferecer uma versão compatível com essa GPU.
 
 A imagem Intel usada no meu teste contém patches locais sobre BOINC 8.0.4. Esse piloto é uma implementação específica do homelab; o exemplo disponível para download neste artigo usa o cliente oficial somente com CPU. Não é a imagem oficial nem uma solução genérica para qualquer GPU. NVIDIA e AMD exigem outros drivers, bibliotecas e recursos; não precisam desse patch Intel por definição.
 
@@ -251,13 +251,13 @@ Ao usar o exemplo do tutorial, acompanhe os sensores do host e suspenda a contri
 
 ## Barrar um deploy maior do que o combinado
 
-Limites no template protegem o pod configurado. Para impedir que uma edição futura crie mais clientes ou aumente silenciosamente o orçamento do namespace, adicionei LimitRange e ResourceQuota.
+Limites no template protegem o pod configurado. Para impedir que uma edição futura crie mais clientes ou aumente silenciosamente o orçamento do namespace, adicionei `LimitRange` e `ResourceQuota`.
 
 No meu deployment, a quota permite dois pods, soma de limites de quatro CPUs, 4 GiB de memória e uma alocação Intel GPU. O teto de armazenamento inclui três PVCs de 8 GiB porque uma cópia histórica de migração continua retida. Ela não roda outro cliente. O exemplo para download tem orçamento próprio para apenas um cliente.
 
-LimitRange define os máximos por container e por pod, além do tamanho dos claims. ResourceQuota limita o conjunto declarado no namespace. Esses controles são admissão de recursos, não medidores de consumo elétrico. Ao serem adicionados, não reiniciam nem alteram retroativamente os pods existentes.
+`LimitRange` define os máximos por container e por pod, além do tamanho dos claims. `ResourceQuota` limita o conjunto declarado no namespace. Esses controles são admissão de recursos, não medidores de consumo elétrico. Ao serem adicionados, não reiniciam nem alteram retroativamente os pods existentes.
 
-A quota também bloqueia réplicas temporárias de um rollout com surge. Por isso mantenho o cliente CPU em `Recreate` e o StatefulSet GPU com uma réplica. Durante manutenção, pode ser necessário esperar um pod em encerramento sair da contagem. A solução não é apagar o PVC.
+A quota também bloqueia réplicas temporárias de um rollout com surge. Por isso mantenho o cliente CPU em `Recreate` e o `StatefulSet` GPU com uma réplica. Durante manutenção, pode ser necessário esperar um pod em encerramento sair da contagem. A solução não é apagar o PVC.
 
 ## Monitorar, pausar e retomar
 
@@ -297,16 +297,16 @@ kubectl --context SEU_CONTEXTO -n boinc-example scale statefulset/boinc --replic
 kubectl --context SEU_CONTEXTO -n boinc-example scale statefulset/boinc --replicas=1
 ```
 
-No meu homelab, gerenciado pelo Argo CD, faço a mesma alteração no Git e deixo o controlador reconciliar. Conserve PVCs e identidades. Os 120 segundos de encerramento permitem ao cliente receber SIGTERM e salvar estado, mas a aplicação científica define seus checkpoints; parte do cálculo desde o último checkpoint pode ser refeita.
+No meu homelab, gerenciado pelo Argo CD, faço a mesma alteração no Git e deixo o controlador reconciliar. Conserve PVCs e identidades. Os 120 segundos de encerramento permitem ao cliente receber `SIGTERM` e salvar estado, mas a aplicação científica define seus checkpoints; parte do cálculo desde o último checkpoint pode ser refeita.
 
-Para mudar o orçamento, revise conjuntamente o limite do container, os requests, as preferências internas e as políticas do namespace. No exemplo, a configuração é copiada durante a inicialização. Depois de editar o manifesto, aplique-o novamente. Para carregar mudanças no ConfigMap, confira checkpoints e prazos antes de reiniciar o cliente:
+Para mudar o orçamento, revise conjuntamente o limite do container, os requests, as preferências internas e as políticas do namespace. No exemplo, a configuração é copiada durante a inicialização. Depois de editar o manifesto, aplique-o novamente. Para carregar mudanças no `ConfigMap`, confira checkpoints e prazos antes de reiniciar o cliente:
 
 ```sh
 kubectl --context SEU_CONTEXTO apply -f boinc-cpu.yaml
 kubectl --context SEU_CONTEXTO -n boinc-example rollout restart statefulset/boinc
 ```
 
-Alterar o ConfigMap sozinho não reinicia o pod.
+Alterar o `ConfigMap` sozinho não reinicia o pod.
 
 Rollback segue a mesma regra. Reverter uma quota não exige trocar imagem nem dados. Reverter uma imagem usa o PVC atual, com o cliente anterior já parado. Uma cópia antiga de volume não deve voltar a rodar em paralelo. Se desabilitar GPU, tarefas que precisam dela podem ficar sem avançar até recuperar suporte ou vencer o prazo.
 
