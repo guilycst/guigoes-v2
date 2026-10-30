@@ -116,6 +116,8 @@ Os dois clientes ficam em máquinas distintas, ambas com Intel N100. O cliente c
 
 A tabela resume a configuração do meu ambiente. O armazenamento e a imagem Intel são escolhas dessa instalação; o tutorial abaixo oferece um exemplo independente para começar com CPU.
 
+Os manifests, o código dos supervisores térmicos, o Dockerfile e os patches estão no [repositório público boinc-k8s-intel-n100](https://github.com/guilycst/boinc-k8s-intel-n100). Ele inclui o exemplo CPU deste tutorial e uma adaptação do piloto Intel para quem quiser reproduzi-lo em outro cluster.
+
 ### O que cada limite controla
 
 `requests.cpu: 25m` participa da reserva para agendamento e do peso relativo de CPU quando há disputa. Não limita o cliente a 2,5% de um núcleo. `limits.cpu: "2"` impõe uma cota de tempo de CPU pelo mecanismo de controle do runtime.
@@ -216,9 +218,9 @@ resources:
 
 Esse trecho pertence ao cliente Intel completo. Não é um patch suficiente para habilitar GPU no exemplo CPU-only. Para usar uma GPU Intel, confira o driver `i915` no host, o device plugin e as bibliotecas OpenCL dentro da imagem. A aplicação científica também precisa oferecer uma versão compatível com essa GPU.
 
-A imagem Intel usada no meu teste contém patches locais sobre BOINC 8.0.4. Esse piloto é uma implementação específica do homelab; o exemplo disponível para download neste artigo usa o cliente oficial somente com CPU. Não é a imagem oficial nem uma solução genérica para qualquer GPU. NVIDIA e AMD exigem outros drivers, bibliotecas e recursos; não precisam desse patch Intel por definição.
+A imagem Intel usada no meu teste contém patches sobre BOINC 8.0.4. O [Dockerfile](https://github.com/guilycst/boinc-k8s-intel-n100/blob/main/image/Dockerfile) e o [patch do cliente](https://github.com/guilycst/boinc-k8s-intel-n100/blob/main/image/single-gpu-task.patch) estão disponíveis no repositório público, junto de uma [imagem de container para download](https://github.com/users/guilycst/packages/container/package/boinc-k8s-intel-n100). Esse piloto é uma implementação específica do homelab; o exemplo disponível para download neste artigo usa o cliente oficial somente com CPU. Não é a imagem oficial nem uma solução genérica para qualquer GPU. NVIDIA e AMD exigem outros drivers, bibliotecas e recursos; não precisam desse patch Intel por definição.
 
-No meu plugin, os slots são compartilhados. Pedir uma unidade dá acesso ao dispositivo, não uma porcentagem de uso, memória dedicada ou potência reservada. Limitei o cliente a uma tarefa GPU por vez, inclusive entre projetos, com o patch versionado. Essa regra também não impede que outro pod com acesso à mesma GPU concorra com ele.
+No meu plugin, os slots são compartilhados. Pedir uma unidade dá acesso ao dispositivo, não uma porcentagem de uso, memória dedicada ou potência reservada. Limitei o cliente a uma tarefa GPU por vez, inclusive entre projetos, com o [patch versionado](https://github.com/guilycst/boinc-k8s-intel-n100/blob/main/image/single-gpu-task.patch). Essa regra também não impede que outro pod com acesso à mesma GPU concorra com ele.
 
 ## Como a contribuição pausa quando o computador esquenta
 
@@ -228,7 +230,7 @@ Limitar o container a duas CPUs não limita a temperatura do processador. No cli
 
 Esse controle é um programa supervisor que inicia o BOINC e acompanha sua execução. A cada dois segundos, ele consulta os sensores Intel `coretemp` do computador e usa a maior leitura válida entre o pacote do processador e seus núcleos. No N100, CPU e GPU integrada compartilham o mesmo chip. A leitura serve para acompanhar o aquecimento desse conjunto, não para medir apenas o uso da GPU.
 
-Cada cliente tem seu próprio supervisor. Ele envia comandos locais ao BOINC pela interface RPC, a mesma interface de controle usada pelo `boinccmd`. No cliente somente CPU, manda suspender a computação. No cliente com GPU, manda suspender apenas o trabalho da GPU; as tarefas de CPU desse cliente continuam sujeitas ao orçamento configurado.
+Cada cliente tem seu próprio supervisor, com código disponível para [CPU](https://github.com/guilycst/boinc-k8s-intel-n100/blob/main/runtime/cpu-guard.py) e [GPU](https://github.com/guilycst/boinc-k8s-intel-n100/blob/main/runtime/gpu-guard.py). Ele envia comandos locais ao BOINC pela interface RPC, a mesma interface de controle usada pelo `boinccmd`. No cliente somente CPU, manda suspender a computação. No cliente com GPU, manda suspender apenas o trabalho da GPU; as tarefas de CPU desse cliente continuam sujeitas ao orçamento configurado.
 
 ```mermaid
 flowchart TB
