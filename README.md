@@ -1,6 +1,6 @@
 # Guigoes
 
-Guilherme de Castro's blog at [guigoes.com](https://guigoes.com), built with the published [Gazeta](https://github.com/araihu/gazeta) engine on [Margo](https://github.com/araihu/margo). `go.mod` pins both versions. This repository owns content, branding, configuration and deployment, while `cmd/blog` is a thin CLI adapter.
+Guilherme de Castro's blog at [guigoes.com](https://guigoes.com), built with the published [Gazeta](https://github.com/araihu/gazeta) engine on [Margo](https://github.com/araihu/margo). `go.mod` pins both versions. The navigation integration uses merged [Margo c08c6ee](https://github.com/araihu/margo/commit/c08c6ee234223ec4efdb06a2eabe2055f3b7ad63) and [App Shells cbb346e](https://github.com/araihu/goshtoso-app-shells/commit/cbb346ef3bca4116c628a78c1f963bea8f7170a3). This repository owns content, branding, configuration and deployment, while `cmd/blog` is a thin CLI adapter.
 
 ## Development
 

@@ -4,7 +4,7 @@ go 1.27.3
 
 require (
 	github.com/araihu/gazeta v0.0.4
-	github.com/araihu/margo v0.0.30
+	github.com/araihu/margo v0.0.34-0.20261030181436-c08c6ee23422
 	github.com/pelletier/go-toml/v2 v2.4.3
 	go.yaml.in/yaml/v3 v3.0.5
 	golang.org/x/net v0.59.0
@@ -14,7 +14,7 @@ require (
 	github.com/a-h/templ v0.3.1070 // indirect
 	github.com/alecthomas/chroma/v2 v2.27.0 // indirect
 	github.com/araihu/goshtoso v0.4.0 // indirect
-	github.com/araihu/goshtoso-app-shells v0.1.9-0.20261029032501-ebb7cf05ce94 // indirect
+	github.com/araihu/goshtoso-app-shells v0.1.9-0.20261030180739-cbb346ef3bca // indirect
 	github.com/araihu/goshtoso-charts v0.0.2 // indirect
 	github.com/chromedp/cdproto v0.0.0-20250724212937-08a3db8b4327 // indirect
 	github.com/chromedp/chromedp v0.14.2 // indirect
