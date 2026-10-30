@@ -68,10 +68,10 @@ Configure these repository settings:
 | Type | Name | Purpose |
 | --- | --- | --- |
 | Variable | `CLOUDFLARE_ACCOUNT_ID` | Cloudflare account hosting `guigoes-v2` |
-| Variable | `CLOUDFLARE_DEPLOY_ENABLED` | `true` only after the previous production trigger is disabled |
+| Variable | `CLOUDFLARE_DEPLOY_ENABLED` | `true` only after Workers Builds stops publishing production |
 | Secret | `CLOUDFLARE_API_TOKEN` | Workers deployment token restricted to the hosting account |
 
-Before enabling Actions production deployment, disable the Workers Builds **Deploy default branch** trigger. Keep **Deploy non-production branches** for native branch previews. Two production publishers must not run concurrently. A migration can leave production deployment disabled while PR checks and manual dry-runs are reviewed.
+Before enabling Actions production deployment, replace the Workers Builds **Deploy default branch** deploy command with `npx --yes wrangler@4.156.0 versions upload`. This follows the [Cloudflare procedure for disabling automatic deployments](https://developers.cloudflare.com/workers/ci-cd/builds/#disconnecting-builds): builds may still save versions, but only Actions promotes production. Keep **Deploy non-production branches** for native branch previews. Two production publishers must not run concurrently. A migration can leave Actions publication disabled while PR checks and manual dry-runs are reviewed.
 
 For a manual check, run **Deploy blog** with `dry_run = true` on `main`. This exercises build, artifact transfer and packaging without publishing. A real manual deployment also requires current `main`, configured credentials and the enable variable.
 
