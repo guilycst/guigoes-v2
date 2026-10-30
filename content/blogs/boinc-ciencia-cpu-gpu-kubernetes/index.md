@@ -230,18 +230,20 @@ Esse controle é um programa supervisor que inicia o BOINC e acompanha sua execu
 
 Cada cliente tem seu próprio supervisor. Ele envia comandos locais ao BOINC pela interface RPC, a mesma interface de controle usada pelo `boinccmd`. No cliente somente CPU, manda suspender a computação. No cliente com GPU, manda suspender apenas o trabalho da GPU; as tarefas de CPU desse cliente continuam sujeitas ao orçamento configurado.
 
-| Leitura dos sensores | O que o supervisor faz |
-| --- | --- |
-| 85 °C ou mais | Pausa o trabalho que controla. |
-| Acima de 80 °C e abaixo de 85 °C | Mantém o estado anterior, em execução ou pausado. |
-| 80 °C ou menos | Libera a retomada, respeitando as demais preferências do BOINC. |
-| Sensor ausente ou leitura inválida | Mantém o trabalho pausado. |
+```mermaid
+flowchart TB
+    accTitle: Ciclo de pausa e retomada por temperatura
+    accDescr: O trabalho começa pausado. Uma leitura válida de 80 graus Celsius ou menos libera a execução. Ao atingir 85 graus ou mais, o trabalho volta a pausar. Entre 80 e 85 graus, mantém o estado anterior. Sensor ausente ou leitura inválida provoca pausa.
+    inicio["Início"] --> pausado["Trabalho pausado"]
+    pausado -->|"80 °C ou menos"| liberado["Liberado para executar"]
+    liberado -->|"85 °C ou mais"| pausado
+```
 
-Por exemplo, uma tarefa em execução continua aos 83 °C. Ao atingir 85 °C, pausa. Se a leitura cair para 83 °C, ela ainda espera; só recebe autorização para retomar aos 80 °C ou menos. Essa diferença entre os dois patamares, chamada histerese, evita ligar e desligar o trabalho a cada pequena oscilação. Na primeira leitura, a decisão também é conservadora: acima de 80 °C, o supervisor manda manter o trabalho pausado até o computador esfriar.
+Acima de 80 °C e abaixo de 85 °C, o supervisor mantém o estado anterior. Aos 83 °C, um trabalho que já estava em execução continua; um que estava pausado ainda espera esfriar até 80 °C. Essa diferença entre os patamares, chamada histerese, evita alternar entre execução e pausa a cada pequena oscilação. A retomada também respeita as demais preferências do BOINC.
 
 Pausar não significa apagar o pod, abortar a tarefa ou remover seu volume. Configurei os clientes para manter as aplicações suspensas na memória, de modo que possam continuar do ponto em que pararam. Isso ocupa RAM durante a pausa. Na implementação Intel, o patch do cliente também respeita essa preferência para tarefas GPU, evitando relançar o cálculo a cada ciclo de aquecimento. Um reinício do pod é outra situação: nesse caso, o progresso recuperável depende do último checkpoint salvo pela aplicação científica.
 
-Se uma tentativa de aplicar a pausa ou a retomada falhar por erro ou timeout do RPC, o supervisor encerra o cliente. A intenção é não manter computação ativa sem conseguir pausá-la. Uma leitura inválida, por sua vez, conserva a pausa até haver uma leitura válida que permita a retomada.
+Se uma tentativa de aplicar a pausa ou a retomada falhar por erro ou timeout do RPC, o supervisor encerra o cliente. A intenção é não manter computação ativa sem conseguir pausá-la. Sensor ausente ou leitura inválida faz o supervisor pausar o trabalho até voltar uma leitura segura.
 
 O mecanismo reduz a contribuição quando o computador esquenta, mas não impõe um teto físico de 85 °C. Há intervalo entre medir e pausar, o chip demora a esfriar e outros serviços continuam produzindo calor. Nos testes, observei pausa e retomada automáticas, com queda do uso de CPU, mas também picos de 90 °C após retomadas. Esse resultado é o motivo para acompanhar a temperatura do computador e manter margem, mesmo com a pausa automática.
 
