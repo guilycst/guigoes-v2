@@ -1,6 +1,6 @@
 # Personagens do Guigoes
 
-Biblioteca visual v1, criada em 27/10/2026 a partir das quatro capas do blog, incluindo a capa aprovada do lazy-dvc com os personagens de mãos dadas. São 22 fichas, com duas variantes de cor na ficha das tags: as dez originais abaixo e [doze personagens de self-hosting e projetos](self-hosting.md).
+The v1 character library began on October 27, 2026 with the four blog covers, including the approved lazy-dvc handholding scene. It now has 23 sheets: the ten original characters below, [twelve self-hosting characters](self-hosting.md), and an [editorial Cloudflare interpretation](cloudflare.md). The tags sheet includes two color variants.
 
 As fichas fixam a identidade visual. Pose, expressão e cenário podem variar; silhueta, paleta, símbolos e anatomia permanecem. Os personagens representam conceitos técnicos, não Guilherme nem os mascotes oficiais dos projetos.
 

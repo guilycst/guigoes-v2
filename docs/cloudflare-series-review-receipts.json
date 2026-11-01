@@ -1,0 +1,90 @@
+{
+  "base_sha": "0662de3e4302d76d73ee78d279c0541ef18313d5",
+  "head_sha": "0662de3e4302d76d73ee78d279c0541ef18313d5",
+  "parts": [
+    {
+      "part": 2,
+      "scope": "content/blogs/cloudflare-homelab-dominio-dns-https",
+      "accepted_snapshot": "b6505f0157d322010007d417f15d07a30133a8d99f9bea3f63721c6e1cacd119",
+      "body_words": 1219,
+      "draft": true
+    },
+    {
+      "part": 3,
+      "scope": "content/blogs/cloudflare-homelab-tunnel-publicacao-limites",
+      "accepted_snapshot": "5dda544e42f2f85fa9b6ad75353178574548d9a120b65f236d7e3207ef511e5e",
+      "body_words": 1195,
+      "draft": true
+    },
+    {
+      "part": 4,
+      "scope": "content/blogs/cloudflare-homelab-access-rede-privada-gateway",
+      "accepted_snapshot": "cf8ec8edafb5587b13e8169be9f868691331084605684ba6e0989ed2a1ebef7c",
+      "body_words": 1156,
+      "draft": true
+    },
+    {
+      "part": 5,
+      "scope": "content/blogs/cloudflare-homelab-workers-r2-integracoes",
+      "accepted_snapshot": "98162326e95f565a2dfbbcad7a64999168f890fad3074466bc9239f323385494",
+      "body_words": 1215,
+      "draft": true
+    }
+  ],
+  "final_series_review": {
+    "date": "2026-11-01",
+    "accepted_snapshot": "b7430c6fd0bcd2b1fa92e1cdbdc341888f202c74f3a900af2a82a3d636b8abdd",
+    "base_sha": "0662de3e4302d76d73ee78d279c0541ef18313d5",
+    "head_sha": "0662de3e4302d76d73ee78d279c0541ef18313d5",
+    "scope": [
+      "content/blogs/cloudflared-tunnel-servicos-internet",
+      "content/blogs/cloudflare-homelab-dominio-dns-https",
+      "content/blogs/cloudflare-homelab-tunnel-publicacao-limites",
+      "content/blogs/cloudflare-homelab-access-rede-privada-gateway",
+      "content/blogs/cloudflare-homelab-workers-r2-integracoes"
+    ],
+    "reviewer_profile": "gpt-5.6-sol/high",
+    "reviewer_lenses": [
+      "editorial progression",
+      "reader comprehension",
+      "technical consistency"
+    ],
+    "review_rounds": 2,
+    "verdict": "acceptable",
+    "unresolved_blockers": [],
+    "boundary_receipt": [
+      "transcript_not_read",
+      "no_polling",
+      "git_native",
+      "stable_snapshots"
+    ],
+    "current_articles": [
+      {
+        "part": 1,
+        "path": "content/blogs/cloudflared-tunnel-servicos-internet/index.md",
+        "sha256": "ac26f8024e11fb3793fb96739f8dd3923e26541067fb4ed3faabfc34834781d8"
+      },
+      {
+        "part": 2,
+        "path": "content/blogs/cloudflare-homelab-dominio-dns-https/index.md",
+        "sha256": "fbce832120faab00624410d877c0a7d71bc5bf5b8225440304d048370f981f9d"
+      },
+      {
+        "part": 3,
+        "path": "content/blogs/cloudflare-homelab-tunnel-publicacao-limites/index.md",
+        "sha256": "512ab0990b6f4f805288ace1f270fc5741de6ed5d6264ec1eb3486b0cde82648"
+      },
+      {
+        "part": 4,
+        "path": "content/blogs/cloudflare-homelab-access-rede-privada-gateway/index.md",
+        "sha256": "084306e298a728fd43d025b97eb6828475dcccdb29656aa7b51ca453b4d7fe5e"
+      },
+      {
+        "part": 5,
+        "path": "content/blogs/cloudflare-homelab-workers-r2-integracoes/index.md",
+        "sha256": "905a88d5c1d1e18640399910b5ec911bbf36a71d34808e1c9ae4765a9951ddb9"
+      }
+    ],
+    "note": "Earlier per-part receipts record the authoring milestone; this final complete-series acceptance supersedes their article-version coverage."
+  }
+}
