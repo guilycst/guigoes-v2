@@ -1,6 +1,6 @@
 # Personagens do Guigoes
 
-The v1 character library began on October 27, 2026 with the four blog covers, including the approved lazy-dvc handholding scene. It now has 23 sheets: the ten original characters below, [twelve self-hosting characters](self-hosting.md), and an [editorial Cloudflare interpretation](cloudflare.md). The tags sheet includes two color variants.
+The v1 character library began on October 27, 2026 with the four blog covers, including the approved lazy-dvc handholding scene. It now has 25 sheets: the ten original characters below, [twelve self-hosting characters](self-hosting.md), an [editorial Cloudflare interpretation](cloudflare.md), and [Go and Kubernetes characters](go-kubernetes.md). The tags sheet includes two color variants.
 
 As fichas fixam a identidade visual. Pose, expressão e cenário podem variar; silhueta, paleta, símbolos e anatomia permanecem. Os personagens representam conceitos técnicos, não Guilherme nem os mascotes oficiais dos projetos.
 
@@ -12,10 +12,11 @@ A [bio](../../../content/about/index.md) trata de Go, plataforma, Kubernetes, au
 |---|---|---|
 | SSH, identidade, lazy-dvc | Chave, pasta e banco | Acesso compartilhado, cooperação, mãos dadas |
 | Git, GitOps, gitmeout | Pasta e terminal | Organizar, sincronizar e transportar código |
-| Go, CLI, automação, DX, Hyperscript | Terminal e novelo | Executar uma tarefa, desfazer complexidade |
+| Go, CLI development, Go libraries | Gopher, terminal and API contract | Build and run Go tools |
+| Automação, DX, Hyperscript | Terminal e novelo | Executar uma tarefa, desfazer complexidade |
 | HTMX, Goshtoso, Margo, Manja | Página e terminal | Transformar conteúdo ou contratos em interface |
 | Metadados, SEO, busca, descoberta, Balemoh | Tags, página e lupa | Descrever, encontrar e inspecionar |
-| Kubernetes, operadores, cloud e homelab | Operador, mini servidor, container e nuvem | Operar serviços e aplicar configuração |
+| Kubernetes, operators, cloud and homelab | Kubernetes wheel, operator, mini server, container and cloud | Orchestrate services and apply configuration |
 | Bancos, DVC, memória, Talaria-Mem | Banco, caderno de memória e lupa | Guardar, recuperar e consultar |
 | Assets, builds reproduzíveis, Muamba | Pacotinho, pasta e lupa | Organizar arquivos e conferir conteúdo |
 | Visualização de dados, Goshtoso Charts | Página e banco | Apresentar dados; gráfico pode ser um acessório |
