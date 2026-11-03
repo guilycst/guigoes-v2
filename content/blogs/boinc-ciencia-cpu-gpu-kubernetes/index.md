@@ -4,6 +4,7 @@ description = "Como contribuir com ciência usando BOINC e Science United, resul
 language = "pt-BR"
 authors = ["Guilherme de Castro"]
 publishedAt = "2026-10-30T18:33:42-03:00"
+modifiedAt = "2026-11-03T10:06:05-03:00"
 tags = ["boinc", "ciencia", "homelab", "kubernetes", "gpu", "gitops"]
 draft = false
 cover = "./assets/cover-cartoon.png"
@@ -108,6 +109,7 @@ Já descrevi o hardware na [primeira parte da série Homelab K8s](/blogs/homelab
 | Limite do container | 2 CPUs e 2 GiB | 2 CPUs e 2 GiB |
 | Request de CPU | 25m | 25m |
 | Request de memória | 2 GiB | 2 GiB |
+| Prioridade de agendamento | `-1000` | `-1000` |
 | CPUs anunciadas ao BOINC | 1 | 2 |
 | GPU | Um acesso Intel `i915` | Desabilitada |
 | Volume próprio | 8 GiB | 8 GiB |
@@ -124,7 +126,9 @@ Os manifests, o código dos supervisores térmicos, o Dockerfile e os patches es
 
 Memória funciona de outra maneira. O request de 2 GiB entra no orçamento do scheduler, enquanto ultrapassar o limite de 2 GiB pode provocar encerramento por falta de memória no container. Também ajusto o orçamento interno do BOINC, deixando 256 MiB para o próprio cliente. Essa versão do BOINC enxerga a RAM do host. No exemplo abaixo, ajusto a porcentagem nas preferências para que o cliente trabalhe dentro do orçamento do container.
 
-Os pods são `Burstable`. Uma `PriorityClass` com valor `-1000` e `preemptionPolicy: Never` reduz a prioridade de agendamento e impede que o BOINC expulse outros pods para conseguir lugar. Ela não retira CPU de um cliente já em execução nem detecta que outro serviço ficou lento.
+Os pods são `Burstable`. Nos dois clientes, uso a `PriorityClass` `boinc-background` com valor `-1000`, abaixo da prioridade padrão `0`. Se um pod mais prioritário não consegue ser agendado, o scheduler pode encerrar pods do BOINC quando essa remoção permite acomodá-lo e a política do pod pendente permite preempção.
+
+O `preemptionPolicy: Never` impede que o próprio BOINC expulse outros pods para conseguir lugar, mas não o protege de ser removido. Essa [preempção](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/#non-preempting-priorityclass) encerra o pod, em vez de suspender os cálculos dentro do cliente. Na retomada, o progresso recuperável depende dos checkpoints salvos no volume. A prioridade não retira CPU de um cliente já em execução nem detecta que outro serviço ficou lento.
 
 Também não uso a detecção de atividade do desktop para decidir se um nó Kubernetes está ocioso. Dentro de um container, essa leitura não representa bem o conjunto dos serviços. Aqui a contribuição tem orçamento fixo e exige observação do host.
 

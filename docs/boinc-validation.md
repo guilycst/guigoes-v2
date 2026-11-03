@@ -95,3 +95,24 @@ output. No values were copied into Git, article assets or this receipt. The raw
 temporary JSON was replaced by an allowlisted summary. Any credential rotation
 must be handled as a separate replication-preserving operation; it was not
 performed during this publication task.
+
+## Scheduling priority clarification, 2026-11-03
+
+The article now lists priority `-1000` for both clients and explains that
+`preemptionPolicy: Never` prevents BOINC from preempting other pods without
+protecting it from higher-priority preemptors. It distinguishes pod termination
+and checkpoint recovery from BOINC's in-process thermal suspension.
+
+The downloadable CPU YAML and the public repository's CPU example remain
+byte-identical. Their only YAML change is an explanatory comment; parsed
+resources are unchanged. The public validator now resolves each BOINC workload's
+PriorityClass and checks value `-1000`, policy `Never` and `globalDefault: false`.
+Both repositories' `make check` targets passed, with the companion repository
+using its local virtual environment. A local fault-injection check rejected 14
+rendered-manifest variants with wrong priority values, policies or defaults,
+removed classes, and missing or unknown workload class references.
+
+The local browser preview showed the added table row and revised explanation.
+No cluster resources were changed and no preemption experiment was performed.
+These checks validate configuration, not observed scheduler preemption. This
+follow-up was prepared locally and does not record a new publication.
