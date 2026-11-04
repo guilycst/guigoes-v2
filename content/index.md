@@ -8,3 +8,5 @@ language = "pt-BR"
 Anotações sobre código, infraestrutura e projetos que saem do meu homelab.
 
 Por [Guilherme de Castro](about/index.md).
+
+<a rel="me" href="https://organica.social/@guicastro" hidden>Mastodon</a>
